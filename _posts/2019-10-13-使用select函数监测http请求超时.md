@@ -218,4 +218,5 @@ ERROR
 - 利用“收到消息是一个可读事件”的性质，让select去监测，实现阻塞IO接收响应的超时控制
 - 利用信号机制实现DNS请求超时控制
 
-详细代码和策略可以参考我写的HTTP/HTTPS请求库[crequest](htts://github.com/bbkgl/crequests)。
+详细代码和策略可以参考我写的HTTP/HTTPS请求库[crequest](https://github.com/bbkgl/crequests)。
+
