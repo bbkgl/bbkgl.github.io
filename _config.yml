@@ -1,10 +1,10 @@
 # Site settings
-title: CaiJi Blog
-SEOTitle: 菜鸡的博客 | CaiJi's Blog
-header-img: img/post-bg-desk.jpg
+title: 我太菜了
+SEOTitle: 菜鸡的博客 | WTCL
+header-img: img/home-bg-index.jpg
 email: zoujiakun@zju.edu.cn
 description: "怎么才能不那么菜！！！"
-keyword: "BY, BY Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜"
+keyword: "Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜"
 url: "https://bbkgl.github.io"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
 github_repo: "https://github.com/bbkgl/bbkgl.github.io.git" # you code repository
