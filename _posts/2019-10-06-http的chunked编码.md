@@ -67,7 +67,7 @@ bd8
 
 这里有一张图片可以清除地描述整个报文：
 
-![img](https://pic2.zhimg.com/v2-cbd57216a2cb582759334cfb299d4461_b.jpg)
+![img](https://ae01.alicdn.com/kf/Hd5aff7c9de9b46bb8088bd767e3cd21eo.jpg)
 
 注意到`\r\n`的位置！！！
 

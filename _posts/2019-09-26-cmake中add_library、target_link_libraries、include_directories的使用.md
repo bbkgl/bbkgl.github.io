@@ -16,7 +16,7 @@ tags:
 
 其实这个东西最好就是举个例子了，首先可以看到整个项目的层级如下图，我们只需要一个CMakeLists.txt就好了。
 
-![1569489173968](https://wx3.sinaimg.cn/large/006moDdjly1g7d3z47ta9j306c05bt8p.jpg)
+![1569489173968](https://pic.superbed.cn/item/5db02da98b58bc7bf7d1fc9d.jpg)
 
 然后看下cmake怎么写：
 
