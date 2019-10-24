@@ -60,7 +60,7 @@ sudo apt install mosquitto
 终端1，作为代理服务器：
 
 ```shell
-mosquitto -p 1883
+mosquitto -p 1883   # mosquitto默认时候用1883端口
 ```
 
 终端2，作为订阅端：
@@ -239,7 +239,8 @@ add_definitions(-std=c++11)
 add_definitions(-g)
 
 include_directories(/usr/local/include)
-add_executable(publish src/publish.cpp)
+add_executable(publish src/publish.cpp) 
+# 为了方便，我把动态库直接放到CMakeLists.txt目录下的lib下面了
 target_link_libraries(publish ${CMAKE_CURRENT_SOURCE_DIR}/lib/libpaho-mqtt3c.so)
 ```
 
