@@ -1,7 +1,7 @@
 ---
 layout:     post
-title:      ubuntu"apt install"出现"Encountered a section with no Package: header"
-subtitle:   Encountered a section with no Package: header
+title:      ubuntu apt install 出现 Encountered a section with no Package header 
+subtitle:   section with no Package
 date:       2019-10-24
 author:     bbkgl
 header-img: img/post-bg-0007.jpg
@@ -19,14 +19,18 @@ tags:
 ```shell
 sudo apt install libuuid-devel
 ```
+
 然后就出现：
-```shell
+
+```cpp
 正在读取软件包列表... 有错误！
 E: Encountered a section with no Package: header
 E: Problem with MergeList /var/lib/apt/lists/ppa.launchpad.net_noobslab_macbuntu_ubuntu_dists_xenial_main_binary-amd64_Packages
 ```
+
 解决办法，依次执行：
-```shell
+
+```cpp
 sudo rm /var/lib/apt/lists/* -vf
 sudo apt-get update
 ```
