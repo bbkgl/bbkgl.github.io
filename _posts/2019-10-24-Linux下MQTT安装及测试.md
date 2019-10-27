@@ -48,7 +48,9 @@ tags:
 直接执行命令：
 
 ```she
-sudo apt install mosquitto
+sudo apt install mosquitto   # 安装MQTT服务器
+
+sudo apt install mosquitto-clients # 安装MQTT客户端
 ```
 
 会自动安装对应的依赖库的，简单吧！！！
@@ -61,6 +63,9 @@ sudo apt install mosquitto
 
 ```shell
 mosquitto -p 1883   # mosquitto默认时候用1883端口
+
+# 以下这个命令可以检测mosquito是否运行
+sudo service mosquitto status 
 ```
 
 终端2，作为订阅端：
@@ -87,6 +92,9 @@ mosquitto_pub -h localhost -t mqtt -m "23333"
 
 ```shell
 sudo apt-get install build-essential gcc make cmake cmake-gui cmake-curses-gui
+
+# 如果提示openssl错误，再装以下openssl
+sudo apt-get install libssl-dev
 ```
 
 安装paho.mqtt.c：
