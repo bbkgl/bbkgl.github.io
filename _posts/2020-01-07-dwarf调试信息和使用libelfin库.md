@@ -1,6 +1,6 @@
 ---
 layout:     post
-title:      关于编程语言中的虚拟机
+title:      dwarf调试信息和使用libelfin库
 subtitle:   profile
 date:       2020-01-07
 author:     bbkgl
