@@ -22,7 +22,7 @@ tags:
 
 选择的进程就是下面这个，fcitx，随便选的，我也不知道它干嘛的。
 
-![](https://pic.downk.cc/item/5e18ae4a7f9a96fec16a3d8e.jpg)
+![img](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112183128.png)
 
 然后麻利地写好trace程序：
 
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
 
 然后打印结果：
 
-![](https://pic.downk.cc/item/5e18af367f9a96fec16a68e3.jpg)
+![20200112183555.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112183555.png)
 
 恐怖故事发生了！！！
 
