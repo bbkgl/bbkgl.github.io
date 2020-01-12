@@ -22,7 +22,7 @@ tags:
 
 选择的进程就是下面这个，fcitx，随便选的，我也不知道它干嘛的。
 
-![img](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112183128.png)
+![20200112214609.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112214609.png)
 
 然后麻利地写好trace程序：
 
@@ -115,7 +115,7 @@ int main(int argc, char **argv) {
 
 然后打印结果：
 
-![20200112183555.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112183555.png)
+![20200112214712.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112214712.png)
 
 恐怖故事发生了！！！
 
@@ -129,7 +129,7 @@ int main(int argc, char **argv) {
 
 其实在官方文档中有关于unw_set_caching_policy的介绍，其中写明remote默认是不能用unw_set_caching_policy的。
 
-![](https://pic.downk.cc/item/5e18b2537f9a96fec16af776.jpg)
+![20200112212948.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112212948.png)
 
 > To speed up execution, `libunwind` may aggressively cache the information it needs to perform unwinding. If a process changes during its lifetime, this creates a risk of `libunwind` using stale data. For example, this would happen if `libunwind` were to cache information about a shared library which later on gets unloaded (e.g., via *dlclose*(3)).
 >
@@ -246,15 +246,15 @@ int main(int argc, char **argv) {
 
 以下5张图代表循环5次trace的打印结果：
 
-![](https://pic.downk.cc/item/5e18b9477f9a96fec16c0be4.jpg)
+![20200112213154.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112213154.png)
 
-![](https://pic.downk.cc/item/5e18b9a87f9a96fec16c1bb8.jpg)
+![20200112213234.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112213234.png)
 
-![](https://pic.downk.cc/item/5e18b9df7f9a96fec16c23dc.jpg)
+![20200112213315.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112213315.png)
 
-![](https://ae01.alicdn.com/kf/Hbea26fcb371c48d4a35139ce92a96264h.jpg)
+![20200112213352.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112213352.png)
 
-![](https://pic.downk.cc/item/5e18bbd17f9a96fec16c66bd.png)
+![20200112213457.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112213457.png)
 
 **结果非常符合我的推测！！！**
 
@@ -359,9 +359,9 @@ int main(int argc, char **argv) {
 
 只贴前两次的了，五个贴起来太累了。
 
-![](<https://ae01.alicdn.com/kf/He4833685cd9a43059d54e39fe6b63939d.png>)
+![20200112213543.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112213543.png)
 
-![](https://pic.downk.cc/item/5e18bc207f9a96fec16c7009.png)
+![20200112213842.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112213842.png)
 
 然后分别五次`unw_step`的时间分别是4858、4572、4597、4744、4677.
 
@@ -419,15 +419,15 @@ int main() {
 
 trace后的结果：
 
-![](https://pic.downk.cc/item/5e18c0ea7f9a96fec16d18e2.jpg)
+![20200112213928.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112213928.png)
 
-![](https://pic.downk.cc/item/5e18c11b7f9a96fec16d1fdb.jpg)
+![20200112214023.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112214023.png)
 
-![](https://pic.downk.cc/item/5e18c14a7f9a96fec16d2645.jpg)
+![20200112214104.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112214104.png)
 
-![](https://pic.downk.cc/item/5e18c1857f9a96fec16d2ddc.jpg)
+![20200112214159.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112214159.png)
 
-![](https://pic.downk.cc/item/5e18c1be7f9a96fec16d34ce.jpg)
+![20200112214304.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112214304.png)
 
 可以明显的看到，堆栈输出是正确且非重复的。
 
