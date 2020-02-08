@@ -1,8 +1,8 @@
 ---
 layout:     post
-title:      dwarf调试信息和使用libelfin库
+title:      使用libelfin库通过dwarf信息读取行号
 subtitle:   profile
-date:       2020-01-07
+date:       2020-02-08
 author:     bbkgl
 header-img: img/post-bg-0004.jpg
 catalog: true
@@ -16,3 +16,4 @@ tags:
 >
 >便随王母仙
 
+mark，不想写了23333。
