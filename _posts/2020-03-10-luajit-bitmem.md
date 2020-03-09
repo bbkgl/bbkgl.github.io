@@ -1,0 +1,130 @@
+---
+layout:     post
+title:      关于luajit2.05中内存扩展的实现
+subtitle:   luajit内存扩展
+date:       2020-03-10
+author:     bbkgl
+header-img: img/post-bg-0003.jpg
+catalog: true
+tags:
+    - leetcode
+---
+
+> 晚泊孤舟古祠下
+>
+> 满川风雨看潮生
+
+简单介绍下相关背景，luajit2.05及以下版本在设计的时候就使用的相关手段，使得luajit中各种变量的内存地址被限制在了1-2GB的范围里，所以实际上其使用的空间也不会超过2GB。
+
+![20200309220754.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309220754.png)
+
+这个在stackoverflow上也有相关的[问题](<https://stackoverflow.com/questions/35155444/why-is-luajits-memory-limited-to-1-2-gb-on-64-bit-platforms>)，然后下面的解答是这样的：
+
+![20200309220906.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309220906.png)
+
+大概意思就是说，在x64的平台上，luajit中通过在`mmap`函数中使用`MAP_32BIT`标志位来限制申请的地址范围只会在最低的2GB里，实际上该标志位不是限制在32位内存里，而是限制在31位里，详细可以查看 [这里](http://timetobleed.com/digging-out-the-craziest-bug-you-never-heard-about-from-2008-a-linux-threading-regression/) 有详细的概述。
+
+如果使用的内存地址范围大于1GB，Luajit的作者解释了为什么这个对性能不好：
+
+- 完整的GC会比分配多花费50%的时间
+- 如果GC可用，将会是分配的2倍时间
+- 为了模拟真实的应用程序，对象之间的链接在第三轮中被随机化。 这使GC时间加倍！
+
+我也看得有点懵逼，大概意思就是使用更多的空间会使得GC的时间变得很长。
+
+所以引出两个问题：
+
+- luajit是怎么做到限制内存使用范围的
+- 本身因为luajit2.05及以下版本中很多指针和地址变量都是32位的，不可能超过4GB。那如果解除这种限制呢？让他在3GB-4GB的范围里
+
+实际上回答里有提到，可以使用luajit2.1，是64位的，不存在这个问题，但很多项目里本身用的是2.05，而且现在不能保证2.1是稳定的，所以解决这个问题就有必要了。
+
+## luajit是如果限制范围的呢？
+
+简单介绍下luajit的内存布局，实际上luajit用`TValue`表示了几乎所有的类型，而`TValue`所在的地址空间，就是使用一个函数区进行分配的。
+
+```cpp
+LUALIB_API lua_State *luaL_newstate(void)
+{
+  lua_State *L;
+  void *ud = lj_alloc_create();
+  if (ud == NULL) return NULL;
+#if LJ_64
+  L = lj_state_newstate(lj_alloc_f, ud);
+#else
+  L = lua_newstate(lj_alloc_f, ud);
+#endif
+  if (L) G(L)->panic = panic;
+  return L;
+}
+```
+
+这个函数就是`lj_alloc_create`：
+
+```cpp
+#ifndef _LJ_ALLOC_H
+#define _LJ_ALLOC_H
+
+#include "lj_def.h"
+
+#ifndef LUAJIT_USE_SYSMALLOC
+LJ_FUNC void *lj_alloc_create(void);
+LJ_FUNC void lj_alloc_destroy(void *msp);
+LJ_FUNC void *lj_alloc_f(void *msp, void *ptr, size_t osize, size_t nsize);
+#endif
+
+#endif
+```
+
+```cpp
+void *lj_alloc_create(void)
+{
+  size_t tsize = DEFAULT_GRANULARITY;
+  char *tbase;
+  INIT_MMAP();
+  tbase = (char *)(CALL_MMAP(tsize));
+  if (tbase != CMFAIL) {
+    size_t msize = pad_request(sizeof(struct malloc_state));
+    mchunkptr mn;
+    mchunkptr msp = align_as_chunk(tbase);
+    mstate m = (mstate)(chunk2mem(msp));
+    memset(m, 0, msize);
+    msp->head = (msize|PINUSE_BIT|CINUSE_BIT);
+    m->seg.base = tbase;
+    m->seg.size = tsize;
+    m->release_checks = MAX_RELEASE_CHECK_RATE;
+    init_bins(m);
+    mn = next_chunk(mem2chunk(m));
+    init_top(m, mn, (size_t)((tbase + tsize) - (char *)mn) - TOP_FOOT_SIZE);
+    return m;
+  }
+  return NULL;
+}
+```
+
+实际上`lj_alloc_create`调用的是函数`CALL_MMAP`来分配内存：
+
+```cpp
+static LJ_AINLINE void *CALL_MMAP(size_t size)
+{
+  int olderr = errno;
+  void *ptr = mmap((void *)MMAP_REGION_START, size, MMAP_PROT, MAP_32BIT|MMAP_FLAGS, -1, 0);
+  errno = olderr;
+  return ptr;
+}
+```
+
+而函数`CALL_MMAP`中正好使用的就是之前提到的`mmap`，其正好使用了标志位`MAP_32BIT`，使得分配的地址可以在低地址2GB以内。
+
+可以说原理还是很简单的，现在的困难就是，在64位平台上，如何让分配内存的时候既不受这个2GB的限制，又能被luajit中32位的指针和地址变量给装下呢？
+
+## 如果限制分配内存的地址范围
+
+我觉得自己能听到这种要求也是很奇怪了，反正有点懵逼也有点无奈。。。
+
+其实这个问题进行一下转化就是想办法让`mmap`返回的指针在32位以下，让我自己纯想肯定是想不出来的，得找资料。
+
+github真的什么都有，不愧是同性交友网站，[mmap_lowmem](<https://github.com/Neopallium/mmap_lowmem>)。
+
+这个repo的大概作用就是能够让`mmap`的`MAP_32BIT`标志位能真的分配到32位的地址上的内存，通过重新包装`mmap`来实现。
+
