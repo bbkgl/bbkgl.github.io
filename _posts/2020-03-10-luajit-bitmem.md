@@ -152,9 +152,126 @@ github真的什么都有，不愧是同性交友网站，[mmap_lowmem](<https://
 
 我又大胆的猜测，如果能够找到满足**页面边界**的地址，就能够让`mmap`返回的**地址值等于**`addr`！
 
-mark，后面作验证。
+### 关于堆顶地址
+
+通过`sbrk(0)`可以直接得到堆顶地址，这里可以做个验证，写个简单的C程序：
+
+```cpp
+#include <vector>
+#include <cstdio>
+#include <iostream>
+#include <unistd.h>
+#include <cstring>
+#include <string>
+
+int main() {
+    pid_t pid = getpid();
+    std::string cmd = "cat /proc/" + std::to_string(pid) + "/maps | grep heap";
+    system(cmd.c_str());
+    printf("sbrk: %016lx\n", sbrk(0));
+    return 0;
+}
+
+```
+
+执行后结果：
+
+![20200311002456.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200311002456.png)
 
 ### 如何自定义分配内存的地址
 
-如何让`mmap`返回的地址值等于第一个参数`addr`，我觉得这就是一件很牛逼有意思很cool的事情了！！！
+问题可以转化成：如何让mmap返回的地址值等于第一个参数addr？？？
+
+## 大内存patch如何做的
+
+首先大概的阅读可以发现，luajit在给部分gc对象分配内存的时候，调用的是lj_alloc_create，这里面不用malloc，而是用mmap，mmap有个标志位MAP_32BIT，这样就会把内存分配在前32位的地址范围里。
+
+而这个patch就是利用这点，把mmap又封了一层，在必要时候不用标志位MAP_32BIT，调的是系统的mmap64这个函数，且把标志位MAP_32BIT给去掉了。
+
+![20200311002641.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200311002641.png)
+
+这里的men在需要分配2GB以上时不为空，mmap64和mmap在64位中其实是一样的！所以区别就在mem这个里面了。
+
+实际上调用mmap，如果第一个参数指定了，则会优先从这个地址开始分配虚拟内存空间，使用的标志位是MAP_PRIVATE | MAP_ANONYMOUS。
+
+前面已经说明且验证过了如果指定第一个参数，且**合适**的话，就会直接在这个地址上进行内存分配！所以重点就变成了如何在复杂的内存空间里，找到这么一个合适的mem。。。
+
+阅读代码发现，该patch基本算是自己去管理内存空间了，而不是让系统去管理。所以主要是两个关键问题：
+
+- 整个堆内存是如何布局的？
+
+- 用什么方法去管理碎片？
+
+回答：
+
+- 管理范围为初始的堆顶到最大的4GB，
+
+- 静态链表，由低地址到髙地址
+
+### 堆内存布局
+
+首先来看一段代码：
+
+```cpp
+WrapMMAP *init_lowmem_mmap() {
+    uint8_t *start;
+#if ENABLE_VERBOSE
+    atexit(dump_stats);
+#endif
+    sys_pagesize = sysconf(_SC_PAGE_SIZE);
+
+    // 通过调用sbrk(0)的方式来获取当前堆结束地址，这里同时做了页对齐处理
+    /* find the end of the bss/brk segment (and make sure it is page-aligned). */
+    region_start = ((uint8_t *)(((ptrdiff_t)sbrk(0)) & ~(sys_pagesize - 1)) + sys_pagesize);
+    /* check if brk is inside the low 4Gbytes. */
+    // GCC6.3及以上版本中，可执行文件的堆顶地址几乎必大于4G
+    if(region_start > LOW_4G) {
+        /* brk is outside the low 4Gbytes, start managed region at lowest posible address */
+        region_start = (uint8_t *)sys_pagesize;
+    }
+    start = SYS_MMAP(region_start, sys_pagesize, PROT_NONE, M_FLAGS, -1, 0);
+    ...
+}
+```
+
+做了两件事
+
+- 使用sbrk(0)获取到堆顶的地址
+
+- 从堆顶选择一个符合分页对齐的地址给了region_start
+
+这里的region_start其实是一个下界，是可分配堆内存的下界，而上界是哪里呢？4GB。
+
+所以后续的内存管理都是在这个范围里的，即[region_start, 2^32]里进行管理。
+
+### 静态链表
+
+直接贴上数据结构定义直观一些2333，首先是数组的定义：
+
+```cpp
+// free_list，已经启用，用来管理空间的Segment链表的表头节点，通常连续排列
+// unused_list，还没有启用，但可能会启用的Segment链表的表头节点，通常是free_list中最大值+1
+
+struct PageAlloc {
+    Segment   *seg;
+    seg_t     seg_len;
+    seg_t     free_list;   /* free memory list. */ 
+    seg_t     unused_list; /* list of unused Segment structure. */
+#if ENABLE_STATS
+    seg_t     used_segs;
+    seg_t     peak_used_segs;
+#endif
+};
+```
+
+然后是数组/静态链表中每个结点的定义：
+
+```cpp
+struct Segment {
+    seg_t   start;
+    seg_t   len;
+    seg_t   prev;
+    seg_t   next;
+};
+```
 
