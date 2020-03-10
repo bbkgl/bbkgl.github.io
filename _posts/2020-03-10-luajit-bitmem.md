@@ -22,7 +22,7 @@ tags:
 
 ![20200309220906.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309220906.png)
 
-大概意思就是说，在x64的平台上，luajit中通过在`mmap`函数中使用`MAP_32BIT`标志位来限制申请的地址范围只会在最低的2GB里，实际上该标志位不是限制在32位内存里，而是限制在31位里，详细可以查看 [这里](http://timetobleed.com/digging-out-the-craziest-bug-you-never-heard-about-from-2008-a-linux-threading-regression/) 有详细的概述。
+大概意思就是说，在x64的平台上，luajit中通过在`mmap`函数中使用`MAP_32BIT`标志位来限制申请的地址范围只会在最低的2GB里，实际上该标志位不是限制在32位内存里，而是限制在31位里，可以查看 [这里](http://timetobleed.com/digging-out-the-craziest-bug-you-never-heard-about-from-2008-a-linux-threading-regression/) 有详细的介绍和说明。
 
 如果使用的内存地址范围大于1GB，Luajit的作者解释了为什么这个对性能不好：
 
@@ -41,7 +41,7 @@ tags:
 
 ## luajit是如果限制范围的呢？
 
-简单介绍下luajit的内存布局，实际上luajit用`TValue`表示了几乎所有的类型，而`TValue`所在的地址空间，就是使用一个函数区进行分配的。
+简单介绍下luajit的内存布局，实际上luajit用`TValue`表示了几乎所有的类型，而`TValue`所在的地址空间，就是使用一个函数进行分配的。
 
 ```cpp
 LUALIB_API lua_State *luaL_newstate(void)
@@ -114,7 +114,7 @@ static LJ_AINLINE void *CALL_MMAP(size_t size)
 }
 ```
 
-而函数`CALL_MMAP`中正好使用的就是之前提到的`mmap`，其正好使用了标志位`MAP_32BIT`，使得分配的地址可以在低地址2GB以内。
+而函数`CALL_MMAP`中实际使用的就是之前提到的`mmap`，其正好使用了标志位`MAP_32BIT`，使得分配的地址可以在低地址2GB以内。
 
 可以说原理还是很简单的，现在的困难就是，在64位平台上，如何让分配内存的时候既不受这个2GB的限制，又能被luajit中32位的指针和地址变量给装下呢？
 
@@ -128,10 +128,33 @@ github真的什么都有，不愧是同性交友网站，[mmap_lowmem](<https://
 
 这个repo的大概作用就是能够让`mmap`的`MAP_32BIT`标志位能真的分配到32位的地址上的内存，通过重新包装`mmap`来实现。
 
-### mmap第一个参数
+### mmap第一个参数addr
 
 划重点，大家使用`mmap`来分配内存的时候有注意过第一个参数不指定为`NULL`会发生什么吗？
 
-这个问题还是从官方文档入手：
+这个问题还是得从官方文档入手：
 
 ![20200309224929.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309224929.png)
+
+这里重点关注的是最长的那一段的内容，我简单翻译一下：
+
+*如果`addr`是`NULL`，则内核会根据分页对齐选择一个合适的地址返回进行映射，这是内存映射最方便快捷的方式。如果`addr`不是`NULL`，内核会把`addr`当成一个提示一样进行地址映射；在linux上，内核会选择页面边界附近的（但始终高于或等于`/proc/sys/vm/mmap_min_addr`指定的值）地址并尝试创建映射。 如果那里已经存在另一个映射，则内核会选择一个可能取决于或可能不取决于`addr`的新地址。调用的结果将返回新映射的地址。*
+
+三个重点信息：
+
+- `mmap`分配的内存地址会参考`addr`，但不一定就是`addr`
+- 实际分配的地址高于或者等于这个页面边界
+- 如果`addr`附近的地址都被映射/分配了，则内核可能分配的地址和`addr`无关
+
+我粗略的猜测，这个**页面边界**就是正好高于`addr`，且符合内存对齐的地址，`/proc/sys/vm/mmap_min_addr`是一个内存分配地址的最小值，也就是如果某个地址值小于这个值，就会直接报错，比如我这里就是65536，很多资料上说如果指针小于这个值，则系统认为是空指针。
+
+![20200309235409.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309235409.png)
+
+我又大胆的猜测，如果能够找到满足**页面边界**的地址，就能够让`mmap`返回的**地址值等于**`addr`！
+
+mark，后面作验证。
+
+### 如何自定义分配内存的地址
+
+如何让`mmap`返回的地址值等于第一个参数`addr`，我觉得这就是一件很牛逼有意思很cool的事情了！！！
+
