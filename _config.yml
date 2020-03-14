@@ -3,7 +3,7 @@ title: 我太菜了
 SEOTitle: 菜鸡的博客 | WTCL
 header-img: img/home-bg-index.jpg
 email: zoujiakun@zju.edu.cn
-description: "怎么才能不那么菜！！！"
+description: "给个offer行不行。。。"
 keyword: "Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜"
 url: "https://bbkgl.github.io"          # your host, for absolute URL
 baseurl: ""      # for example, '/blog' if your blog hosted on 'host/blog'
@@ -11,7 +11,7 @@ github_repo: "https://github.com/bbkgl/bbkgl.github.io.git" # you code repositor
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "菜了二十多年，终于更菜了！"
+sidebar-about-description: "只会写Hello World, 下过矿的程序员。"
 sidebar-avatar: /img/bbkgl.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 
