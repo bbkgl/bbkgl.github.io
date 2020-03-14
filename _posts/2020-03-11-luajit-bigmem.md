@@ -180,4 +180,6 @@ struct PageAlloc {
 
 后面会画出出一个大概的图进行比较形象的解释。
 
+![20200314135824.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200314135824.png)
+
 读这种源码最大的障碍就是，读之前并不知道他的设计，而是通过源码去推测设计，比如这次patch内存的管理布局，读了才知道是这么搞的；再比如luajit中内存布局，之前也不知道是一堆TValue堆成的，但每读一次，提升都蛮大的。
