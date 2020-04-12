@@ -145,7 +145,7 @@ public:
 };
 ```
 
-### [437. Path Sum III](https://leetcode-cn.com/problems/path-sum-iii/)
+## [437. Path Sum III](https://leetcode-cn.com/problems/path-sum-iii/)
 
 这也不算是easy题了，感觉还是比较绕的，但树的算法题总是离不开dfs，我一直觉得树的题就是套娃题。
 
@@ -182,5 +182,52 @@ public:
             return dfs(root->left, sum) + dfs(root->right, sum);
     }
 };
+```
+
+## [155. Min Stack](https://leetcode-cn.com/problems/min-stack/)
+
+简单：
+
+```cpp
+class MinStack {
+private:
+    std::stack<int> sk_;
+    std::stack<int> minsk_;
+
+public:
+    /** initialize your data structure here. */
+    MinStack() {
+        
+    }
+    
+    void push(int x) {
+        sk_.push(x);
+        if (minsk_.empty() || minsk_.top() >= x)
+            minsk_.push(x);
+    }
+    
+    void pop() {
+        if (!minsk_.empty() && minsk_.top() == sk_.top())
+            minsk_.pop();
+        sk_.pop();
+    }
+    
+    int top() {
+        return sk_.top();
+    }
+    
+    int getMin() {
+        return minsk_.top();
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(x);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
 ```
 
