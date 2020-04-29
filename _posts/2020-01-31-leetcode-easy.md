@@ -231,3 +231,34 @@ public:
  */
 ```
 
+## [101. Symmetric Tree](https://leetcode-cn.com/problems/symmetric-tree/)
+
+简单的递归，算是经典题了。。。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    bool isSame(TreeNode *left, TreeNode *right) {
+        if (!left && !right)
+            return true;
+        else if (left && right && left->val == right->val)
+            return isSame(left->left, right->right) && isSame(left->right, right->left);
+        else return false;
+    }
+public:
+    bool isSymmetric(TreeNode* root) {
+        if (root)
+            return isSame(root->left, root->right);
+        else return true;
+    }
+};
+```
+
