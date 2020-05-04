@@ -312,3 +312,42 @@ public:
 };
 ```
 
+## [124. Binary Tree Maximum Path Sum](https://leetcode-cn.com/problems/binary-tree-maximum-path-sum/)
+
+这道题其实是我面试Momenta（第一家实习公司）的一面的手撕算法题。重点在于以下两点：
+
+- 后序遍历的时候，返回值应该是以根结点作为路径起（终）点的最大路径和
+- 计算最终结果的时候，应该加上左右子树的和，注意处理负数
+
+把上面两点想清楚就不是很难了。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    int dfs(TreeNode* root, int &ans) {
+        if (root == nullptr) return 0;
+        int left = dfs(root->left, ans);
+        int right = dfs(root->right, ans);
+        int returnv = max(left, 0) + max(right, 0) + root->val;
+        ans = max(returnv, ans);
+        return max(0, max(left, right)) + root->val;
+    }
+
+public:
+    int maxPathSum(TreeNode* root) {
+        int ans = INT32_MIN;
+        dfs(root, ans);
+        return ans;
+    }
+};
+```
+
