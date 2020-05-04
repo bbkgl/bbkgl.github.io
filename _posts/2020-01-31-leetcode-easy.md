@@ -288,3 +288,27 @@ public:
 };
 ```
 
+## [121. Best Time to Buy and Sell Stock](https://leetcode-cn.com/problems/best-time-to-buy-and-sell-stock/)
+
+简单dp，dp[i]表示到i位置的最小值，但实际上dp不用数组，临时数就可以了。
+
+```cpp
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        size_t len = prices.size();
+        if (len <= 0) return 0;
+        int ans = 0;
+        int dp = prices[0];
+        for (size_t i = 1; i < len; i++) {
+            if (prices[i] < dp) 
+                dp = prices[i];
+            else {
+                ans = max(ans, prices[i] - dp);
+            }
+        }
+        return ans;
+    }
+};
+```
+
