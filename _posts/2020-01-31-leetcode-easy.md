@@ -351,3 +351,95 @@ public:
 };
 ```
 
+## [141. Linked List Cycle](https://leetcode-cn.com/problems/linked-list-cycle/)
+
+快慢指针！
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    bool hasCycle(ListNode *head) {
+        if (!head) return false;
+        ListNode *dummy = new ListNode(0);
+        dummy->next = head;
+        ListNode *slow = dummy, *fast = head->next;
+        while (fast != nullptr && fast != slow) {
+            slow = slow->next;
+            fast = fast->next;
+            if (fast)
+                fast = fast->next;
+            else return false;
+        }
+        return fast != nullptr;
+    }
+};
+```
+
+## [160. Intersection of Two Linked Lists](https://leetcode-cn.com/problems/intersection-of-two-linked-lists/)
+
+经典题！！！计算差值然后前后指针。
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
+        ListNode *pa = headA, *pb = headB;
+        int stepa = 0, stepb = 0;
+        while (pa || pb) {
+            if (pa) { pa = pa->next; stepa++; }
+            if (pb) { pb = pb->next; stepb++; }
+        }
+        pa = headA; pb = headB;
+        if (stepa > stepb) swap(pa, pb);
+        for (int i = 0; i < abs(stepb - stepa); i++) pb = pb->next;
+        while (pa && pb) {
+            if (pa == pb)
+                return pa;
+            pa = pa->next;
+            pb = pb->next;
+        }
+        return nullptr;
+    }
+};
+```
+
+## [169. Majority Element](https://leetcode-cn.com/problems/majority-element/)
+
+经典题，经典 ==“你没做过，就做不出来！”
+
+理论：超过半数，1对1消耗，剩下的必然是超过半数的。。。
+
+```cpp
+class Solution {
+public:
+    int majorityElement(vector<int>& nums) {
+        int cnt = 0, ans = INT_MIN;
+        for (const int &it : nums) {
+            if (cnt == 0) {
+                cnt = 1;
+                ans = it;
+            }
+            else if (ans == it) cnt++;
+            else cnt--;
+        }
+        return ans;
+    }
+};
+```
+
