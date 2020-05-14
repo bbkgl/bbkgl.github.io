@@ -443,3 +443,149 @@ public:
 };
 ```
 
+## [198. House Robber](https://leetcode-cn.com/problems/house-robber/)
+
+简单题，`dp[i] = max(dp[i-2], dp[i-3]) + nums[i];`
+
+```cpp
+class Solution {
+public:
+    int rob(vector<int>& nums) {
+        size_t len = nums.size();
+        int ans = 0;
+        int *dp = new int[len];
+        for (int i = 0; i < len; i++) {
+            if (i < 2) {
+                dp[i] = nums[i];
+            } 
+            else if (i < 3)  {
+                dp[i] = nums[i] + dp[0];
+            } else {
+                dp[i] = max(dp[i-2], dp[i-3]) + nums[i];
+            }
+            ans = max(dp[i], ans);
+        }
+        delete[] dp;
+        return ans;
+    }
+};
+```
+
+## [206. Reverse Linked List](https://leetcode-cn.com/problems/reverse-linked-list/)
+
+简单题，头插法。。。
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+        if (!head) return nullptr;
+        ListNode *now = head->next;
+        head->next = nullptr;
+        ListNode *pre = head;
+        while (now) {
+            ListNode *next = now->next;
+            now->next = pre;
+            pre = now;
+            now = next;
+        }
+        return pre;
+    }
+};
+```
+
+## [226. Invert Binary Tree](https://leetcode-cn.com/problems/invert-binary-tree/)
+
+五行代码的简单题。。。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* invertTree(TreeNode* root) {
+        if (!root) return nullptr;
+        TreeNode *right = invertTree(root->right);
+        root->right = invertTree(root->left);
+        root->left = right;
+        return root;
+    }
+};
+```
+
+## [234. Palindrome Linked List](https://leetcode-cn.com/problems/palindrome-linked-list/)
+
+三步：
+
+1. 统计长度
+2. 翻转后一半
+3. 比较前一半和后一半是否相等
+
+```cpp
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    ListNode *reverse_list(ListNode *head) {
+        if (!head) return nullptr;
+        ListNode *pre = head;
+        ListNode *now = head->next;
+        head->next = nullptr;
+        while (now) {
+            ListNode *next = now->next;
+            now->next = pre;
+            pre = now;
+            now = next;
+        }
+        return pre;
+    }
+
+    inline ListNode *indexof(ListNode *root, int index) {
+        while (index--) root = root->next;
+        return root;
+    }
+
+    bool is_same(ListNode *a, ListNode *b) {
+        while (a && b) {
+            if (a->val != b->val) return false;
+            a = a->next;
+            b = b->next;
+        } 
+        return true;
+    }
+
+public:
+    bool isPalindrome(ListNode* head) {
+        int len = 0;
+        ListNode *p = head;
+        while(p) { p = p->next; len++; }
+        if (len <= 1) return true;
+        int cnt = 1;
+        if (len % 2 == 0) p = indexof(head, len / 2 - 1);
+        else p = indexof(head, len / 2);
+        return is_same(head, reverse_list(p->next));
+    }
+};
+```
+
