@@ -10,7 +10,7 @@ tags:
     - leetcode
 ---
 
-
+## [128. Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
 
 好像还有其他的解法，我这里觉得还是并查集合适。。。
 
@@ -73,6 +73,41 @@ public:
         for (int i = 0; i < len; i++) {
             if (next[i] < 0)
                 ans = max(ans, -next[i]);
+        }
+        return ans;
+    }
+};
+```
+
+## [239. Sliding Window Maximum](https://leetcode-cn.com/problems/sliding-window-maximum/)
+
+滑动窗口，用双端单调队列，其实一开始我就想到了单调栈，但是单调栈只能一端进出，同时具有单调递增/减和两端进出的数据结构就是双端单调队列了。。。
+
+问题就是如何维护这么个队列：
+
+- 队列的长度小于等于K
+- 队列的左（front）端元素不能落后于滑动窗口的左端
+- 队列内所有元素保持递减，即最大值永远在左端
+
+明确问题后，对队列的处理如下：
+
+- 队列保存元素的索引，而不是元素值
+- 按照当前i的大小，队列左侧元素需要进行pop
+- 每次添加新元素，将队列中小于新元素的值pop
+
+简单！
+
+```cpp
+class Solution {
+public:
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        deque<int> dq;
+        vector<int> ans;
+        for (int i = 0; i < nums.size(); i++) {
+            if (!dq.empty() && dq.front() + k <= i) dq.pop_front();
+            while (!dq.empty() && nums[dq.back()] <= nums[i]) dq.pop_back();
+            dq.push_back(i);
+            if (i >= k - 1) ans.push_back(nums[dq.front()]);
         }
         return ans;
     }
