@@ -589,3 +589,26 @@ public:
 };
 ```
 
+## [283. Move Zeroes](https://leetcode-cn.com/problems/move-zeroes/)
+
+简单题，硬是绕了一下。。。
+
+```CPP
+class Solution {
+public:
+    void moveZeroes(vector<int>& nums) {
+        int cnt = 0;
+        for (int i = 0; i < nums.size(); i++) {
+            if (cnt != 0) {
+                nums[i - cnt] = nums[i];
+                if (nums[i] == 0) cnt++;
+                nums[i] = 0;
+                continue;
+            }
+            if (nums[i] == 0) cnt++;
+            if (cnt + i >= nums.size()) nums[i] = 0;
+        }
+    }
+};
+```
+
