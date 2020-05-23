@@ -612,3 +612,42 @@ public:
 };
 ```
 
+## [617. Merge Two Binary Trees](https://leetcode-cn.com/problems/merge-two-binary-trees/)
+
+简单。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* mergeTrees(TreeNode* t1, TreeNode* t2) {
+        if (t1 && t2) {
+            t1->val += t2->val;
+            t1->left = mergeTrees(t1->left, t2->left);
+            t1->right = mergeTrees(t1->right, t2->right);
+        } else if (!t1 && !t2) 
+            return nullptr;
+        else {
+            if (t1) {
+                t1->left = mergeTrees(t1->left, nullptr);
+                t1->right = mergeTrees(t1->right, nullptr);
+            }
+            else {
+                t2->left = mergeTrees(t2->left, nullptr);
+                t2->right = mergeTrees(t2->right, nullptr);
+                t1 = t2;
+            }
+        }
+        return t1;
+    }
+};
+```
+
