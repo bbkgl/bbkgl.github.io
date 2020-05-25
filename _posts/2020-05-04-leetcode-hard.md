@@ -184,3 +184,62 @@ public:
 };
 ```
 
+## [301. Remove Invalid Parentheses](https://leetcode-cn.com/problems/remove-invalid-parentheses/)
+
+dfs，三步：
+
+1. 得到非法的左右括号数量left, right
+2. 递归删除所有可能的的左右括号数量，直至`left == right == 0`，这个步骤就可以去重
+3. 检查删除非法括号后，剩下的字符串是否合法
+
+```cpp
+class Solution {
+private:
+    bool isvalid(string &s) {
+        int cnt = 0;
+        for (int i = 0; i < s.length(); i++) {
+            if (s[i] == '(') cnt++;
+            else if (s[i] == ')') cnt--;
+            if (cnt < 0) return false;
+        }
+        if (cnt == 0)
+            return true;
+        else return false;
+    }
+
+    void dfs(string s, vector<string> &ans, int start, int left, int right) {
+        if (left == 0 && right == 0) {
+            if (isvalid(s)) {
+                ans.push_back(s);
+            }
+            return ;
+        }
+        for (int i = start; i < s.length(); i++) {
+            if (i > start && s[i] == s[i-1]) continue;
+            if (s[i] == '(' && left > 0) {
+                string next = s.substr(0, i) + s.substr(i + 1, s.length() - 1 - i);
+                dfs(next, ans, i, left - 1, right);
+            } else if (s[i] == ')' && right > 0) {
+                string next = s.substr(0, i) + s.substr(i + 1, s.length() - 1 - i);
+                dfs(next, ans, i, left, right - 1);
+            }
+        }
+    }
+public:
+    vector<string> removeInvalidParentheses(string s) {
+        int left = 0, right = 0;
+        for (const char &it : s) {
+            if (it == '(') left++;
+            else if (it == ')') {
+                if (left) left--;
+                else right++;
+            }
+        }
+        vector<string> ans;
+        dfs(s, ans, 0, left, right);
+        if (ans.empty()) ans.push_back("");
+        return ans;
+    }
+};
+```
+
