@@ -8,6 +8,9 @@ header-img: img/post-bg-0003.jpg
 catalog: true
 tags:
     - leetcode
+    - 并查集
+    - 双端队列
+    - dfs
 ---
 
 ## [128. Longest Consecutive Sequence](https://leetcode-cn.com/problems/longest-consecutive-sequence/)
