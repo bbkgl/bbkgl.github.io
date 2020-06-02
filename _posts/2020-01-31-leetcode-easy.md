@@ -651,3 +651,36 @@ public:
 };
 ```
 
+## [581. Shortest Unsorted Continuous Subarray](https://leetcode-cn.com/problems/shortest-unsorted-continuous-subarray/)
+
+感觉并不是那么easy。。。
+
+核心点：
+
+- 序列的组成可以看作：`[有序1，无序，有序2]`
+- 整个序列符合：`有序1 < 无序 < 有序2`
+- 从左到右，找到第一个小于左边最大值的数
+- 从右到左，扎到第一个小于右边最小值的数
+
+主要根据后面两点写代码。。。
+
+```cpp
+class Solution {
+public:
+    int findUnsortedSubarray(vector<int>& nums) {
+        int len = nums.size();
+        int leftmax = INT_MIN, left = -1;
+        int right = -1, rightmin = INT_MAX;
+        for (int i = 0; i < len; i++) {
+            leftmax = max(nums[i], leftmax);
+            rightmin = min(nums[len - i - 1], rightmin);
+            if (nums[i] < leftmax) left = i;
+            if (nums[len-i-1] > rightmin) right = len - i - 1;
+        }
+        if (left > right)
+            return left - right + 1;
+        return 0;
+    }
+};
+```
+
