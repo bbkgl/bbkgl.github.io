@@ -684,3 +684,45 @@ public:
 };
 ```
 
+## [543. Diameter of Binary Tree](https://leetcode-cn.com/problems/diameter-of-binary-tree/)
+
+这是我第一份实习Momenta的一面的手撕算法题。。。
+
+很简单，dfs后序返回每个结点到叶子结点的最长路径，然后树的直径就是：
+
+```cpp
+ans = max(ans, left + right + 1);
+```
+
+代码也是相当简短：
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    int dfs(TreeNode *root, int &ans) {
+        if (root == nullptr)
+            return 0;
+        int left = dfs(root->left, ans);
+        int right = dfs(root->right, ans);
+        ans = max(left + right, ans);
+        return max(left, right) + 1;
+    }
+
+public:
+    int diameterOfBinaryTree(TreeNode* root) {
+        int ans = 0;
+        dfs(root, ans);
+        return ans;
+    }
+};
+```
+
