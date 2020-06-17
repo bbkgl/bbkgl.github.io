@@ -784,3 +784,34 @@ public:
 };
 ```
 
+## [448. Find All Numbers Disappeared in an Array](https://leetcode-cn.com/problems/find-all-numbers-disappeared-in-an-array/)
+
+一个数组的每个元素除了能存储本身值的信息外，还能通过某种手段存储额外的信息，常见的：
+
+- 一半空间存值，一半空间存储额外信息
+- 正整数数组，正数表示正常信息，负数表示额外信息
+
+本题中就是利用对应下标位置`index`的负数元素表示这个`index + 1`这个元素出现过。。。后面直接数正数就好了。。。需要注意的就是计算`index`应该用`index = abs(nums[i] - 1)`。
+
+```cpp
+class Solution {
+public:
+    vector<int> findDisappearedNumbers(vector<int>& nums) {
+        int len = nums.size();
+        for (int i = 0; i < len; i++) {
+            int index = abs(nums[i]) - 1;
+            if (nums[index] > 0)
+                nums[index] *= -1;
+        }
+        vector<int> ans;
+        for (int i = 0; i < len; i++) {
+            if (nums[i] < 0) {
+                nums[i] *= -1;
+            } else
+                ans.push_back(i + 1);
+        }
+        return ans;
+    }
+};
+```
+
