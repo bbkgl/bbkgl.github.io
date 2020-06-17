@@ -765,3 +765,22 @@ public:
 };
 ```
 
+## [461. Hamming Distance](https://leetcode-cn.com/problems/hamming-distance/)
+
+异或以后，找出二进制中1的个数。。。
+
+```cpp
+class Solution {
+public:
+    int hammingDistance(int x, int y) {
+        int d = x ^ y;
+        int cnt = 0;
+        for (int i = 0; i <= 31; i++) {
+            if (d & (1 << i))
+                cnt++;
+        }
+        return cnt;
+    }
+};
+```
+
