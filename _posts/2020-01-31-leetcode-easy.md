@@ -726,3 +726,42 @@ public:
 };
 ```
 
+## [538. Convert BST to Greater Tree](https://leetcode-cn.com/problems/convert-bst-to-greater-tree/)
+
+就是dfs：
+
+- 每层递归的返回值是右子树返回值+左子树返回值+当前结点的和
+- 每层结点的新值是右子树返回值+presum
+- 递归左子树传入的presum为右子树返回值+presum+左子树返回值
+- 递归右子树传入的presum为presum
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+private:
+    int dfs(TreeNode *root, int preSum = 0) {
+        if (root == nullptr)
+            return 0;
+        int right = dfs(root->right, preSum);
+        root->val += right;
+        int ret = root->val;
+        root->val += preSum;
+        int left = dfs(root->left, root->val);
+        return ret + left;
+    }
+public:
+    TreeNode* convertBST(TreeNode* root) {
+        dfs(root);
+        return root;
+    }
+};
+```
+
