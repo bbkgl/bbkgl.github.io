@@ -815,3 +815,26 @@ public:
 };
 ```
 
+## [125. Valid Palindrome](https://leetcode-cn.com/problems/valid-palindrome/)
+
+很简单。。。
+
+```cpp
+class Solution {
+private:
+    bool dfs(const char *left, const char *right) {
+        while (!isalnum(*left) && left < right) left++;
+        while (!isalnum(*right) && left < right) right--;
+        if (left >= right)
+            return true;
+        if (*left == *right || (abs(*right - *left) == 32 && isalpha(*right) && isalpha(*left)))
+            return dfs(left + 1, right - 1);
+        else return false;
+    }
+public:
+    bool isPalindrome(string s) {
+        return dfs(s.data(), s.data() + s.length() - 1);
+    }
+};
+```
+
