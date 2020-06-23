@@ -838,3 +838,53 @@ public:
 };
 ```
 
+## [67. Add Binary](https://leetcode-cn.com/problems/add-binary/)
+
+这个也太简单了。。。
+
+```cpp
+class Solution {
+private:
+    inline string strip0(string &&s) {
+        const char *p = s.data();
+        while (*p && *p == '0') p++;
+        string temp = *p ? string(p) : string();
+        reverse(temp.begin(), temp.end());
+        return temp;
+    }
+public:
+    string addBinary(string a, string b) {
+        a = strip0(std::move(a));
+        b = strip0(std::move(b));
+        string ans;
+        if (a.length() < b.length())
+            swap(a, b);
+        int8_t plus = 0;
+        for (int i = 0; i < a.length(); i++) {
+            if (i < b.length()) {
+                int8_t c = (a[i] + b[i] - '0' - '0' + plus);
+                if (c > 1)
+                    plus = 1;
+                else
+                    plus = 0;
+                c = c % static_cast<int8_t>(2);
+                ans.push_back(c + '0');
+                continue;
+            }
+            int8_t c = (a[i] - '0' + plus);
+            if (c > 1)
+                plus = 1;
+            else plus = 0;
+            c = c % static_cast<int8_t>(2);
+            ans.push_back(c + '0');
+        }
+        if (plus) ans.push_back('1');
+        reverse(ans.begin(), ans.end());
+        if (ans.empty()) ans.push_back('0');
+        return ans;
+    }
+};
+```
+
+
+
