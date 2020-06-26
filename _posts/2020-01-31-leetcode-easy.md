@@ -888,3 +888,57 @@ public:
 
 
 
+## [面试题 02.01. Remove Duplicate Node LCCI](https://leetcode-cn.com/problems/remove-duplicate-node-lcci/)
+
+很懵逼，leetcode中下面代码如果没有加14行那句`memset`直接会报错。。。按理来说无论如何也不会报错呀，new出来的bool数组应该默认赋值`false`。。。。
+
+```
+Line 18: Char 17: runtime error: load of value 190, which is not a valid value for type 'bool' (solution.cpp)
+```
+
+按照字面意思理解是随机赋值为190，而不是`true/false`。。。这样想的话`bool`在编译器中的设计是一个字节，确实可能被赋值为190，而`bool`运算符重载的时候可能只认`0/1`，其他值确实可能直接抛错。
+
+按理来说`new`运算符会直接调用默认构造函数，那样应该被赋值为0，也就是`false`。
+
+经过测试，基础类型不会默认赋值，是随机值，如果在`new`后加上`()`，就会默认赋值为`false`了。
+
+```cpp
+bool *hash = new bool[20001]();
+```
+
+题目还是相当简单的。。。
+
+```cpp
+/*
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* removeDuplicateNodes(ListNode* head) {
+        if (!head) return head;
+        bool *hash = new bool[20001];
+        memset(hash, 0x0, 20001 * sizeof(bool));
+        ListNode *dummy = new ListNode(-1);
+        dummy->next = head;
+        ListNode *pre = dummy, *curr = head;
+        while (curr) {
+            if (hash[curr->val]) {
+                pre->next = curr->next;
+                curr = pre->next;
+            } else {
+                hash[curr->val] = true;
+                pre = curr;
+                curr = curr->next;
+            }
+        }
+        delete[] hash;
+        return dummy->next;
+    }
+};
+```
+
