@@ -979,3 +979,24 @@ public:
 };
 ```
 
+## [680. 验证回文字符串 Ⅱ](https://leetcode-cn.com/problems/valid-palindrome-ii/)
+
+不是很难，正确删除某个字符的方法是双指针，然后跳过该字符进行比对。
+
+```cpp
+class Solution {
+private:
+    bool dfs(const char *left, const char *right, bool can_del) {
+        if (left >= right) return true;
+        if (*left == *right) 
+            return dfs(left + 1, right - 1, can_del);
+        if (!can_del) return false;
+        return dfs(left + 1, right, false) || dfs(left, right - 1, false);
+    }
+public:
+    bool validPalindrome(string s) {
+        return dfs(s.c_str(), s.c_str() + s.length() - 1, true);
+    }
+};
+```
+
