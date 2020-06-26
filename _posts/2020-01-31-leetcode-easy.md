@@ -942,3 +942,40 @@ public:
 };
 ```
 
+## [572. Subtree of Another Tree](https://leetcode-cn.com/problems/subtree-of-another-tree/)
+
+简单粗暴：dfs遍历`s`的每个结点，然后如果当前结点结点和`t`的根结点相等，则以当前结点为根结点的子树与`t`是相等。`s`中有一个结点满足，则返回`true`。
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+private:
+    bool is_same(TreeNode *a, TreeNode *b) {
+        if (!a && !b) return true;
+        if (!a && b) return false;
+        if (1 && !b) return false;
+        if (a->val != b->val) return false;
+        else return is_same(a->left, b->left) && is_same(a->right, b->right);
+    }
+public:
+    bool isSubtree(TreeNode* s, TreeNode* t) {
+        if (s == nullptr || t == nullptr) return false;
+        if (s->val == t->val) {
+            if (is_same(s, t)) return true;
+            return isSubtree(s->left, t) || isSubtree(s->right, t);
+        }
+        return isSubtree(s->left, t) || isSubtree(s->right, t);
+    }
+};
+```
+
