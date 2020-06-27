@@ -1000,3 +1000,31 @@ public:
 };
 ```
 
+## [7. Reverse Integer](https://leetcode-cn.com/problems/reverse-integer/)
+
+简单，处理边界。
+
+```cpp
+class Solution {
+public:
+    int reverse(int x) {
+        queue<uint8_t> q;
+        int high = 2147483647, low = -2147483648;
+        int sign = (x >= 0 ? 1 : -1);
+        while (x) {
+            q.push(abs(x % 10));
+            x /= 10;
+        }
+        while (!q.empty() && q.front() == 0) q.pop();
+        long ans = 0;
+        while (!q.empty()) {
+            ans *= 10;
+            ans += q.front();
+            q.pop();
+        }
+        if (sign > 0 && ans > high || sign < 0 && -ans < low) return 0;
+        return ((int) ans) * sign;
+    }
+};
+```
+
