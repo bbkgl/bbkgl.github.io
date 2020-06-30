@@ -1028,3 +1028,36 @@ public:
 };
 ```
 
+## [剑指 Offer 09. 用两个栈实现队列](https://leetcode-cn.com/problems/yong-liang-ge-zhan-shi-xian-dui-lie-lcof/)
+
+一进一出。。。
+
+```cpp
+class CQueue {
+private:
+    stack<int> stack_in_;
+    stack<int> stack_out_;
+public:
+    CQueue() {
+
+    }
+
+    void appendTail(int value) {
+        stack_in_.push(value);
+    }
+
+    int deleteHead() {
+        if (stack_out_.empty()) {
+            while (!stack_in_.empty()) {
+                stack_out_.push(stack_in_.top());
+                stack_in_.pop();
+            }
+        }
+        int pop_v = stack_out_.empty() ? -1 : stack_out_.top();
+        if (!stack_out_.empty()) stack_out_.pop();
+        return pop_v;
+    }
+};
+
+```
+
