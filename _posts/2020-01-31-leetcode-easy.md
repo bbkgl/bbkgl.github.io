@@ -1061,3 +1061,25 @@ public:
 
 ```
 
+## [202. Happy Number](https://leetcode-cn.com/problems/happy-number/)
+
+只有一个无限循环：` 4 → 16 → 37 → 58 → 89 → 145 → 42 → 20 → 4`。
+
+```cpp
+class Solution {
+public:
+    bool isHappy(int n) {
+        while (true) {
+            int temp = 0;
+            while (n) {
+                temp += pow(n % 10, 2);
+                n /= 10;
+            }
+            n = temp;
+            if (temp == 1) return true;
+            else if (temp == 4) return false;
+        }
+    }
+};
+```
+
