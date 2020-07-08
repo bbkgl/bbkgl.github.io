@@ -1109,3 +1109,25 @@ public:
 };
 ```
 
+## [面试题 16.11. 跳水板](https://leetcode-cn.com/problems/diving-board-lcci/)
+
+就是长短木板的组合。
+
+```cpp
+class Solution {
+public:
+    vector<int> divingBoard(int shorter, int longer, int k) {
+        if (k == 0) return vector<int> ();
+        int cnt_short = k;
+        vector<int> ans;
+        while (cnt_short >= 0) {
+            int temp = cnt_short * shorter + (k - cnt_short) * longer;
+            cnt_short--;
+            if (ans.empty() || ans.back() != temp)
+                ans.emplace_back(temp);
+        }
+        return ans;
+    }
+};
+```
+
