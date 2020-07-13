@@ -1131,3 +1131,27 @@ public:
 };
 ```
 
+## [350. Intersection of Two Arrays II](https://leetcode-cn.com/problems/intersection-of-two-arrays-ii/)
+
+直接统计次数。。。看懂题意就很简单。
+
+```cpp
+class Solution {
+public:
+    vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
+        unordered_map<int, int> hash;
+        if (nums1.size() > nums2.size())
+            swap(nums1, nums2);
+        for (const int &it : nums1)
+            hash[it]++;
+        vector<int> ans;
+        for (const int &it : nums2) {
+            if (hash[it]) {
+                ans.emplace_back(it);
+                hash[it]--;
+            }
+        }
+        return ans;
+    }
+};
+```
