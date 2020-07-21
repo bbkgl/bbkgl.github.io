@@ -20,7 +20,7 @@ tags:
 
 而这个patch就是利用这点，把mmap又封了一层，在必要时候不用标志位MAP_32BIT，调的是系统的mmap64这个函数，且把标志位MAP_32BIT给去掉了。
 
-![20200311002641.png](../cloud_img/20200311002641.png)
+![20200311002641.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200311002641.png)
 
 这里的men在需要分配2GB以上时不为空，mmap64和mmap在64位中其实是一样的！所以区别就在mem这个里面了。
 
@@ -180,7 +180,7 @@ struct PageAlloc {
 
 后面会画出出一个大概的图进行比较形象的解释。
 
-![20200314135824.png](../cloud_img/20200314135824.png)
+![20200314135824.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200314135824.png)
 
 读这种源码最大的障碍就是，读之前并不知道他的设计，而是通过源码去推测设计，比如这次patch内存的管理布局，读了才知道是这么搞的；再比如luajit中内存布局，之前也不知道是一堆TValue堆成的，但每读一次，提升都蛮大的。
 

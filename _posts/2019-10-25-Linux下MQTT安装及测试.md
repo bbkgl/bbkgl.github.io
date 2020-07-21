@@ -24,7 +24,7 @@ tags:
 
 这东西安装也是费了大劲，百度一查全是介绍协议的，CSDN博客上也是互相抄的飞起，没一个是真正能用的，要么抄别人没抄完，要么抄的就是错的。
 
-![Hb22b3b5446434c7b912b28f2dc44d887r](../cloud_img/Hb22b3b5446434c7b912b28f2dc44d887r.jpg)
+![Hb22b3b5446434c7b912b28f2dc44d887r](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/Hb22b3b5446434c7b912b28f2dc44d887r.jpg)
 
 理一下我们的需求：使用MQTT通信，实现部分远程控制命令，基于C/C++编程语言实现。
 
@@ -43,7 +43,7 @@ tags:
 
 我又要吐槽了，人家官网都说了，Ubuntu可以apt安装，我就不明白为什么网上一搜全是源码安装的，无脑抄真是难搞。。。[mosquitto官网下载](https://mosquitto.org/download/)
 
-![He6bb63a2cfe34e698e34c62878e2cfc2Q](../cloud_img/He6bb63a2cfe34e698e34c62878e2cfc2Q.jpg)
+![He6bb63a2cfe34e698e34c62878e2cfc2Q](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/He6bb63a2cfe34e698e34c62878e2cfc2Q.jpg)
 
 直接执行命令：
 
@@ -82,7 +82,7 @@ mosquitto_pub -h localhost -t mqtt -m "23333"
 
 然后，就能在终端2收到消息了：
 
-![H87930d5abfc146c0b2497def0a4a1b81N](../cloud_img/H87930d5abfc146c0b2497def0a4a1b81N.jpg)
+![H87930d5abfc146c0b2497def0a4a1b81N](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/H87930d5abfc146c0b2497def0a4a1b81N.jpg)
 
 #### paho.mqtt.c安装
 
@@ -264,10 +264,10 @@ mosquitto -p 1883
 
 在publish下输入23333：
 
-![Hf963ff09e5b24832b67e993ce9969dfcZ](../cloud_img/Hf963ff09e5b24832b67e993ce9969dfcZ.jpg)
+![Hf963ff09e5b24832b67e993ce9969dfcZ](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/Hf963ff09e5b24832b67e993ce9969dfcZ.jpg)
 
 在client的终端下就能收到如下消息：
 
-![H43e60e5068314075bcc92640fd742086J](../cloud_img/H43e60e5068314075bcc92640fd742086J.jpg)
+![H43e60e5068314075bcc92640fd742086J](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/H43e60e5068314075bcc92640fd742086J.jpg)
 
 验证成功！

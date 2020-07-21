@@ -19,7 +19,7 @@ tags:
 
 提示重定向到他们的https站点上去，这太伤人心了，搞了半天，居然访问不了。
 
-![H592b1e643bbd4bcbae9a25c06715e063t](../cloud_img/H592b1e643bbd4bcbae9a25c06715e063t.jpg)
+![H592b1e643bbd4bcbae9a25c06715e063t](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/H592b1e643bbd4bcbae9a25c06715e063t.jpg)
 
 当然不能这么放弃了，于是各种搜，终于明白了，https请求如何发出去和收到响应。
 
