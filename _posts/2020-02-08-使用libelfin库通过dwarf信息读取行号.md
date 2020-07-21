@@ -67,4 +67,4 @@ int main() {
 
 看看效果图：
 
-![20200208185327.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208185327.png)
+![20200208185327.png](../cloud_img/20200208185327.png)

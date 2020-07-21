@@ -13,7 +13,7 @@ def download(url:str):
         f.write(img)
     return "../" + img_path
 
-def fix(file):
+def fix1(file):
     imgs = []
     text = ""
     url_list = []
@@ -29,7 +29,23 @@ def fix(file):
     with open(file, "w", encoding="utf-8") as f:
         f.write(text)
 
+def fix2(file):
+    imgs = []
+    text = ""
+    url_list = []
+    with open(file, "r", encoding="utf-8") as f:
+        text = f.read()
+        imgs_urls = re.findall(pat, text)
+        for it in imgs_urls:
+            if "../cloud_img" in it[1]:
+                new_url = str(it[1]).replace("../cloud_img", "https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img")
+                url_list.append([it[1], new_url])
+    for url_pair in url_list:
+        text = text.replace(url_pair[0], url_pair[1])
+    with open(file, "w", encoding="utf-8") as f:
+        f.write(text)
 
-
-md_path = "_posts/2019-11-03-opecv检测图像中几何图形.md"
-fix(md_path)
+if __name__ == "__main__":
+    for fname in os.listdir("./_posts"):
+        md_path = "./_posts/" + fname
+        fix2(md_path)

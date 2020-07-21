@@ -16,11 +16,11 @@ tags:
 
 简单介绍下相关背景，luajit2.05及以下版本在设计的时候就使用的相关手段，使得luajit中各种变量的内存地址被限制在了1-2GB的范围里，所以实际上其使用的空间也不会超过2GB。
 
-![20200309220754.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309220754.png)
+![20200309220754.png](../cloud_img/20200309220754.png)
 
 这个在stackoverflow上也有相关的[问题](<https://stackoverflow.com/questions/35155444/why-is-luajits-memory-limited-to-1-2-gb-on-64-bit-platforms>)，然后下面的解答是这样的：
 
-![20200309220906.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309220906.png)
+![20200309220906.png](../cloud_img/20200309220906.png)
 
 大概意思就是说，在x64的平台上，luajit中通过在`mmap`函数中使用`MAP_32BIT`标志位来限制申请的地址范围只会在最低的2GB里，实际上该标志位不是限制在32位内存里，而是限制在31位里，可以查看 [这里](http://timetobleed.com/digging-out-the-craziest-bug-you-never-heard-about-from-2008-a-linux-threading-regression/) 有详细的介绍和说明。
 
@@ -134,7 +134,7 @@ github真的什么都有，不愧是同性交友网站，[mmap_lowmem](<https://
 
 这个问题还是得从官方文档入手：
 
-![20200309224929.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309224929.png)
+![20200309224929.png](../cloud_img/20200309224929.png)
 
 这里重点关注的是最长的那一段的内容，我简单翻译一下：
 
@@ -148,7 +148,7 @@ github真的什么都有，不愧是同性交友网站，[mmap_lowmem](<https://
 
 我粗略的猜测，这个**页面边界**就是正好高于`addr`，且符合内存对齐的地址，`/proc/sys/vm/mmap_min_addr`是一个内存分配地址的最小值，也就是如果某个地址值小于这个值，就会直接报错，比如我这里就是65536，很多资料上说如果指针小于这个值，则系统认为是空指针。
 
-![20200309235409.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200309235409.png)
+![20200309235409.png](../cloud_img/20200309235409.png)
 
 我又大胆的猜测，如果能够找到满足**页面边界**的地址，就能够让`mmap`返回的**地址值等于**`addr`！
 
@@ -176,7 +176,7 @@ int main() {
 
 执行后结果：
 
-![20200311002456.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200311002456.png)
+![20200311002456.png](../cloud_img/20200311002456.png)
 
 ### 如何自定义分配内存的地址
 
@@ -219,6 +219,6 @@ int main() {
 
 输出和想象中一样：
 
-![20200311215016.png](https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200311215016.png)
+![20200311215016.png](../cloud_img/20200311215016.png)
 
 所以如果能够找到满足上述三个条件的地址，就能够让`mmap`返回的**地址值等于**`addr`！
