@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/page8/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/home-bg-index.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>我太菜了</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">喜欢写Hello World的未来程序员.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+    		<div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                postlist-container
+            ">
+    			
+<div class="post-preview">
+    <a href="/2019/10/27/%E6%95%B0%E6%8D%AE%E6%B5%81%E4%B8%AD%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/">
+        <h2 class="post-title">
+            数据流中的中位数
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗？
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  深知身在情长在
+
+  怅望江头江水声
+
+
+C++，最大堆，最小堆。
+
+一开始想到的是直接用一个数组或者vector存储，插入的时候顺序查找并计数，然后Insert是O(n)，GetMedian是O(1)，但是觉得太简单了，肯定不是这样的，慢慢就想到能不能一半大，一半小，于是就想到了堆。
+
+在插入的时候，把大的一半放到最小堆，把大的一半放到最大堆，而插入堆的复杂度是O(logn)，应该就...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 27, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/27/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/">
+        <h2 class="post-title">
+            序列化二叉树
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗？
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  荷叶生时春恨生
+
+  荷叶枯时秋恨成
+
+
+
+C++，二叉搜索树，递归。
+
+这道题最简单的思路就是直接中序遍历，然后得到一个中序序列数组，直接从中序数组中得到第k小。题目当然可以做出来，但是面试的时候这么做恐怕不行，隐含条件应该就是不能额外申请空间。
+
+不用数组记录怎么做呢？
+
+答案：利用中序遍历的特性。
+
+利用一个变量记录当前已经遍历的结点数目，如果已经遍历的结点数目已经等于k时，就说...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 27, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/26/%E4%BD%BF%E7%94%A8MQTT%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E5%91%BD%E4%BB%A4/">
+        <h2 class="post-title">
+            使用MQTT实现简单命令控制
+        </h2>
+        
+        <h3 class="post-subtitle">
+            MQTT
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  塞上长城空自许
+
+  镜中衰鬓已先斑
+
+
+前面的博文中已经讲了如何安装MQTT的环境，以及如何进行测试，并给出了一个C语言的小例子。今天再讲讲paho.mqtt.c中一些常用接口的使用以及实现一个命令控制及回显功能。
+
+接口介绍
+
+这里讲的不详细，如果有读者读到了感觉不太懂的话，需要先了解一下MQTT的的工作机制。
+
+MQTTClient_create()
+
+int MQTTClien...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 26, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/25/Linux%E4%B8%8BMQTT%E5%AE%89%E8%A3%85%E5%8F%8A%E6%B5%8B%E8%AF%95/">
+        <h2 class="post-title">
+            Linux下MQTT安装及测试
+        </h2>
+        
+        <h3 class="post-subtitle">
+            MQTT
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  雨打梨花深闭门
+
+  忘了青春
+
+  误了青春
+
+
+物联网老师上课的时候突然让用MQTT写一个通信程序，实现命令控制，他说的是客户端输入ls，那边就得返回目录信息，不是很懂，查了一大堆也不会，今天有点时间把第一步走了。
+
+MQTT程序安装
+
+
+  千里之行，始于足下
+
+
+这东西安装也是费了大劲，百度一查全是介绍协议的，CSDN博客上也是互相抄的飞起，没一个是真正能用的，要么抄别人没抄完...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 25, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/24/aptinstall%E5%87%BA%E7%8E%B0EncounteredasectionwithnoPackage/">
+        <h2 class="post-title">
+            apt install 出现 Encountered a section with no Package header
+        </h2>
+        
+        <h3 class="post-subtitle">
+            section with no Package
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  流水下滩非有意
+
+  白云出岫本无心
+
+
+安装uuid的时候报错了，其实很多次安装的时候都报过这种错：
+
+sudo apt install libuuid-devel
+
+
+然后就出现：
+
+正在读取软件包列表... 有错误！
+E: Encountered a section with no Package: header
+E: Problem with MergeList /var/li...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 24, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/23/Raft%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E4%BF%9D%E9%9A%9C/">
+        <h2 class="post-title">
+            Raft中的一致性保障
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分布式一致性问题
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  有水的地方就有人想家
+
+  有岸的地方楚歌就四起
+
+
+领导人崩溃
+
+在集群系统中，领导人崩溃可能会造成不一致的情况出现，比如群众可能会丢失一些在新的领导人中有的日志条目，他也可能拥有一些领导人没有的日志条目，或者两者都发生。丢失的情况也是在一般情况下已经可以处理，也就是前面日志复制中说到的直接覆盖，但是第二种情况可能会无法处理。例如，一名群众可能会进入不可用状态同时领导人已经提交了若干...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 23, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/22/3%E5%85%B3%E4%BA%8ERaft%E4%B8%AD%E7%9A%84%E6%97%A5%E5%BF%97%E5%A4%8D%E5%88%B6/">
+        <h2 class="post-title">
+            Raft中的日志复制
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分布式一致性问题
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  夜来幽梦忽还乡
+
+  小轩窗
+
+  正梳妆
+
+
+日志简介
+
+关于日志状态机
+
+Raft 的目标是将日志完整地复制到集群内的所有服务器，这些复制的日志会被状态机所使用。假设我们希望程序或应用能可靠地执行，能够实现的一种方式是保证集群中所有服务器内的状态机都能按照相同的方式执行命令，这就是状态机复制同步的目的，这里的状态机通常指的是一个输入输出程序或应用。
+
+如果系统的客户端将要执行的命令...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 22, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/22/2Raft%E4%B8%AD%E7%9A%84%E9%A2%86%E5%AF%BC%E9%80%89%E4%B8%BE/">
+        <h2 class="post-title">
+            Raft中的领导人选举
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分布式一致性问题
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  原来姹紫嫣红开遍
+
+  似这般都付与断井颓垣
+
+
+极简解释
+
+为了能够很容易地浏览整个过程，先从一个最小的Raft民主集群出发，即一开始是3个群众（单数是为了能让某个候选人拿到多数票）。如下图，发起选举时，有可能发生如下三种情况。
+
+
+
+可以看出，前两种都能够选出领导人，第三种因为“瓜分”选票的原因，没有候选人拿到多数选票，则本轮选票无效。之后会再次发生超时（Election Time...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 22, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/20/1Raft%E4%B8%AD%E7%94%A8%E5%88%B0%E7%9A%84RPC/">
+        <h2 class="post-title">
+            Raft中用到的RPC
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分布式一致性问题
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  韶华不为少年留
+
+  恨悠悠
+
+  几时休
+
+
+在阅读Raft论文的时候发现其中用到了三种RPC，都是由领导人发出：
+
+
+  心跳包RPC，用于维持领导人的权威
+  发送请求投票的 RPC，拉票
+  附加条目 RPC，用于其他服务器的日志复制
+
+
+其实第一种和第三种是同一类型的RPC，只是在不同情况下作用不一样：当其entries域为空时，该RPC作为Leader的心跳；当entrie...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 20, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/10/19/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95Raft%E6%A6%82%E8%BF%B0/">
+        <h2 class="post-title">
+            分布式一致性算法Raft概述
+        </h2>
+        
+        <h3 class="post-subtitle">
+            分布式一致性问题
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  渐行渐远渐无书
+
+  水阔鱼沉何处问
+
+
+前几天的一篇文章已经讲过了拜占庭将军问题，从而引出了分布式的一致性问题，Raft正是一种以较易理解的方式解决该问题的算法。
+
+说实话，我这几天看了Raft的英文，也看了Raft的中文译文版，然后又找了很多大佬的博文看了，实在没觉得Raft容易理解或者是容易实现，如果真要自己实现的话还真的一头雾水，当然看懂讲的什么东西还是不难的。
+
+Raft通过...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on October 19, 2019
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+    <li class="previous">
+        <a href="/page7">&larr; Newer Posts</a>
+    </li>
+    
+    
+    <li class="next">
+        <a href="/page9">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
+
+
+    		</div>
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                            
+                                <a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+                        
+                            
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
+                    <div class="short-about">
+                        
+                            <a href="/about">
+                                <img src="/img/bbkgl.jpg"/>
+                            </a>
+                        
+                        
+                            <p>写过Hello World, 下过矿。</p>
+                        
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            <!-- add jianshu add target = "_blank" to <a> by BY -->
+                            
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://github.com/bbkgl">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                        </ul>
+                        
+                            <p>✉️ zoujiakun@zju.edu.cn</p>
+                        
+                    </div>
+                </section>
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+    		</div>
+        
+	</div>
+</div>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

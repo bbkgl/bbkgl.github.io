@@ -1,0 +1,4312 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Tags - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/tags/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/tag-bg.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="site-heading" id="tag-heading">
+                    <h1>Tags</h1>
+                    <span class="subheading">keep hungry keep foolish</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+		<div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <!-- 标签云 -->
+			<div id='tag_cloud' class="tags">
+				
+				<a href="#Blog" title="Blog" rel="3">Blog</a>
+				
+				<a href="#leetcode" title="leetcode" rel="79">leetcode</a>
+				
+				<a href="#C++" title="C++" rel="8">C++</a>
+				
+				<a href="#cmake" title="cmake" rel="1">cmake</a>
+				
+				<a href="#剑指offer" title="剑指offer" rel="67">剑指offer</a>
+				
+				<a href="#http" title="http" rel="4">http</a>
+				
+				<a href="#PAT/PTA" title="PAT/PTA" rel="1">PAT/PTA</a>
+				
+				<a href="#Raft" title="Raft" rel="6">Raft</a>
+				
+				<a href="#Linux" title="Linux" rel="3">Linux</a>
+				
+				<a href="#Hadoop" title="Hadoop" rel="2">Hadoop</a>
+				
+				<a href="#设计模式" title="设计模式" rel="2">设计模式</a>
+				
+				<a href="#CV" title="CV" rel="2">CV</a>
+				
+				<a href="#面向对象" title="面向对象" rel="1">面向对象</a>
+				
+				<a href="#六级" title="六级" rel="1">六级</a>
+				
+				<a href="#leveldb" title="leveldb" rel="3">leveldb</a>
+				
+				<a href="#profile" title="profile" rel="11">profile</a>
+				
+				<a href="#luajit" title="luajit" rel="2">luajit</a>
+				
+				<a href="#计算机网络" title="计算机网络" rel="2">计算机网络</a>
+				
+				<a href="#linux" title="linux" rel="1">linux</a>
+				
+			</div>
+
+            <!--<blockquote class="tag-comments">
+                标签命名规范：
+                    <li>行业观察、职位、公司优先使用中文</li>
+                    <li>外国产品、术语优先使用英文</li>
+            </blockquote>-->
+
+            <!-- 标签列表 -->
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="Blog">
+                    <span class="tag-text">Blog</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-06">2019-11-06</time>
+				  <a href="/2019/11/06/%E5%8D%9A%E5%AE%A2%E4%B8%AD%E4%BD%BF%E7%94%A8Latex%E5%85%AC%E5%BC%8F/" title="博客中使用Latex公式">博客中使用Latex公式</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/06/%E5%8D%9A%E5%AE%A2%E4%B8%AD%E4%BD%BF%E7%94%A8Latex%E5%85%AC%E5%BC%8F/">
+				        <h2 class="post-title">
+                            博客中使用Latex公式
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            文章中嵌入latex
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-06</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-06">2019-11-06</time>
+				  <a href="/2019/11/06/Typora%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C/" title="Typora一些操作">Typora一些操作</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/06/Typora%E4%B8%80%E4%BA%9B%E6%93%8D%E4%BD%9C/">
+				        <h2 class="post-title">
+                            Typora一些操作
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            markdown
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-06</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2017-02-06">2017-02-06</time>
+				  <a href="/2017/02/06/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" title="手把手教你在半小时内搭建自己的个人博客(如果不踩坑的话🙈🙊🙉)">手把手教你在半小时内搭建自己的个人博客(如果不踩坑的话🙈🙊🙉)</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2017/02/06/%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/">
+				        <h2 class="post-title">
+                            手把手教你在半小时内搭建自己的个人博客(如果不踩坑的话🙈🙊🙉)
+				        </h2>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2017-02-06</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="leetcode">
+                    <span class="tag-text">leetcode</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-03-09">2020-03-09</time>
+				  <a href="/2020/03/09/leetcode42/" title="42. Trapping Rain Water">42. Trapping Rain Water</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/03/09/leetcode42/">
+				        <h2 class="post-title">
+                            42. Trapping Rain Water
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-03-09</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-02-19">2020-02-19</time>
+				  <a href="/2020/02/19/leetcode32/" title="32. Longest Valid Parentheses">32. Longest Valid Parentheses</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/02/19/leetcode32/">
+				        <h2 class="post-title">
+                            32. Longest Valid Parentheses
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-02-19</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-02-09">2020-02-09</time>
+				  <a href="/2020/02/09/leetcode23/" title="23. Merge k Sorted Lists">23. Merge k Sorted Lists</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/02/09/leetcode23/">
+				        <h2 class="post-title">
+                            23. Merge k Sorted Lists
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-02-09</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-02-09">2020-02-09</time>
+				  <a href="/2020/02/09/leetcode10/" title="10. Regular Expression Matching">10. Regular Expression Matching</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/02/09/leetcode10/">
+				        <h2 class="post-title">
+                            10. Regular Expression Matching
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-02-09</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-02-01">2020-02-01</time>
+				  <a href="/2020/02/01/leetcode4/" title="4. Median of Two Sorted Arrays">4. Median of Two Sorted Arrays</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/02/01/leetcode4/">
+				        <h2 class="post-title">
+                            4. Median of Two Sorted Arrays
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-02-01</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-31">2020-01-31</time>
+				  <a href="/2020/01/31/leetcode-easy/" title="leetcode easy 题集合">leetcode easy 题集合</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/31/leetcode-easy/">
+				        <h2 class="post-title">
+                            leetcode easy 题集合
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-31</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-31">2020-01-31</time>
+				  <a href="/2020/01/31/leetcode739/" title="739. Daily Temperatures">739. Daily Temperatures</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/31/leetcode739/">
+				        <h2 class="post-title">
+                            739. Daily Temperatures
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-31</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-30">2020-01-30</time>
+				  <a href="/2020/01/30/leetcode647/" title="647. Palindromic Substrings">647. Palindromic Substrings</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/30/leetcode647/">
+				        <h2 class="post-title">
+                            647. Palindromic Substrings
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-30</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-12">2020-01-12</time>
+				  <a href="/2020/01/12/leetcode621/" title="621. Task Scheduler">621. Task Scheduler</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/12/leetcode621/">
+				        <h2 class="post-title">
+                            621. Task Scheduler
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-12</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-08">2020-01-08</time>
+				  <a href="/2020/01/08/leetcode560/" title="494. Target Sum">494. Target Sum</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/08/leetcode560/">
+				        <h2 class="post-title">
+                            494. Target Sum
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-08</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-04">2020-01-04</time>
+				  <a href="/2020/01/04/leetcode494/" title="494. Target Sum">494. Target Sum</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/04/leetcode494/">
+				        <h2 class="post-title">
+                            494. Target Sum
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-04</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-01">2020-01-01</time>
+				  <a href="/2020/01/01/leetcode438/" title="438. Find All Anagrams in a String">438. Find All Anagrams in a String</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/01/leetcode438/">
+				        <h2 class="post-title">
+                            438. Find All Anagrams in a String
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-01</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-28">2019-12-28</time>
+				  <a href="/2019/12/28/leetcode416/" title="416. Partition Equal Subset Sum">416. Partition Equal Subset Sum</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/28/leetcode416/">
+				        <h2 class="post-title">
+                            416. Partition Equal Subset Sum
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-28</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-28">2019-12-28</time>
+				  <a href="/2019/12/28/leetcode406/" title="406. Queue Reconstruction by Height">406. Queue Reconstruction by Height</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/28/leetcode406/">
+				        <h2 class="post-title">
+                            406. Queue Reconstruction by Height
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-28</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-19">2019-12-19</time>
+				  <a href="/2019/12/19/leetcode394/" title="394. Decode String">394. Decode String</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/19/leetcode394/">
+				        <h2 class="post-title">
+                            394. Decode String
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-19</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-18">2019-12-18</time>
+				  <a href="/2019/12/18/leetcode347/" title="347. Top K Frequent Elements">347. Top K Frequent Elements</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/18/leetcode347/">
+				        <h2 class="post-title">
+                            347. Top K Frequent Elements
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-18</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-17">2019-12-17</time>
+				  <a href="/2019/12/17/leetcode338/" title="338. Counting Bits">338. Counting Bits</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/17/leetcode338/">
+				        <h2 class="post-title">
+                            338. Counting Bits
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-17</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-01">2019-12-01</time>
+				  <a href="/2019/12/01/leetcode337/" title="337. House Robber III">337. House Robber III</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/01/leetcode337/">
+				        <h2 class="post-title">
+                            337. House Robber III
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-01</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-30">2019-11-30</time>
+				  <a href="/2019/11/30/leetcode322/" title="322. Coin Change">322. Coin Change</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/30/leetcode322/">
+				        <h2 class="post-title">
+                            322. Coin Change
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-30</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-28">2019-11-28</time>
+				  <a href="/2019/11/28/leetcode309/" title="309. Best Time to Buy and Sell Stock with Cooldown">309. Best Time to Buy and Sell Stock with Cooldown</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/28/leetcode309/">
+				        <h2 class="post-title">
+                            309. Best Time to Buy and Sell Stock with Cooldown
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-28</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-27">2019-11-27</time>
+				  <a href="/2019/11/27/leetcode300/" title="300. Longest Increasing Subsequence">300. Longest Increasing Subsequence</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/27/leetcode300/">
+				        <h2 class="post-title">
+                            300. Longest Increasing Subsequence
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-27</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-26">2019-11-26</time>
+				  <a href="/2019/11/26/leetcode287/" title="287. Find the Duplicate Number">287. Find the Duplicate Number</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/26/leetcode287/">
+				        <h2 class="post-title">
+                            287. Find the Duplicate Number
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-25">2019-11-25</time>
+				  <a href="/2019/11/25/leetcode279/" title="279. Perfect Squares">279. Perfect Squares</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/25/leetcode279/">
+				        <h2 class="post-title">
+                            279. Perfect Squares
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-25</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-24">2019-11-24</time>
+				  <a href="/2019/11/24/leetcode240/" title="240. Search a 2D Matrix II">240. Search a 2D Matrix II</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/24/leetcode240/">
+				        <h2 class="post-title">
+                            240. Search a 2D Matrix II
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-24</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-24">2019-11-24</time>
+				  <a href="/2019/11/24/leetcode238/" title="238. Product of Array Except Self">238. Product of Array Except Self</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/24/leetcode238/">
+				        <h2 class="post-title">
+                            238. Product of Array Except Self
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-24</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-23">2019-11-23</time>
+				  <a href="/2019/11/23/leetcode236/" title="221. Maximal Square">221. Maximal Square</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/23/leetcode236/">
+				        <h2 class="post-title">
+                            221. Maximal Square
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-23</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-22">2019-11-22</time>
+				  <a href="/2019/11/22/leetcode221/" title="221. Maximal Square">221. Maximal Square</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/22/leetcode221/">
+				        <h2 class="post-title">
+                            221. Maximal Square
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-22</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-21">2019-11-21</time>
+				  <a href="/2019/11/21/leetcode215/" title="215. Kth Largest Element in an Array">215. Kth Largest Element in an Array</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/21/leetcode215/">
+				        <h2 class="post-title">
+                            215. Kth Largest Element in an Array
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-21</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-20">2019-11-20</time>
+				  <a href="/2019/11/20/leetcode208/" title="208. Implement Trie (Prefix Tree)">208. Implement Trie (Prefix Tree)</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/20/leetcode208/">
+				        <h2 class="post-title">
+                            208. Implement Trie (Prefix Tree)
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-20</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-19">2019-11-19</time>
+				  <a href="/2019/11/19/leetcode207/" title="207. Course Schedule">207. Course Schedule</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/19/leetcode207/">
+				        <h2 class="post-title">
+                            207. Course Schedule
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-19</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-17">2019-11-17</time>
+				  <a href="/2019/11/17/leetcode200/" title="200. Number of Islands">200. Number of Islands</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/17/leetcode200/">
+				        <h2 class="post-title">
+                            200. Number of Islands
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-17</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-16">2019-11-16</time>
+				  <a href="/2019/11/16/leetcode152/" title="152. Maximum Product Subarray">152. Maximum Product Subarray</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/16/leetcode152/">
+				        <h2 class="post-title">
+                            152. Maximum Product Subarray
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-16</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-15">2019-11-15</time>
+				  <a href="/2019/11/15/leetcode148/" title="148. Sort List">148. Sort List</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/15/leetcode148/">
+				        <h2 class="post-title">
+                            148. Sort List
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-15</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-09">2019-11-09</time>
+				  <a href="/2019/11/09/leetcode147/" title="Insertion Sort List">Insertion Sort List</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/09/leetcode147/">
+				        <h2 class="post-title">
+                            Insertion Sort List
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-09</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-08">2019-11-08</time>
+				  <a href="/2019/11/08/leetcode146/" title="LRU Cache">LRU Cache</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/08/leetcode146/">
+				        <h2 class="post-title">
+                            LRU Cache
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-08</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/98.ValidateBinarySearchTree/" title="98.ValidateBinarySearchTree">98.ValidateBinarySearchTree</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/98.ValidateBinarySearchTree/">
+				        <h2 class="post-title">
+                            98.ValidateBinarySearchTree
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/96.UniqueBinarySearchTrees/" title="96.UniqueBinarySearchTrees">96.UniqueBinarySearchTrees</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/96.UniqueBinarySearchTrees/">
+				        <h2 class="post-title">
+                            96.UniqueBinarySearchTrees
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/95.UniqueBinarySearchTreesII/" title="95.UniqueBinarySearchTreesII">95.UniqueBinarySearchTreesII</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/95.UniqueBinarySearchTreesII/">
+				        <h2 class="post-title">
+                            95.UniqueBinarySearchTreesII
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/94.BinaryTreeInorderTraversal/" title="94.BinaryTreeInorderTraversal">94.BinaryTreeInorderTraversal</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/94.BinaryTreeInorderTraversal/">
+				        <h2 class="post-title">
+                            94.BinaryTreeInorderTraversal
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/93.RestoreIPAddresses/" title="93.RestoreIPAddresses">93.RestoreIPAddresses</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/93.RestoreIPAddresses/">
+				        <h2 class="post-title">
+                            93.RestoreIPAddresses
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/92.ReverseLinkedListII/" title="92.ReverseLinkedListII">92.ReverseLinkedListII</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/92.ReverseLinkedListII/">
+				        <h2 class="post-title">
+                            92.ReverseLinkedListII
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/91.Decode_Ways/" title="91.Decode_Ways">91.Decode_Ways</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/91.Decode_Ways/">
+				        <h2 class="post-title">
+                            91.Decode_Ways
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/90.SubsetsII/" title="90.SubsetsII">90.SubsetsII</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/90.SubsetsII/">
+				        <h2 class="post-title">
+                            90.SubsetsII
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/89.%E6%A0%BC%E9%9B%B7%E7%BC%96%E7%A0%81/" title="89.格雷编码">89.格雷编码</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/89.%E6%A0%BC%E9%9B%B7%E7%BC%96%E7%A0%81/">
+				        <h2 class="post-title">
+                            89.格雷编码
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/86.%E5%88%86%E9%9A%94%E9%93%BE%E8%A1%A8/" title="86.分隔链表">86.分隔链表</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/86.%E5%88%86%E9%9A%94%E9%93%BE%E8%A1%A8/">
+				        <h2 class="post-title">
+                            86.分隔链表
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/82.-Remove-Duplicates-from-Sorted-List-II/" title="82. Remove Duplicates from Sorted List II">82. Remove Duplicates from Sorted List II</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/82.-Remove-Duplicates-from-Sorted-List-II/">
+				        <h2 class="post-title">
+                            82. Remove Duplicates from Sorted List II
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/81.-Search-in-Rotated-Sorted-Array-II/" title="81. Search in Rotated Sorted Array II">81. Search in Rotated Sorted Array II</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/81.-Search-in-Rotated-Sorted-Array-II/">
+				        <h2 class="post-title">
+                            81. Search in Rotated Sorted Array II
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/80.Remove-Duplicates-from-Sorted-Array-II/" title="80.Remove Duplicates from Sorted Array II">80.Remove Duplicates from Sorted Array II</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/80.Remove-Duplicates-from-Sorted-Array-II/">
+				        <h2 class="post-title">
+                            80.Remove Duplicates from Sorted Array II
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/79.-Word-Search/" title="79. Word Search">79. Word Search</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/79.-Word-Search/">
+				        <h2 class="post-title">
+                            79. Word Search
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/78.-Subsets/" title="78. Subsets">78. Subsets</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/78.-Subsets/">
+				        <h2 class="post-title">
+                            78. Subsets
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/77.-Combinations/" title="77. Combinations">77. Combinations</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/77.-Combinations/">
+				        <h2 class="post-title">
+                            77. Combinations
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/75.-Sort-Colors/" title="75. Sort Colors">75. Sort Colors</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/75.-Sort-Colors/">
+				        <h2 class="post-title">
+                            75. Sort Colors
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/74.-Search-a-2D-Matrix/" title="74. Search a 2D Matrix">74. Search a 2D Matrix</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/74.-Search-a-2D-Matrix/">
+				        <h2 class="post-title">
+                            74. Search a 2D Matrix
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/73.-Set-Matrix-Zeroes/" title="73. Set Matrix Zeroes">73. Set Matrix Zeroes</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/73.-Set-Matrix-Zeroes/">
+				        <h2 class="post-title">
+                            73. Set Matrix Zeroes
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/71.-Simplify-Path/" title="71. Simplify Path">71. Simplify Path</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/71.-Simplify-Path/">
+				        <h2 class="post-title">
+                            71. Simplify Path
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/47.-Permutations-II/" title="47. Permutations II">47. Permutations II</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/47.-Permutations-II/">
+				        <h2 class="post-title">
+                            47. Permutations II
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/33.-Search-in-Rotated-Sorted-Array/" title="33. Search in Rotated Sorted Array">33. Search in Rotated Sorted Array</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/33.-Search-in-Rotated-Sorted-Array/">
+				        <h2 class="post-title">
+                            33. Search in Rotated Sorted Array
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/143.Reorder_List/" title="143.Reorder_List">143.Reorder_List</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/143.Reorder_List/">
+				        <h2 class="post-title">
+                            143.Reorder_List
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/142.-Linked-List-Cycle-II/" title="142. Linked List Cycle II">142. Linked List Cycle II</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/142.-Linked-List-Cycle-II/">
+				        <h2 class="post-title">
+                            142. Linked List Cycle II
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/139.-Word-Break/" title="139. Word Break">139. Word Break</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/139.-Word-Break/">
+				        <h2 class="post-title">
+                            139. Word Break
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/138.-Copy-List-with-Random-Pointer/" title="138. Copy List with Random Pointer">138. Copy List with Random Pointer</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/138.-Copy-List-with-Random-Pointer/">
+				        <h2 class="post-title">
+                            138. Copy List with Random Pointer
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/137.SingleNumberII/" title="137.SingleNumberII">137.SingleNumberII</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/137.SingleNumberII/">
+				        <h2 class="post-title">
+                            137.SingleNumberII
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/136.Single-Number/" title="136.Single Number">136.Single Number</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/136.Single-Number/">
+				        <h2 class="post-title">
+                            136.Single Number
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/134.Gas-Station/" title="134.Gas Station">134.Gas Station</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/134.Gas-Station/">
+				        <h2 class="post-title">
+                            134.Gas Station
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/133.-Clone-Graph/" title="133. Clone Graph">133. Clone Graph</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/133.-Clone-Graph/">
+				        <h2 class="post-title">
+                            133. Clone Graph
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/131.PalindromePartitioning/" title="131.PalindromePartitioning">131.PalindromePartitioning</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/131.PalindromePartitioning/">
+				        <h2 class="post-title">
+                            131.PalindromePartitioning
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/130.SurroundedRegions/" title="130.SurroundedRegions">130.SurroundedRegions</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/130.SurroundedRegions/">
+				        <h2 class="post-title">
+                            130.SurroundedRegions
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/129.SumRoottoLeafNumbers/" title="129.SumRoottoLeafNumbers">129.SumRoottoLeafNumbers</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/129.SumRoottoLeafNumbers/">
+				        <h2 class="post-title">
+                            129.SumRoottoLeafNumbers
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/127.WordLadder/" title="127.WordLadder">127.WordLadder</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/127.WordLadder/">
+				        <h2 class="post-title">
+                            127.WordLadder
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/120.Triangle/" title="120.Triangle">120.Triangle</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/120.Triangle/">
+				        <h2 class="post-title">
+                            120.Triangle
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/117.PopulatingNextRightPointersinEachNodeII/" title="117.PopulatingNextRightPointersinEachNodeII">117.PopulatingNextRightPointersinEachNodeII</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/117.PopulatingNextRightPointersinEachNodeII/">
+				        <h2 class="post-title">
+                            117.PopulatingNextRightPointersinEachNodeII
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/116.PopulatingNextRightPointersinEachNode/" title="116.PopulatingNextRightPointersinEachNode">116.PopulatingNextRightPointersinEachNode</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/116.PopulatingNextRightPointersinEachNode/">
+				        <h2 class="post-title">
+                            116.PopulatingNextRightPointersinEachNode
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/114.FlattenBinaryTreetoLinkedList/" title="114.FlattenBinaryTreetoLinkedList">114.FlattenBinaryTreetoLinkedList</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/114.FlattenBinaryTreetoLinkedList/">
+				        <h2 class="post-title">
+                            114.FlattenBinaryTreetoLinkedList
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/113.PathSumII/" title="113.PathSumII">113.PathSumII</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/113.PathSumII/">
+				        <h2 class="post-title">
+                            113.PathSumII
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/109.ConvertSortedListtoBinarySearchTree/" title="109.ConvertSortedListtoBinarySearchTree">109.ConvertSortedListtoBinarySearchTree</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/109.ConvertSortedListtoBinarySearchTree/">
+				        <h2 class="post-title">
+                            109.ConvertSortedListtoBinarySearchTree
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/106.ConstructBinaryTreefromInorderandPostorderTraversal/" title="106.ConstructBinaryTreefromInorderandPostorderTraversal">106.ConstructBinaryTreefromInorderandPostorderTraversal</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/106.ConstructBinaryTreefromInorderandPostorderTraversal/">
+				        <h2 class="post-title">
+                            106.ConstructBinaryTreefromInorderandPostorderTraversal
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/105.ConstructBinaryTreefromPreorderandInorderTraversal/" title="105.ConstructBinaryTreefromPreorderandInorderTraversal">105.ConstructBinaryTreefromPreorderandInorderTraversal</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/105.ConstructBinaryTreefromPreorderandInorderTraversal/">
+				        <h2 class="post-title">
+                            105.ConstructBinaryTreefromPreorderandInorderTraversal
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/103.BinaryTreeZigzagLevelOrderTraversal/" title="103.BinaryTreeZigzagLevelOrderTraversal">103.BinaryTreeZigzagLevelOrderTraversal</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/103.BinaryTreeZigzagLevelOrderTraversal/">
+				        <h2 class="post-title">
+                            103.BinaryTreeZigzagLevelOrderTraversal
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/102.BinaryTreeLevelOrderTraversal/" title="102.BinaryTreeLevelOrderTraversal">102.BinaryTreeLevelOrderTraversal</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/102.BinaryTreeLevelOrderTraversal/">
+				        <h2 class="post-title">
+                            102.BinaryTreeLevelOrderTraversal
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="C++">
+                    <span class="tag-text">C++</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-04-07">2020-04-07</time>
+				  <a href="/2020/04/07/%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8%E6%8C%87%E9%92%88%E7%9A%84%E4%BD%8D%E7%BD%AE%E5%8F%8A%E5%8D%A0%E7%94%A8%E5%A4%A7%E5%B0%8F/" title="C++中虚函数表指针的位置及大小">C++中虚函数表指针的位置及大小</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/04/07/%E8%99%9A%E5%87%BD%E6%95%B0%E8%A1%A8%E6%8C%87%E9%92%88%E7%9A%84%E4%BD%8D%E7%BD%AE%E5%8F%8A%E5%8D%A0%E7%94%A8%E5%A4%A7%E5%B0%8F/">
+				        <h2 class="post-title">
+                            C++中虚函数表指针的位置及大小
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            虚函数表指针
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-04-07</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-15">2019-12-15</time>
+				  <a href="/2019/12/15/C++%E4%B8%AD%E8%B4%9F%E6%95%B0%E4%B8%8B%E6%A0%87/" title="C++中负数下标">C++中负数下标</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/15/C++%E4%B8%AD%E8%B4%9F%E6%95%B0%E4%B8%8B%E6%A0%87/">
+				        <h2 class="post-title">
+                            C++中负数下标
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            C++
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-15</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-11">2019-10-11</time>
+				  <a href="/2019/10/11/C%E5%92%8CC++%E8%B7%A8%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F/" title="C/C++跨文件共享全局变量">C/C++跨文件共享全局变量</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/11/C%E5%92%8CC++%E8%B7%A8%E6%96%87%E4%BB%B6%E5%85%B1%E4%BA%AB%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F/">
+				        <h2 class="post-title">
+                            C/C++跨文件共享全局变量
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            extern关键字
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-11</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-11">2019-10-11</time>
+				  <a href="/2019/10/11/C++%E4%BD%BF%E7%94%A8%E4%BF%A1%E5%8F%B7%E5%AE%9E%E7%8E%B0%E8%B6%85%E6%97%B6%E5%8A%9F%E8%83%BD/" title="C/C++使用信号实现超时功能">C/C++使用信号实现超时功能</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/11/C++%E4%BD%BF%E7%94%A8%E4%BF%A1%E5%8F%B7%E5%AE%9E%E7%8E%B0%E8%B6%85%E6%97%B6%E5%8A%9F%E8%83%BD/">
+				        <h2 class="post-title">
+                            C/C++使用信号实现超时功能
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            socket超时
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-11</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-10">2019-10-10</time>
+				  <a href="/2019/10/10/C%E5%92%8CC++%E4%B8%AD%E5%88%86%E5%89%B2%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="C/C++中分割字符串">C/C++中分割字符串</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/10/C%E5%92%8CC++%E4%B8%AD%E5%88%86%E5%89%B2%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+				        <h2 class="post-title">
+                            C/C++中分割字符串
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            使用sscanf库函数分割字符串
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-10</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-09">2019-10-09</time>
+				  <a href="/2019/10/09/C++%E5%A4%B4%E6%96%87%E4%BB%B6%E4%B8%AD%E5%87%BD%E6%95%B0%E8%A2%AB%E5%A4%9A%E6%AC%A1%E5%AE%9A%E4%B9%89/" title="C++头文件中函数被多次定义">C++头文件中函数被多次定义</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/09/C++%E5%A4%B4%E6%96%87%E4%BB%B6%E4%B8%AD%E5%87%BD%E6%95%B0%E8%A2%AB%E5%A4%9A%E6%AC%A1%E5%AE%9A%E4%B9%89/">
+				        <h2 class="post-title">
+                            C++头文件中函数被多次定义
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            头文件多次被include
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-09</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-28">2019-09-28</time>
+				  <a href="/2019/09/28/%E5%AF%B9-vtable-for-XXX-%E6%9C%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%BC%95%E7%94%A8/" title="对‘vtable for ×××’未定义的引用">对‘vtable for ×××’未定义的引用</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/28/%E5%AF%B9-vtable-for-XXX-%E6%9C%AA%E5%AE%9A%E4%B9%89%E7%9A%84%E5%BC%95%E7%94%A8/">
+				        <h2 class="post-title">
+                            对‘vtable for ×××’未定义的引用
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            undefined reference to `vtable for
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-28</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/C%E5%92%8CC++%E4%B8%AD%E5%BC%95%E7%94%A8%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" title="C和C++中引用的底层原理">C和C++中引用的底层原理</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/C%E5%92%8CC++%E4%B8%AD%E5%BC%95%E7%94%A8%E7%9A%84%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">
+				        <h2 class="post-title">
+                            C和C++中引用的底层原理
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            关于引用是否占用内存，和指针的区别
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="cmake">
+                    <span class="tag-text">cmake</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/cmake%E4%B8%ADadd_library-target_link_libraries-include_directories%E7%9A%84%E4%BD%BF%E7%94%A8/" title="cmake中add_library、target_link_libraries、include_directories的使用">cmake中add_library、target_link_libraries、include_directories的使用</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/cmake%E4%B8%ADadd_library-target_link_libraries-include_directories%E7%9A%84%E4%BD%BF%E7%94%A8/">
+				        <h2 class="post-title">
+                            cmake中add_library、target_link_libraries、include_directories的使用
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            add_library、target_link_libraries、include_directories
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="剑指offer">
+                    <span class="tag-text">剑指offer</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-05">2019-11-05</time>
+				  <a href="/2019/11/05/%E5%89%AA%E7%BB%B3%E5%AD%90/" title="剪绳子">剪绳子</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/05/%E5%89%AA%E7%BB%B3%E5%AD%90/">
+				        <h2 class="post-title">
+                            剪绳子
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-05</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-04">2019-11-04</time>
+				  <a href="/2019/11/04/%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%BF%90%E5%8A%A8%E8%8C%83%E5%9B%B4/" title="机器人的运动范围">机器人的运动范围</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/04/%E6%9C%BA%E5%99%A8%E4%BA%BA%E7%9A%84%E8%BF%90%E5%8A%A8%E8%8C%83%E5%9B%B4/">
+				        <h2 class="post-title">
+                            机器人的运动范围
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-04</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-29">2019-10-29</time>
+				  <a href="/2019/10/29/%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/" title="矩阵中的路径">矩阵中的路径</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/29/%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/">
+				        <h2 class="post-title">
+                            矩阵中的路径
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-29</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-28">2019-10-28</time>
+				  <a href="/2019/10/28/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC/" title="滑动窗口的最大值">滑动窗口的最大值</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/28/%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3%E7%9A%84%E6%9C%80%E5%A4%A7%E5%80%BC/">
+				        <h2 class="post-title">
+                            滑动窗口的最大值
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-28</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-27">2019-10-27</time>
+				  <a href="/2019/10/27/%E6%95%B0%E6%8D%AE%E6%B5%81%E4%B8%AD%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/" title="数据流中的中位数">数据流中的中位数</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/27/%E6%95%B0%E6%8D%AE%E6%B5%81%E4%B8%AD%E7%9A%84%E4%B8%AD%E4%BD%8D%E6%95%B0/">
+				        <h2 class="post-title">
+                            数据流中的中位数
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-27</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-27">2019-10-27</time>
+				  <a href="/2019/10/27/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/" title="序列化二叉树">序列化二叉树</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/27/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/">
+				        <h2 class="post-title">
+                            序列化二叉树
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-27</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-18">2019-10-18</time>
+				  <a href="/2019/10/18/%E5%BA%8F%E5%88%97%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91/" title="序列化二叉树">序列化二叉树</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/18/%E5%BA%8F%E5%88%97%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91/">
+				        <h2 class="post-title">
+                            序列化二叉树
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-18</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-17">2019-10-17</time>
+				  <a href="/2019/10/17/%E6%8A%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E6%89%93%E5%8D%B0%E6%88%90%E5%A4%9A%E8%A1%8C/" title="把二叉树打印成多行">把二叉树打印成多行</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/17/%E6%8A%8A%E4%BA%8C%E5%8F%89%E6%A0%91%E6%89%93%E5%8D%B0%E6%88%90%E5%A4%9A%E8%A1%8C/">
+				        <h2 class="post-title">
+                            把二叉树打印成多行
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-17</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-16">2019-10-16</time>
+				  <a href="/2019/10/16/%E6%8C%89%E4%B9%8B%E5%AD%97%E5%BD%A2%E9%A1%BA%E5%BA%8F%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/" title="按之字形顺序打印二叉树">按之字形顺序打印二叉树</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/16/%E6%8C%89%E4%B9%8B%E5%AD%97%E5%BD%A2%E9%A1%BA%E5%BA%8F%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/">
+				        <h2 class="post-title">
+                            按之字形顺序打印二叉树
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-16</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-16">2019-10-16</time>
+				  <a href="/2019/10/16/%E5%AF%B9%E7%A7%B0%E7%9A%84%E4%BA%8C%E5%8F%89%E6%A0%91/" title="对称的二叉树">对称的二叉树</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/16/%E5%AF%B9%E7%A7%B0%E7%9A%84%E4%BA%8C%E5%8F%89%E6%A0%91/">
+				        <h2 class="post-title">
+                            对称的二叉树
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-16</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-12">2019-10-12</time>
+				  <a href="/2019/10/12/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E7%BB%93%E7%82%B9/" title="二叉树的下一个结点">二叉树的下一个结点</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/12/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E4%B8%8B%E4%B8%80%E4%B8%AA%E7%BB%93%E7%82%B9/">
+				        <h2 class="post-title">
+                            二叉树的下一个结点
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-12</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-11">2019-10-11</time>
+				  <a href="/2019/10/11/%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E7%BB%93%E7%82%B9/" title="删除链表中重复的结点">删除链表中重复的结点</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/11/%E5%88%A0%E9%99%A4%E9%93%BE%E8%A1%A8%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E7%BB%93%E7%82%B9/">
+				        <h2 class="post-title">
+                            删除链表中重复的结点
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-11</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-09">2019-10-09</time>
+				  <a href="/2019/10/09/%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%8E%AF%E7%9A%84%E5%85%A5%E5%8F%A3%E7%BB%93%E7%82%B9/" title="链表中环的入口结点">链表中环的入口结点</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/09/%E9%93%BE%E8%A1%A8%E4%B8%AD%E7%8E%AF%E7%9A%84%E5%85%A5%E5%8F%A3%E7%BB%93%E7%82%B9/">
+				        <h2 class="post-title">
+                            链表中环的入口结点
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-09</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-09">2019-10-09</time>
+				  <a href="/2019/10/09/%E5%AD%97%E7%AC%A6%E6%B5%81%E4%B8%AD%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%B8%8D%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%97%E7%AC%A6/" title="字符流中第一个不重复的字符">字符流中第一个不重复的字符</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/09/%E5%AD%97%E7%AC%A6%E6%B5%81%E4%B8%AD%E7%AC%AC%E4%B8%80%E4%B8%AA%E4%B8%8D%E9%87%8D%E5%A4%8D%E7%9A%84%E5%AD%97%E7%AC%A6/">
+				        <h2 class="post-title">
+                            字符流中第一个不重复的字符
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-09</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-27">2019-09-27</time>
+				  <a href="/2019/09/27/%E8%A1%A8%E7%A4%BA%E6%95%B0%E5%80%BC%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="表示数值的字符串">表示数值的字符串</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/27/%E8%A1%A8%E7%A4%BA%E6%95%B0%E5%80%BC%E7%9A%84%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+				        <h2 class="post-title">
+                            表示数值的字符串
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-27</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E9%A1%BA%E6%97%B6%E9%92%88%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5/" title="顺时针打印矩阵">顺时针打印矩阵</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E9%A1%BA%E6%97%B6%E9%92%88%E6%89%93%E5%8D%B0%E7%9F%A9%E9%98%B5/">
+				        <h2 class="post-title">
+                            顺时针打印矩阵
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/" title="链表中倒数第k个结点">链表中倒数第k个结点</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E9%93%BE%E8%A1%A8%E4%B8%AD%E5%80%92%E6%95%B0%E7%AC%ACk%E4%B8%AA%E7%BB%93%E7%82%B9/">
+				        <h2 class="post-title">
+                            链表中倒数第k个结点
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/" title="重建二叉树">重建二叉树</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91/">
+				        <h2 class="post-title">
+                            重建二叉树
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%A4%A7%E5%92%8C/" title="连续子数组的最大和">连续子数组的最大和</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%A4%A7%E5%92%8C/">
+				        <h2 class="post-title">
+                            连续子数组的最大和
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E8%B7%B3%E5%8F%B0%E9%98%B6/" title="跳台阶">跳台阶</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E8%B7%B3%E5%8F%B0%E9%98%B6/">
+				        <h2 class="post-title">
+                            跳台阶
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E8%B0%83%E6%95%B4%E6%95%B0%E7%BB%84%E9%A1%BA%E5%BA%8F%E4%BD%BF%E5%A5%87%E6%95%B0%E4%BD%8D%E4%BA%8E%E5%81%B6%E6%95%B0%E5%89%8D%E9%9D%A2/" title="调整数组顺序使奇数位于偶数前面">调整数组顺序使奇数位于偶数前面</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E8%B0%83%E6%95%B4%E6%95%B0%E7%BB%84%E9%A1%BA%E5%BA%8F%E4%BD%BF%E5%A5%87%E6%95%B0%E4%BD%8D%E4%BA%8E%E5%81%B6%E6%95%B0%E5%89%8D%E9%9D%A2/">
+				        <h2 class="post-title">
+                            调整数组顺序使奇数位于偶数前面
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F%E5%88%97/" title="翻转单词顺序列">翻转单词顺序列</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E7%BF%BB%E8%BD%AC%E5%8D%95%E8%AF%8D%E9%A1%BA%E5%BA%8F%E5%88%97/">
+				        <h2 class="post-title">
+                            翻转单词顺序列
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E5%AD%97%E7%AC%A6/" title="第一个只出现一次的字符">第一个只出现一次的字符</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E5%AD%97%E7%AC%A6/">
+				        <h2 class="post-title">
+                            第一个只出现一次的字符
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E7%9F%A9%E5%BD%A2%E8%A6%86%E7%9B%96/" title="矩形覆盖">矩形覆盖</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E7%9F%A9%E5%BD%A2%E8%A6%86%E7%9B%96/">
+				        <h2 class="post-title">
+                            矩形覆盖
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E7%94%A8%E4%B8%A4%E4%B8%AA%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/" title="用两个栈实现队列">用两个栈实现队列</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E7%94%A8%E4%B8%A4%E4%B8%AA%E6%A0%88%E5%AE%9E%E7%8E%B0%E9%98%9F%E5%88%97/">
+				        <h2 class="post-title">
+                            用两个栈实现队列
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%B1%821%E5%88%B0n%E7%B4%AF%E5%8A%A0%E5%92%8C/" title="求1到n累加和">求1到n累加和</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%B1%821%E5%88%B0n%E7%B4%AF%E5%8A%A0%E5%92%8C/">
+				        <h2 class="post-title">
+                            求1到n累加和
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/" title="正则表达式匹配">正则表达式匹配</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%8C%B9%E9%85%8D/">
+				        <h2 class="post-title">
+                            正则表达式匹配
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/" title="树的子结构">树的子结构</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%A0%91%E7%9A%84%E5%AD%90%E7%BB%93%E6%9E%84/">
+				        <h2 class="post-title">
+                            树的子结构
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%A0%88%E7%9A%84%E5%8E%8B%E5%85%A5-%E5%BC%B9%E5%87%BA%E5%BA%8F%E5%88%97/" title="栈的压入、弹出序列">栈的压入、弹出序列</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%A0%88%E7%9A%84%E5%8E%8B%E5%85%A5-%E5%BC%B9%E5%87%BA%E5%BA%8F%E5%88%97/">
+				        <h2 class="post-title">
+                            栈的压入、弹出序列
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%9E%84%E5%BB%BA%E4%B9%98%E7%A7%AF%E6%95%B0%E7%BB%84/" title="构建乘积数组">构建乘积数组</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%9E%84%E5%BB%BA%E4%B9%98%E7%A7%AF%E6%95%B0%E7%BB%84/">
+				        <h2 class="post-title">
+                            构建乘积数组
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%9C%80%E5%B0%8F%E7%9A%84K%E4%B8%AA%E6%95%B0/" title="最小的K个数">最小的K个数</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%9C%80%E5%B0%8F%E7%9A%84K%E4%B8%AA%E6%95%B0/">
+				        <h2 class="post-title">
+                            最小的K个数
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%9B%BF%E6%8D%A2%E7%A9%BA%E6%A0%BC/" title="替换空格">替换空格</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%9B%BF%E6%8D%A2%E7%A9%BA%E6%A0%BC/">
+				        <h2 class="post-title">
+                            替换空格
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9C%80%E5%B0%8F%E6%95%B0%E5%AD%97/" title="旋转数组中的最小数字">旋转数组中的最小数字</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%97%8B%E8%BD%AC%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9C%80%E5%B0%8F%E6%95%B0%E5%AD%97/">
+				        <h2 class="post-title">
+                            旋转数组中的最小数字
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/" title="斐波那契数列">斐波那契数列</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%96%90%E6%B3%A2%E9%82%A3%E5%A5%91%E6%95%B0%E5%88%97/">
+				        <h2 class="post-title">
+                            斐波那契数列
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%95%B4%E6%95%B0%E4%B8%AD1%E5%87%BA%E7%8E%B0%E7%9A%84%E6%AC%A1%E6%95%B0/" title="整数中1出现的次数">整数中1出现的次数</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%95%B4%E6%95%B0%E4%B8%AD1%E5%87%BA%E7%8E%B0%E7%9A%84%E6%AC%A1%E6%95%B0/">
+				        <h2 class="post-title">
+                            整数中1出现的次数
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%95%B0%E7%BB%84%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E6%95%B0%E5%AD%97/" title="数组中重复的数字">数组中重复的数字</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%95%B0%E7%BB%84%E4%B8%AD%E9%87%8D%E5%A4%8D%E7%9A%84%E6%95%B0%E5%AD%97/">
+				        <h2 class="post-title">
+                            数组中重复的数字
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%80%86%E5%BA%8F%E5%AF%B9/" title="数组中的逆序对">数组中的逆序对</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E9%80%86%E5%BA%8F%E5%AF%B9/">
+				        <h2 class="post-title">
+                            数组中的逆序对
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%95%B0%E7%BB%84%E4%B8%AD%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E6%95%B0%E5%AD%97/" title="数组中只出现一次的数字">数组中只出现一次的数字</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%95%B0%E7%BB%84%E4%B8%AD%E5%8F%AA%E5%87%BA%E7%8E%B0%E4%B8%80%E6%AC%A1%E7%9A%84%E6%95%B0%E5%AD%97/">
+				        <h2 class="post-title">
+                            数组中只出现一次的数字
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0%E8%B6%85%E8%BF%87%E4%B8%80%E5%8D%8A%E7%9A%84%E6%95%B0%E5%AD%97/" title="数组中出现次数超过一半的数字">数组中出现次数超过一半的数字</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E6%AC%A1%E6%95%B0%E8%B6%85%E8%BF%87%E4%B8%80%E5%8D%8A%E7%9A%84%E6%95%B0%E5%AD%97/">
+				        <h2 class="post-title">
+                            数组中出现次数超过一半的数字
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%95%B0%E5%AD%97%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E7%9A%84%E6%AC%A1%E6%95%B0/" title="数字在排序数组中出现的次数">数字在排序数组中出现的次数</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%95%B0%E5%AD%97%E5%9C%A8%E6%8E%92%E5%BA%8F%E6%95%B0%E7%BB%84%E4%B8%AD%E5%87%BA%E7%8E%B0%E7%9A%84%E6%AC%A1%E6%95%B0/">
+				        <h2 class="post-title">
+                            数字在排序数组中出现的次数
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%95%B0%E5%80%BC%E7%9A%84%E6%95%B4%E6%95%B0%E6%AC%A1%E6%96%B9/" title="数值的整数次方">数值的整数次方</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%95%B0%E5%80%BC%E7%9A%84%E6%95%B4%E6%95%B0%E6%AC%A1%E6%96%B9/">
+				        <h2 class="post-title">
+                            数值的整数次方
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%8A%8A%E6%95%B0%E7%BB%84%E6%8E%92%E6%88%90%E6%9C%80%E5%B0%8F%E7%9A%84%E6%95%B0/" title="把数组排成最小的数">把数组排成最小的数</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%8A%8A%E6%95%B0%E7%BB%84%E6%8E%92%E6%88%90%E6%9C%80%E5%B0%8F%E7%9A%84%E6%95%B0/">
+				        <h2 class="post-title">
+                            把数组排成最小的数
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%8A%8A%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%88%90%E6%95%B4%E6%95%B0/" title="把字符串转换成整数">把字符串转换成整数</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%8A%8A%E5%AD%97%E7%AC%A6%E4%B8%B2%E8%BD%AC%E6%8D%A2%E6%88%90%E6%95%B4%E6%95%B0/">
+				        <h2 class="post-title">
+                            把字符串转换成整数
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E6%89%91%E5%85%8B%E7%89%8C%E9%A1%BA%E5%AD%90/" title="扑克牌顺子">扑克牌顺子</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E6%89%91%E5%85%8B%E7%89%8C%E9%A1%BA%E5%AD%90/">
+				        <h2 class="post-title">
+                            扑克牌顺子
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/" title="平衡二叉树">平衡二叉树</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91/">
+				        <h2 class="post-title">
+                            平衡二叉树
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%B7%A6%E6%97%8B%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2/" title="左旋转字符串">左旋转字符串</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%B7%A6%E6%97%8B%E8%BD%AC%E5%AD%97%E7%AC%A6%E4%B8%B2/">
+				        <h2 class="post-title">
+                            左旋转字符串
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%AD%A9%E5%AD%90%E4%BB%AC%E7%9A%84%E6%B8%B8%E6%88%8F(%E5%9C%86%E5%9C%88%E4%B8%AD%E6%9C%80%E5%90%8E%E5%89%A9%E4%B8%8B%E7%9A%84%E6%95%B0)/" title="孩子们的游戏(圆圈中最后剩下的数)">孩子们的游戏(圆圈中最后剩下的数)</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%AD%A9%E5%AD%90%E4%BB%AC%E7%9A%84%E6%B8%B8%E6%88%8F(%E5%9C%86%E5%9C%88%E4%B8%AD%E6%9C%80%E5%90%8E%E5%89%A9%E4%B8%8B%E7%9A%84%E6%95%B0)/">
+				        <h2 class="post-title">
+                            孩子们的游戏(圆圈中最后剩下的数)
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%85%A8%E6%8E%92%E5%88%97/" title="字符串的全排列">字符串的全排列</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84%E5%85%A8%E6%8E%92%E5%88%97/">
+				        <h2 class="post-title">
+                            字符串的全排列
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/" title="复杂链表的复制">复杂链表的复制</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%A4%8D%E6%9D%82%E9%93%BE%E8%A1%A8%E7%9A%84%E5%A4%8D%E5%88%B6/">
+				        <h2 class="post-title">
+                            复杂链表的复制
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%92%8C%E4%B8%BAS%E7%9A%84%E8%BF%9E%E7%BB%AD%E6%AD%A3%E6%95%B0%E5%BA%8F%E5%88%97/" title="和为S的连续正数序列">和为S的连续正数序列</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%92%8C%E4%B8%BAS%E7%9A%84%E8%BF%9E%E7%BB%AD%E6%AD%A3%E6%95%B0%E5%BA%8F%E5%88%97/">
+				        <h2 class="post-title">
+                            和为S的连续正数序列
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%92%8C%E4%B8%BAS%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%95%B0%E5%AD%97/" title="和为S的两个数字">和为S的两个数字</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%92%8C%E4%B8%BAS%E7%9A%84%E4%B8%A4%E4%B8%AA%E6%95%B0%E5%AD%97/">
+				        <h2 class="post-title">
+                            和为S的两个数字
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%8E%92%E5%BA%8F%E7%9A%84%E9%93%BE%E8%A1%A8/" title="合并两个排序的链表">合并两个排序的链表</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%90%88%E5%B9%B6%E4%B8%A4%E4%B8%AA%E6%8E%92%E5%BA%8F%E7%9A%84%E9%93%BE%E8%A1%A8/">
+				        <h2 class="post-title">
+                            合并两个排序的链表
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%8F%98%E6%80%81%E8%B7%B3%E5%8F%B0%E9%98%B6/" title="变态跳台阶">变态跳台阶</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%8F%98%E6%80%81%E8%B7%B3%E5%8F%B0%E9%98%B6/">
+				        <h2 class="post-title">
+                            变态跳台阶
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/" title="反转链表">反转链表</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%8F%8D%E8%BD%AC%E9%93%BE%E8%A1%A8/">
+				        <h2 class="post-title">
+                            反转链表
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E5%8C%85%E5%90%ABmin%E5%87%BD%E6%95%B0%E7%9A%84%E6%A0%88/" title="包含min函数的栈">包含min函数的栈</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E5%8C%85%E5%90%ABmin%E5%87%BD%E6%95%B0%E7%9A%84%E6%A0%88/">
+				        <h2 class="post-title">
+                            包含min函数的栈
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BB%8E%E5%B0%BE%E5%88%B0%E5%A4%B4%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/" title="从尾到头打印链表">从尾到头打印链表</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BB%8E%E5%B0%BE%E5%88%B0%E5%A4%B4%E6%89%93%E5%8D%B0%E9%93%BE%E8%A1%A8/">
+				        <h2 class="post-title">
+                            从尾到头打印链表
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BB%8E%E4%B8%8A%E5%BE%80%E4%B8%8B%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/" title="从上往下打印二叉树">从上往下打印二叉树</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BB%8E%E4%B8%8A%E5%BE%80%E4%B8%8B%E6%89%93%E5%8D%B0%E4%BA%8C%E5%8F%89%E6%A0%91/">
+				        <h2 class="post-title">
+                            从上往下打印二叉树
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%B8%AD1%E7%9A%84%E4%B8%AA%E6%95%B0/" title="二进制中1的个数">二进制中1的个数</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BA%8C%E8%BF%9B%E5%88%B6%E4%B8%AD1%E7%9A%84%E4%B8%AA%E6%95%B0/">
+				        <h2 class="post-title">
+                            二进制中1的个数
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/" title="二维数组中的查找">二维数组中的查找</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BA%8C%E7%BB%B4%E6%95%B0%E7%BB%84%E4%B8%AD%E7%9A%84%E6%9F%A5%E6%89%BE/">
+				        <h2 class="post-title">
+                            二维数组中的查找
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%95%9C%E5%83%8F/" title="二叉树的镜像">二叉树的镜像</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%95%9C%E5%83%8F/">
+				        <h2 class="post-title">
+                            二叉树的镜像
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%B7%B1%E5%BA%A6/" title="二叉树的深度">二叉树的深度</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%B7%B1%E5%BA%A6/">
+				        <h2 class="post-title">
+                            二叉树的深度
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%92%8C%E4%B8%BA%E6%9F%90%E4%B8%80%E5%80%BC%E7%9A%84%E8%B7%AF%E5%BE%84/" title="二叉树中和为某一值的路径">二叉树中和为某一值的路径</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%A0%91%E4%B8%AD%E5%92%8C%E4%B8%BA%E6%9F%90%E4%B8%80%E5%80%BC%E7%9A%84%E8%B7%AF%E5%BE%84/">
+				        <h2 class="post-title">
+                            二叉树中和为某一值的路径
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E5%BA%8F%E5%88%97/" title="二叉搜索树的后序序列">二叉搜索树的后序序列</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E7%9A%84%E5%90%8E%E5%BA%8F%E5%BA%8F%E5%88%97/">
+				        <h2 class="post-title">
+                            二叉搜索树的后序序列
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/" title="二叉搜索树与双向链表">二叉搜索树与双向链表</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91%E4%B8%8E%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8/">
+				        <h2 class="post-title">
+                            二叉搜索树与双向链表
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E8%8A%82%E7%82%B9/" title="两个链表的第一个公共节点">两个链表的第一个公共节点</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%B8%A4%E4%B8%AA%E9%93%BE%E8%A1%A8%E7%9A%84%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%85%AC%E5%85%B1%E8%8A%82%E7%82%B9/">
+				        <h2 class="post-title">
+                            两个链表的第一个公共节点
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%B8%91%E6%95%B0/" title="丑数">丑数</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%B8%91%E6%95%B0/">
+				        <h2 class="post-title">
+                            丑数
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-26">2019-09-26</time>
+				  <a href="/2019/09/26/%E4%B8%8D%E7%94%A8%E5%8A%A0%E5%87%8F%E4%B9%98%E9%99%A4%E5%81%9A%E5%8A%A0%E6%B3%95/" title="不用加减乘除做加法">不用加减乘除做加法</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/26/%E4%B8%8D%E7%94%A8%E5%8A%A0%E5%87%8F%E4%B9%98%E9%99%A4%E5%81%9A%E5%8A%A0%E6%B3%95/">
+				        <h2 class="post-title">
+                            不用加减乘除做加法
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-26</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="http">
+                    <span class="tag-text">http</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-13">2019-10-13</time>
+				  <a href="/2019/10/13/%E4%BD%BF%E7%94%A8select%E5%87%BD%E6%95%B0%E7%9B%91%E6%B5%8Bhttp%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6/" title="使用select函数监测http请求超时">使用select函数监测http请求超时</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/13/%E4%BD%BF%E7%94%A8select%E5%87%BD%E6%95%B0%E7%9B%91%E6%B5%8Bhttp%E8%AF%B7%E6%B1%82%E8%B6%85%E6%97%B6/">
+				        <h2 class="post-title">
+                            使用select函数监测http请求超时
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            socket超时
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-13</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-06">2019-10-06</time>
+				  <a href="/2019/10/06/http%E7%9A%84chunked%E7%BC%96%E7%A0%81/" title="http的chunked编码">http的chunked编码</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/06/http%E7%9A%84chunked%E7%BC%96%E7%A0%81/">
+				        <h2 class="post-title">
+                            http的chunked编码
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            利用chunked编码确定接收长度
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-06</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-28">2019-09-28</time>
+				  <a href="/2019/09/28/C++%E4%BD%BF%E7%94%A8ssl%E5%8F%91%E9%80%81https%E8%AF%B7%E6%B1%82/" title="C++使用ssl发送https请求">C++使用ssl发送https请求</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/28/C++%E4%BD%BF%E7%94%A8ssl%E5%8F%91%E9%80%81https%E8%AF%B7%E6%B1%82/">
+				        <h2 class="post-title">
+                            C++使用ssl发送https请求
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            使用ssl访问
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-28</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-09-27">2019-09-27</time>
+				  <a href="/2019/09/27/http%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%9A%84%E9%95%BF%E5%BA%A6/" title="http响应报文的长度">http响应报文的长度</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/09/27/http%E5%93%8D%E5%BA%94%E6%8A%A5%E6%96%87%E7%9A%84%E9%95%BF%E5%BA%A6/">
+				        <h2 class="post-title">
+                            http响应报文的长度
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-09-27</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="PAT/PTA">
+                    <span class="tag-text">PAT/PTA</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-13">2019-10-13</time>
+				  <a href="/2019/10/13/%E7%90%83%E9%98%9F-%E9%A3%9F%E7%89%A9%E9%93%BE/" title="球队“食物链”">球队“食物链”</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/13/%E7%90%83%E9%98%9F-%E9%A3%9F%E7%89%A9%E9%93%BE/">
+				        <h2 class="post-title">
+                            球队“食物链”
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗？
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-13</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="Raft">
+                    <span class="tag-text">Raft</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-23">2019-10-23</time>
+				  <a href="/2019/10/23/Raft%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E4%BF%9D%E9%9A%9C/" title="Raft中的一致性保障">Raft中的一致性保障</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/23/Raft%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E4%BF%9D%E9%9A%9C/">
+				        <h2 class="post-title">
+                            Raft中的一致性保障
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            分布式一致性问题
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-23</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-22">2019-10-22</time>
+				  <a href="/2019/10/22/3%E5%85%B3%E4%BA%8ERaft%E4%B8%AD%E7%9A%84%E6%97%A5%E5%BF%97%E5%A4%8D%E5%88%B6/" title="Raft中的日志复制">Raft中的日志复制</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/22/3%E5%85%B3%E4%BA%8ERaft%E4%B8%AD%E7%9A%84%E6%97%A5%E5%BF%97%E5%A4%8D%E5%88%B6/">
+				        <h2 class="post-title">
+                            Raft中的日志复制
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            分布式一致性问题
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-22</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-22">2019-10-22</time>
+				  <a href="/2019/10/22/2Raft%E4%B8%AD%E7%9A%84%E9%A2%86%E5%AF%BC%E9%80%89%E4%B8%BE/" title="Raft中的领导人选举">Raft中的领导人选举</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/22/2Raft%E4%B8%AD%E7%9A%84%E9%A2%86%E5%AF%BC%E9%80%89%E4%B8%BE/">
+				        <h2 class="post-title">
+                            Raft中的领导人选举
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            分布式一致性问题
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-22</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-20">2019-10-20</time>
+				  <a href="/2019/10/20/1Raft%E4%B8%AD%E7%94%A8%E5%88%B0%E7%9A%84RPC/" title="Raft中用到的RPC">Raft中用到的RPC</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/20/1Raft%E4%B8%AD%E7%94%A8%E5%88%B0%E7%9A%84RPC/">
+				        <h2 class="post-title">
+                            Raft中用到的RPC
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            分布式一致性问题
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-20</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-19">2019-10-19</time>
+				  <a href="/2019/10/19/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95Raft%E6%A6%82%E8%BF%B0/" title="分布式一致性算法Raft概述">分布式一致性算法Raft概述</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/19/%E5%88%86%E5%B8%83%E5%BC%8F%E4%B8%80%E8%87%B4%E6%80%A7%E7%AE%97%E6%B3%95Raft%E6%A6%82%E8%BF%B0/">
+				        <h2 class="post-title">
+                            分布式一致性算法Raft概述
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            分布式一致性问题
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-19</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-15">2019-10-15</time>
+				  <a href="/2019/10/15/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%B0%86%E5%86%9B%E9%97%AE%E9%A2%98/" title="拜占庭将军问题">拜占庭将军问题</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/15/%E6%8B%9C%E5%8D%A0%E5%BA%AD%E5%B0%86%E5%86%9B%E9%97%AE%E9%A2%98/">
+				        <h2 class="post-title">
+                            拜占庭将军问题
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            分布式一致性问题
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-15</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="Linux">
+                    <span class="tag-text">Linux</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-26">2019-10-26</time>
+				  <a href="/2019/10/26/%E4%BD%BF%E7%94%A8MQTT%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E5%91%BD%E4%BB%A4/" title="使用MQTT实现简单命令控制">使用MQTT实现简单命令控制</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/26/%E4%BD%BF%E7%94%A8MQTT%E5%AE%9E%E7%8E%B0%E7%AE%80%E5%8D%95%E5%91%BD%E4%BB%A4/">
+				        <h2 class="post-title">
+                            使用MQTT实现简单命令控制
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            MQTT
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-26</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-25">2019-10-25</time>
+				  <a href="/2019/10/25/Linux%E4%B8%8BMQTT%E5%AE%89%E8%A3%85%E5%8F%8A%E6%B5%8B%E8%AF%95/" title="Linux下MQTT安装及测试">Linux下MQTT安装及测试</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/25/Linux%E4%B8%8BMQTT%E5%AE%89%E8%A3%85%E5%8F%8A%E6%B5%8B%E8%AF%95/">
+				        <h2 class="post-title">
+                            Linux下MQTT安装及测试
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            MQTT
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-25</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-24">2019-10-24</time>
+				  <a href="/2019/10/24/aptinstall%E5%87%BA%E7%8E%B0EncounteredasectionwithnoPackage/" title="apt install 出现 Encountered a section with no Package header">apt install 出现 Encountered a section with no Package header</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/24/aptinstall%E5%87%BA%E7%8E%B0EncounteredasectionwithnoPackage/">
+				        <h2 class="post-title">
+                            apt install 出现 Encountered a section with no Package header
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            section with no Package
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-24</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="Hadoop">
+                    <span class="tag-text">Hadoop</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-01">2019-11-01</time>
+				  <a href="/2019/11/01/%E6%90%9C%E7%8B%97%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/" title="搜狗数据分析">搜狗数据分析</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/01/%E6%90%9C%E7%8B%97%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">
+				        <h2 class="post-title">
+                            搜狗数据分析
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            Hadoop/Hive
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-01</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-30">2019-10-30</time>
+				  <a href="/2019/10/30/%E4%BD%BF%E7%94%A8%E5%92%8Chive%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/" title="使用和配置hive碰到的坑">使用和配置hive碰到的坑</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/30/%E4%BD%BF%E7%94%A8%E5%92%8Chive%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/">
+				        <h2 class="post-title">
+                            使用和配置hive碰到的坑
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            Hadoop/Hive
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-30</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="设计模式">
+                    <span class="tag-text">设计模式</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-31">2019-10-31</time>
+				  <a href="/2019/10/31/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" title="工厂模式">工厂模式</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/31/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/">
+				        <h2 class="post-title">
+                            工厂模式
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            简单工厂、工厂方法，抽象工厂
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-31</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-10-31">2019-10-31</time>
+				  <a href="/2019/10/31/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" title="单例模式">单例模式</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/10/31/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/">
+				        <h2 class="post-title">
+                            单例模式
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            饿汉式、懒汉式
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-10-31</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="CV">
+                    <span class="tag-text">CV</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-03">2019-11-03</time>
+				  <a href="/2019/11/03/%E7%BB%B4%E7%BA%B3%E6%BB%A4%E6%B3%A2%E8%BF%98%E5%8E%9F%E8%BF%90%E5%8A%A8%E6%A8%A1%E7%B3%8A%E5%9B%BE%E5%83%8F/" title="维纳滤波还原运动模糊图像">维纳滤波还原运动模糊图像</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/03/%E7%BB%B4%E7%BA%B3%E6%BB%A4%E6%B3%A2%E8%BF%98%E5%8E%9F%E8%BF%90%E5%8A%A8%E6%A8%A1%E7%B3%8A%E5%9B%BE%E5%83%8F/">
+				        <h2 class="post-title">
+                            维纳滤波还原运动模糊图像
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            图像还原
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-03</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-03">2019-11-03</time>
+				  <a href="/2019/11/03/opecv%E6%A3%80%E6%B5%8B%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%87%A0%E4%BD%95%E5%9B%BE%E5%BD%A2/" title="检测图像中几何图形">检测图像中几何图形</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/03/opecv%E6%A3%80%E6%B5%8B%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%87%A0%E4%BD%95%E5%9B%BE%E5%BD%A2/">
+				        <h2 class="post-title">
+                            检测图像中几何图形
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            图形/颜色检测
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-03</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="面向对象">
+                    <span class="tag-text">面向对象</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-07">2019-11-07</time>
+				  <a href="/2019/11/07/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%E4%B8%8E%E8%AE%BE%E8%AE%A1/" title="面向对象系统分析与设计">面向对象系统分析与设计</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/07/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%E4%B8%8E%E8%AE%BE%E8%AE%A1/">
+				        <h2 class="post-title">
+                            面向对象系统分析与设计
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            面向对象考试总结
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-07</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="六级">
+                    <span class="tag-text">六级</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-16">2019-11-16</time>
+				  <a href="/2019/11/16/%E5%8D%95%E8%AF%8D%E8%AE%B0%E5%BD%95/" title="英语单词记录">英语单词记录</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/16/%E5%8D%95%E8%AF%8D%E8%AE%B0%E5%BD%95/">
+				        <h2 class="post-title">
+                            英语单词记录
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            我太难了
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-16</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="leveldb">
+                    <span class="tag-text">leveldb</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-24">2019-11-24</time>
+				  <a href="/2019/11/24/leveldb(3)/" title="leveldb的整体设计">leveldb的整体设计</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/24/leveldb(3)/">
+				        <h2 class="post-title">
+                            leveldb的整体设计
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            leveldb
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-24</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-24">2019-11-24</time>
+				  <a href="/2019/11/24/leveldb(2)/" title="leveldb的整体思路">leveldb的整体思路</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/24/leveldb(2)/">
+				        <h2 class="post-title">
+                            leveldb的整体思路
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            leveldb
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-24</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-11-23">2019-11-23</time>
+				  <a href="/2019/11/23/leveldb(1)/" title="leveldb的介绍和安装">leveldb的介绍和安装</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/11/23/leveldb(1)/">
+				        <h2 class="post-title">
+                            leveldb的介绍和安装
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            leveldb
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-11-23</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="profile">
+                    <span class="tag-text">profile</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-02-14">2020-02-14</time>
+				  <a href="/2020/02/14/%E8%AF%BB%E5%8F%96elf%E6%96%87%E4%BB%B6%E7%9A%84%E7%B1%BB%E5%9E%8B/" title="C/C++读取elf文件的头部">C/C++读取elf文件的头部</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/02/14/%E8%AF%BB%E5%8F%96elf%E6%96%87%E4%BB%B6%E7%9A%84%E7%B1%BB%E5%9E%8B/">
+				        <h2 class="post-title">
+                            C/C++读取elf文件的头部
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-02-14</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-02-08">2020-02-08</time>
+				  <a href="/2020/02/08/%E4%BD%BF%E7%94%A8libelfin%E5%BA%93%E9%80%9A%E8%BF%87dwarf%E4%BF%A1%E6%81%AF%E8%AF%BB%E5%8F%96%E8%A1%8C%E5%8F%B7/" title="使用libelfin库通过dwarf信息读取行号">使用libelfin库通过dwarf信息读取行号</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/02/08/%E4%BD%BF%E7%94%A8libelfin%E5%BA%93%E9%80%9A%E8%BF%87dwarf%E4%BF%A1%E6%81%AF%E8%AF%BB%E5%8F%96%E8%A1%8C%E5%8F%B7/">
+				        <h2 class="post-title">
+                            使用libelfin库通过dwarf信息读取行号
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-02-08</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-02-07">2020-02-07</time>
+				  <a href="/2020/02/07/%E5%8A%A8%E6%80%81%E5%BA%93%E6%8C%87%E4%BB%A4%E5%9C%B0%E5%9D%80/" title="读取动态库符号表以及指令地址转化">读取动态库符号表以及指令地址转化</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/02/07/%E5%8A%A8%E6%80%81%E5%BA%93%E6%8C%87%E4%BB%A4%E5%9C%B0%E5%9D%80/">
+				        <h2 class="post-title">
+                            读取动态库符号表以及指令地址转化
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-02-07</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-11">2020-01-11</time>
+				  <a href="/2020/01/11/libunwind%E4%B8%ADunw_set_caching_policy/" title="libunwind中unw_set_caching_policy对unw_step性能的影响">libunwind中unw_set_caching_policy对unw_step性能的影响</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/11/libunwind%E4%B8%ADunw_set_caching_policy/">
+				        <h2 class="post-title">
+                            libunwind中unw_set_caching_policy对unw_step性能的影响
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            你快乐吗
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-11</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-06">2020-01-06</time>
+				  <a href="/2020/01/06/elf%E6%96%87%E4%BB%B6%E5%92%8C%E8%AF%BB%E5%8F%96elf%E4%BF%A1%E6%81%AF/" title="elf文件和读取elf信息">elf文件和读取elf信息</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/06/elf%E6%96%87%E4%BB%B6%E5%92%8C%E8%AF%BB%E5%8F%96elf%E4%BF%A1%E6%81%AF/">
+				        <h2 class="post-title">
+                            elf文件和读取elf信息
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-06</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-01-05">2020-01-05</time>
+				  <a href="/2020/01/05/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA/" title="关于编程语言中的虚拟机">关于编程语言中的虚拟机</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/01/05/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA/">
+				        <h2 class="post-title">
+                            关于编程语言中的虚拟机
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-01-05</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-12">2019-12-12</time>
+				  <a href="/2019/12/12/%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%85%A5%E5%8F%A3%E5%9C%B0%E5%9D%80/" title="关于程序入口地址">关于程序入口地址</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/12/%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%85%A5%E5%8F%A3%E5%9C%B0%E5%9D%80/">
+				        <h2 class="post-title">
+                            关于程序入口地址
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-12</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-04">2019-12-04</time>
+				  <a href="/2019/12/04/%E8%8E%B7%E5%8F%96%E8%BF%9B%E7%A8%8B%E4%B8%AD%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%80%BC/" title="“远程”获取进程中函数参数值">“远程”获取进程中函数参数值</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/04/%E8%8E%B7%E5%8F%96%E8%BF%9B%E7%A8%8B%E4%B8%AD%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%80%BC/">
+				        <h2 class="post-title">
+                            “远程”获取进程中函数参数值
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-04</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-03">2019-12-03</time>
+				  <a href="/2019/12/03/%E6%A0%88%E5%B8%A7/" title="程序中栈帧的分布">程序中栈帧的分布</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/03/%E6%A0%88%E5%B8%A7/">
+				        <h2 class="post-title">
+                            程序中栈帧的分布
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-03</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-02">2019-12-02</time>
+				  <a href="/2019/12/02/%E8%8E%B7%E5%8F%96%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F/" title="获取其他进程的全局变量">获取其他进程的全局变量</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/02/%E8%8E%B7%E5%8F%96%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F/">
+				        <h2 class="post-title">
+                            获取其他进程的全局变量
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-02</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2019-12-01">2019-12-01</time>
+				  <a href="/2019/12/01/%E8%8E%B7%E5%8F%96%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E5%A0%86%E6%A0%88%E4%BF%A1%E6%81%AFC++/" title="C/C++获取程序堆栈信息">C/C++获取程序堆栈信息</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2019/12/01/%E8%8E%B7%E5%8F%96%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E5%A0%86%E6%A0%88%E4%BF%A1%E6%81%AFC++/">
+				        <h2 class="post-title">
+                            C/C++获取程序堆栈信息
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            profile
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2019-12-01</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="luajit">
+                    <span class="tag-text">luajit</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-03-10">2020-03-10</time>
+				  <a href="/2020/03/10/luajit-bigmem/" title="关于luajit2.05中大内存patch实现">关于luajit2.05中大内存patch实现</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/03/10/luajit-bigmem/">
+				        <h2 class="post-title">
+                            关于luajit2.05中大内存patch实现
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            luajit内存扩展
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-03-10</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-03-10">2020-03-10</time>
+				  <a href="/2020/03/10/luajit-bitmem/" title="关于luajit2.05中的内存限制">关于luajit2.05中的内存限制</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/03/10/luajit-bitmem/">
+				        <h2 class="post-title">
+                            关于luajit2.05中的内存限制
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            luajit内存扩展
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-03-10</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="计算机网络">
+                    <span class="tag-text">计算机网络</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-03-15">2020-03-15</time>
+				  <a href="/2020/03/15/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%8F%8A%E7%8A%B6%E6%80%81%E8%A7%A3%E6%9E%90/" title="TCP四次挥手及状态解析">TCP四次挥手及状态解析</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/03/15/TCP%E5%9B%9B%E6%AC%A1%E6%8C%A5%E6%89%8B%E5%8F%8A%E7%8A%B6%E6%80%81%E8%A7%A3%E6%9E%90/">
+				        <h2 class="post-title">
+                            TCP四次挥手及状态解析
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            天气真好
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-03-15</p> -->
+				</div>
+				<hr>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-03-14">2020-03-14</time>
+				  <a href="/2020/03/14/TCP%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%8F%8A%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B/" title="TCP数据报及三次握手">TCP数据报及三次握手</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/03/14/TCP%E6%95%B0%E6%8D%AE%E6%8A%A5%E5%8F%8A%E4%B8%89%E6%AC%A1%E6%8F%A1%E6%89%8B/">
+				        <h2 class="post-title">
+                            TCP数据报及三次握手
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            天气真好
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-03-14</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+			<div class="one-tag-list">
+			  	<span class="fa fa-tag listing-seperator" id="linux">
+                    <span class="tag-text">linux</span>
+                </span>
+				
+				  <!-- <li class="listing-item">
+				  <time datetime="2020-03-23">2020-03-23</time>
+				  <a href="/2020/03/23/mmap%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%92%8C%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="mmap基本用法和共享内存">mmap基本用法和共享内存</a>
+				  </li> -->
+				 <div class="post-preview">
+				    <a href="/2020/03/23/mmap%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E5%92%8C%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/">
+				        <h2 class="post-title">
+                            mmap基本用法和共享内存
+				        </h2>
+				        
+				        <h3 class="post-subtitle">
+				            用mmap写文件及共享内存
+				        </h3>
+				        
+				    </a>
+				    <!-- <p class="post-meta">2020-03-23</p> -->
+				</div>
+				<hr>
+				
+			</div>
+			
+
+		</div>
+	</div>
+</div>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

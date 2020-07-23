@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>获取其他进程的全局变量 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2019/12/02/%E8%8E%B7%E5%8F%96%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0007.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0007.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#profile" title="profile">profile</a>
+                        
+                    </div>
+                    <h1>获取其他进程的全局变量</h1>
+                    
+                    
+                    <h2 class="subheading">profile</h2>
+                    
+                    <span class="meta">Posted by bbkgl on December 2, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>微微风簇浪</p>
+
+  <p>散作满河星</p>
+</blockquote>
+
+<p>如何获取存储在bss段上的，未初始化的“其他进程”的全局变量？</p>
+
+<p>首先考虑到的是使用ptrace，但是ptrace获取其他进程的全局变量，需要该变量的地址。</p>
+
+<p>那如何得到对应bss段变量的地址呢？</p>
+
+<p>使用对应程序段的起始地址+变量的地址偏移量，接下来进行验证和说明。</p>
+
+<p>这里先贴出被测试的程序：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+#include &lt;iostream&gt;
+#include &lt;unistd.h&gt;
+</span>
+<span class="k">struct</span> <span class="n">temp</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">temp</span> <span class="n">g_test</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">test</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+
+<span class="kt">void</span> <span class="nf">func</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"0x%016lx</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">g_test</span><span class="p">);</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">100000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+    <span class="n">func</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="变量的地址以及调试信息">变量的地址以及调试信息</h2>
+
+<h4 id="调试符号">调试符号</h4>
+
+<blockquote>
+  <p>可以参考<a href="https://www.cnblogs.com/chenxuming/articles/9706161.html">符号表</a></p>
+
+  <p><a href="https://blog.csdn.net/farmwang/article/details/72848058">关于elf中的st_value</a>，<strong>一定要看，很重要！！！！</strong></p>
+</blockquote>
+
+<p>关于调试信息，可以自行查资料，目前比较常用的就是dwarf，也就是在编译程序的时候加上-g选项，就能在对应可执行文件中加入符号信息。</p>
+
+<p>linux下查看调试符号可以通过<code class="highlighter-rouge">readelf</code>和<code class="highlighter-rouge">objdump</code>两个工具。</p>
+
+<p>如果使用<code class="highlighter-rouge">readelf -s &lt;exename&gt;</code>会打印出所有符号的信息：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/H75098c05a7404b5f868bd18fd4341b38T.jpg" alt="H75098c05a7404b5f868bd18fd4341b38T.jpg" /></p>
+
+<p>如果需要找到对应变量的信息，可以直接<code class="highlighter-rouge">grep</code>，比如我使用<code class="highlighter-rouge">readelf -s testo | grep g_test</code>：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112221738.png" alt="20200112221738.png" /></p>
+
+<p>其中value有可能是偏移量，也有可能就是绝对地址。</p>
+
+<p><strong>目前关于st_value</strong>的值，因为我们查看的就是elf可执行文件，所以实际上该地址就是内存中的虚拟地址。</p>
+
+<p>特别是对于全局变量来说，无论在.data段还是.bss段，都是在编译后就确定了其虚拟地址，后面会进行验证和分析。</p>
+
+<h4 id="地址范围">地址范围</h4>
+
+<p>程序运行后，代码加载进入内存，并打印结果：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112221823.png" alt="20200112221823.png" /></p>
+
+<p>第一行是进程id，第二行是未初始化的全局变量<code class="highlighter-rouge">g_test</code>的地址，然后再使用gdb attach到目标进程中，可以查找到已经初始化的<code class="highlighter-rouge">test</code>全局变量的地址：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/Heaf48dd313d0410a812048b7cf168bdaC.jpg" alt="Heaf48dd313d0410a812048b7cf168bdaC.jpg" /></p>
+
+<p>同时会在<code class="highlighter-rouge">/proc/&lt;pid&gt;/maps</code>文件中存储下每个段的地址范围：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/Hf5f692c25b1646ef980791ffa3427239i.jpg" alt="Hf5f692c25b1646ef980791ffa3427239i.jpg" /></p>
+
+<p>每一行前面表示的是地址范围和读写权限等信息，最后表示的是文件名。</p>
+
+<p>主要关注前四行和倒数第四行，行数从大到小（内存由低到高）分别表示：</p>
+
+<ul>
+  <li>第一行代码段，因为只读+可执行</li>
+  <li>第二行我也不知道23333</li>
+  <li>第三行是data+bss段，根据前面打印的初始化以及未初始化的全局变量的地址，可以看到是吻合的</li>
+  <li>第四行是堆地址</li>
+  <li>还有倒数第四行是栈地址</li>
+</ul>
+
+<p>说这么多，基本就是想说明，我们可以通过调试信息得到全局变量的地址，无论是bss段还是data段，然后就能使用ptrace读取些变量的值，下面进行实践和验证。</p>
+
+<h2 id="获取进程中全局变量的值">获取进程中全局变量的值</h2>
+
+<h4 id="绝对地址验证gcc较低版本或者clang">绝对地址验证（gcc较低版本或者clang）</h4>
+
+<p>关于ptrace，相关的博客介绍很多，相关使用可以参考我的博客文章<a href="[https://bbkgl.github.io/2019/12/04/获取进程中函数参数值/](https://bbkgl.github.io/2019/12/04/%E8%8E%B7%E5%8F%96%E8%BF%9B%E7%A8%8B%E4%B8%AD%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%80%BC/)">如何获取进程函数参数</a>，这里不再过多追说了。</p>
+
+<p>获取变量值需要两个参数，分别是进程id和变量地址，进程id就是之前看到的11976，而变量的地址就是我们在读取elf文件得到的：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112222336.png" alt="20200112222336.png" /></p>
+
+<p>很简单，贴上代码：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;sys/ptrace.h&gt;
+#include &lt;iostream&gt;
+#include &lt;errno.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;wait.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">wait4stop</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">waitpid</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">WIFEXITED</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">||</span> <span class="n">WIFSIGNALED</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">WIFSTOPPED</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">get_value</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">address</span><span class="p">,</span> <span class="n">pid_t</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_ATTACH</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">wait4stop</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"wait SIGSTOP of ptrace failed"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="kt">long</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_PEEKDATA</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">errno</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"ptrace error!---"</span> <span class="o">&lt;&lt;</span> <span class="n">errno</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+        <span class="n">ret</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_DETACH</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+    <span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ret</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="mi">1880</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">address1</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">int</span> <span class="o">*&gt;</span><span class="p">(</span><span class="mh">0x601060</span><span class="p">);</span>
+    <span class="kt">int</span> <span class="o">*</span><span class="n">address2</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">int</span> <span class="o">*&gt;</span><span class="p">(</span><span class="mh">0x601070</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">get_value</span><span class="p">(</span><span class="n">address1</span><span class="p">,</span> <span class="n">pid</span><span class="p">));</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">get_value</span><span class="p">(</span><span class="n">address2</span><span class="p">,</span> <span class="n">pid</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>输出：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">1</span>
+<span class="mi">0</span>
+</code></pre></div></div>
+
+<p>注：如果报错为3，说明<strong>没有权限或者进程id错误，使用sudo或者检查进程id</strong>。</p>
+
+<h4 id="相对地址验证gcc63较高版本">相对地址验证（gcc6.3较高版本）</h4>
+
+<p>需要说明的是，在gcc/g++较高版本，我发现这个问题时，使用的<strong>gcc6.3，是相对地址</strong> 。</p>
+
+<p>使用如下待验证程序：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+#include &lt;unistd.h&gt;
+#include &lt;vector&gt;
+</span>
+<span class="k">struct</span> <span class="n">test</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">a</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">b</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span> <span class="n">c</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">test</span> <span class="n">aaa</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">func</span><span class="p">(</span><span class="n">test</span> <span class="n">a</span><span class="p">,</span> <span class="n">test</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%016lx</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">aaa</span><span class="p">);</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">100000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%016lx</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">aaa</span><span class="p">);</span>
+    <span class="n">test</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">;</span>
+    <span class="n">func</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>首先通过objdump命令查看bss段信息获取aaa的相对地址，假设该地址为X：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112222423.png" alt="20200112222423.png" /></p>
+
+<p>然后直接运行该程序，打印结果如下：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112222536.png" alt="20200112222536.png" /></p>
+
+<p>其中第一行打印是进程id，第二三行是aaa的实际地址，设该地址为Z。</p>
+
+<p>接下来查看程序起始地址：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112222616.png" alt="20200112222616.png" /></p>
+
+<p>也就是563e937b4000，假设为Y。</p>
+
+<p>可以很明显的看到：</p>
+
+<p>563e937b4000 + 2030a0 = 0000563e939b70a0，也就是X + Y = Z。</p>
+
+<p>说明通过这样的方法可以获得变量的实际地址。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/12/01/%E8%8E%B7%E5%8F%96%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E5%A0%86%E6%A0%88%E4%BF%A1%E6%81%AFC++/" data-toggle="tooltip" data-placement="top" title="C/C++获取程序堆栈信息">
+                        Previous<br>
+                        <span>C/C++获取程序堆栈信息</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/12/03/%E6%A0%88%E5%B8%A7/" data-toggle="tooltip" data-placement="top" title="程序中栈帧的分布">
+                        Next<br>
+                        <span>程序中栈帧的分布</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

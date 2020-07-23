@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>使用和配置hive碰到的坑 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2019/10/30/%E4%BD%BF%E7%94%A8%E5%92%8Chive%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0001.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0001.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
+                        
+                    </div>
+                    <h1>使用和配置hive碰到的坑</h1>
+                    
+                    
+                    <h2 class="subheading">Hadoop/Hive</h2>
+                    
+                    <span class="meta">Posted by bbkgl on October 30, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>只愁歌舞散</p>
+
+  <p>化作彩云飞</p>
+</blockquote>
+
+<p>贝老师的课《大数据存储与处理》的大作业是使用Hadoop和Hive进行数据分析，这里来记录下碰到的坑。</p>
+
+<h2 id="安装hadoop">安装Hadoop</h2>
+
+<p>关于安装Hadoop，这里强烈建议参考厦门大学数据库实验室的博客<a href="http://dblab.xmu.edu.cn/blog/install-hadoop-simplify/#more-94">Hadoop安装配置简略教程</a>，我感觉是问题不大的。</p>
+
+<h2 id="配置hive">配置Hive</h2>
+
+<blockquote>
+  <p>参考<a href="https://www.cnblogs.com/biehongli/p/8074642.html">实验手册——搜狗搜索日志分析系统</a></p>
+</blockquote>
+
+<h4 id="连接不上hadoop">连接不上hadoop</h4>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir: Call From bbkgl/127.0.1.1 to localhost:9000 failed on connection exception: java.net.ConnectException: 拒绝连接<span class="p">;</span> For more details see:  http://wiki.apache.org/hadoop/ConnectionRefused
+mkdir: Call From bbkgl/127.0.1.1 to localhost:9000 failed on connection exception: java.net.ConnectException: 拒绝连接<span class="p">;</span> For more details see:  http://wiki.apache.org/hadoop/ConnectionRefused
+put: Call From bbkgl/127.0.1.1 to localhost:9000 failed on connection exception: java.net.ConnectException: 拒绝连接<span class="p">;</span> For more details see:  http://wiki.apache.org/hadoop/ConnectionRefused
+put: Call From bbkgl/127.0.1.1 to localhost:9000 failed on connection exception: java.net.ConnectException: 拒绝连接<span class="p">;</span> For more details see:  http://wiki.apache.org/hadoop/ConnectionRefused
+</code></pre></div></div>
+
+<p>这种一般是Hadoop各个结点服务没有成功启动，重新启动即可。</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>stop-all.sh
+start-all.sh
+</code></pre></div></div>
+
+<h4 id="hadoop安全模式">hadoop安全模式</h4>
+
+<p>显示hadoop处于安全模式，不能进行任何写入操作：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Caused by: org.apache.hadoop.ipc.RemoteException<span class="o">(</span>org.apache.hadoop.hdfs.server.namenode.SafeModeException<span class="o">)</span>: Cannot create directory /tmp/hive. Name node is <span class="k">in </span>safe mode.
+Resources are low on NN. Please add or free up more resourcesthen turn off safe mode manually. NOTE:  If you turn off safe mode before adding resources, the NN will immediately <span class="k">return </span>to safe mode. Use <span class="s2">"hdfs dfsadmin -safemode leave"</span> to turn safe mode off. NamenodeHostName:localhost
+</code></pre></div></div>
+
+<p>如果去搜的话，大部分文章都是提供这么两个解决办法：</p>
+
+<ol>
+  <li>等，等hadoop退出安全模式</li>
+  <li>强制退出安全模式<code class="highlighter-rouge">hadoop/hdfs dfsadmin -safemode leave</code></li>
+</ol>
+
+<p>如果足够幸运的话，能够通过以上两种方式解决。</p>
+
+<p>不幸运的话，可以再仔细看看报错信息，<strong>Resources are low on NN</strong>，也就是资源不足。。。</p>
+
+<p>于是搜这个加粗的内容，得到的答案基本都是扩容，毕竟报的是磁盘不足。</p>
+
+<p>当然了，如果发现磁盘空间充足的话，可以考虑这个办法，<strong>重新格式化节点</strong>。</p>
+
+<p>对，重新执行以下命令：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hdfs namenode <span class="nt">-format</span>
+start-dfs.sh
+start-yarn.sh
+</code></pre></div></div>
+
+<p>然后就搞定了，可以添加文件了。。。我也不知道为什么，反正就是可以了。。。</p>
+
+<h4 id="mysql-connector-java和mysql版本不匹配">mysql-connector-java和mysql版本不匹配</h4>
+
+<p>错误：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>FAILED: SemanticException Unable to fetch table sogou_ext. You have an error <span class="k">in </span>your SQL syntax<span class="p">;</span> check the manual that corresponds to your MySQL server version <span class="k">for </span>the right syntax to use near <span class="s1">'OPTION SQL_SELECT_LIMIT=DEFAULT'</span> at line 1
+</code></pre></div></div>
+
+<p>之前我用的mysql是5.7，然后mysql-connector-java用的是mysql-connector-java-5.1.9.jar。。。看各种博客上说5.7和5.1是匹配的，结果打脸了呀。</p>
+
+<p>于是我去<a href="http://central.maven.org/maven2/mysql/mysql-connector-java/8.0.11/">官网</a>下载了mysql-connector-java-8.0.jar，完美解决！！！</p>
+
+<h4 id="如果出现文件不能写入">如果出现文件不能写入</h4>
+
+<p>错误：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>put: File /sogou/data_ext._COPYING_ could only be written to 0 of the 1 minReplication nodes. There are 0 datanode<span class="o">(</span>s<span class="o">)</span> running and 0 node<span class="o">(</span>s<span class="o">)</span> are excluded <span class="k">in </span>this operation.
+</code></pre></div></div>
+
+<p>考虑两种可能：</p>
+
+<ul>
+  <li>安全模式，解决如上</li>
+  <li>重复数据，需要重新进行格式化</li>
+</ul>
+
+<p>第二种的话按如下操作：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>rm <span class="nt">-rf</span> hadoop/tmp/<span class="k">*</span>
+stop-all.sh
+hdfs namenode <span class="nt">-format</span>
+start-dfs.sh
+start-yarn.sh
+</code></pre></div></div>
+
+<h2 id="操作步骤">操作步骤</h2>
+
+<h4 id="基本操作">基本操作</h4>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">#</span> <span class="err">查看数据库</span>
+<span class="k">show</span> <span class="n">databases</span><span class="p">;</span>
+<span class="o">#</span> <span class="err">创建数据库</span>
+<span class="k">create</span> <span class="k">database</span> <span class="n">sogou</span><span class="p">;</span>
+<span class="o">#</span><span class="err">　使用数据库</span>
+<span class="n">use</span> <span class="n">sogou</span><span class="p">;</span>
+<span class="o">#</span> <span class="err">查看所有表名</span>
+<span class="k">show</span> <span class="n">tables</span><span class="p">;</span>
+<span class="o">#</span> <span class="err">创建外部表</span><span class="p">,</span><span class="err">使用相对路径绝对</span><span class="n">URI</span><span class="err">，</span> <span class="o">#</span> <span class="err">创建数据库要小心关键字冲突，不能使用</span><span class="n">date</span><span class="err">，</span><span class="k">order</span><span class="p">,</span><span class="k">user</span><span class="err">等关键字</span>
+<span class="o">#</span> <span class="err">还有就是</span><span class="k">location</span><span class="err">中，如果是单机要使用</span><span class="n">lcoalhos</span><span class="err">而不是</span><span class="n">master</span>
+<span class="k">create</span> <span class="k">external</span> <span class="k">table</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_table</span><span class="p">(</span><span class="n">ts</span> <span class="n">string</span><span class="p">,</span> <span class="n">uid</span> <span class="n">string</span><span class="p">,</span> <span class="n">keyword</span> <span class="n">string</span><span class="p">,</span> <span class="n">rank</span> <span class="n">int</span><span class="p">,</span> <span class="n">sorder</span> <span class="n">int</span><span class="p">,</span> <span class="n">url</span> <span class="n">string</span><span class="p">)</span> <span class="k">comment</span> <span class="s1">'this is the sogou search data'</span> <span class="k">Row</span> <span class="n">FORMAT</span> <span class="n">DELIMITED</span>  <span class="n">FIELDS</span> <span class="n">TERMINATED</span> <span class="k">BY</span> <span class="s1">'</span><span class="se">\t</span><span class="s1">'</span> <span class="n">stored</span> <span class="k">as</span> <span class="n">TEXTFILE</span>  <span class="k">location</span> <span class="s1">'hdfs://localhost:9000/sogou/data'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<h4 id="创建带时间分区的表">创建带时间分区的表</h4>
+
+<p>创建扩展数据的外部表：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">external</span> <span class="k">table</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span><span class="p">(</span><span class="n">ts</span> <span class="n">string</span><span class="p">,</span><span class="n">uid</span> <span class="n">string</span><span class="p">,</span><span class="n">keyword</span> <span class="n">string</span><span class="p">,</span><span class="n">rank</span> <span class="n">int</span><span class="p">,</span><span class="n">sorder</span> <span class="n">int</span><span class="p">,</span><span class="n">url</span> <span class="n">string</span><span class="p">,</span><span class="k">year</span> <span class="n">int</span><span class="p">,</span><span class="k">month</span> <span class="n">int</span><span class="p">,</span><span class="k">day</span> <span class="n">int</span><span class="p">,</span><span class="n">hour</span> <span class="n">int</span><span class="p">)</span><span class="k">row</span> <span class="n">format</span> <span class="n">delimited</span> <span class="n">fields</span> <span class="n">terminated</span> <span class="k">by</span> <span class="s1">'</span><span class="se">\t</span><span class="s1">'</span> <span class="n">stored</span> <span class="k">as</span> <span class="n">textfile</span> <span class="k">location</span> <span class="s1">'hdfs://localhost:9000/sogou_ext/data'</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>创建扩展 4 个字段（年、月、日、小时）数据的外部表，其实就是加了句<code class="highlighter-rouge">partitioned by (year INT,month INT,day INT,hour INT)</code>：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">create</span> <span class="k">external</span> <span class="k">table</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_partition</span><span class="p">(</span><span class="n">ts</span> <span class="n">string</span><span class="p">,</span> <span class="n">uid</span> <span class="n">string</span><span class="p">,</span> <span class="n">keyword</span> <span class="n">string</span><span class="p">,</span> <span class="n">rank</span> <span class="n">int</span><span class="p">,</span> <span class="n">sorder</span> <span class="n">int</span><span class="p">,</span> <span class="n">url</span> <span class="n">string</span><span class="p">)</span> <span class="k">comment</span> <span class="s1">'this is the sogou search data'</span> <span class="n">partitioned</span> <span class="k">by</span> <span class="p">(</span><span class="k">year</span> <span class="n">INT</span><span class="p">,</span><span class="k">month</span> <span class="n">INT</span><span class="p">,</span><span class="k">day</span> <span class="n">INT</span><span class="p">,</span><span class="n">hour</span> <span class="n">INT</span><span class="p">)</span> <span class="k">Row</span> <span class="n">FORMAT</span> <span class="n">DELIMITED</span> <span class="n">FIELDS</span> <span class="n">TERMINATED</span> <span class="k">BY</span> <span class="s1">'</span><span class="se">\t</span><span class="s1">'</span> <span class="n">stored</span> <span class="k">as</span> <span class="n">TEXTFILE</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>灌入数据：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">#</span> <span class="err">设置动态分区。</span><span class="n">nonstrict</span><span class="err">全分区字段是动态的</span>
+<span class="k">set</span> <span class="n">hive</span><span class="p">.</span><span class="k">exec</span><span class="p">.</span><span class="k">dynamic</span><span class="p">.</span><span class="n">partition</span><span class="p">.</span><span class="k">mode</span><span class="o">=</span><span class="n">nonstrict</span><span class="p">;</span>
+<span class="k">insert</span> <span class="n">overwrite</span> <span class="k">table</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_partition</span> <span class="n">partition</span><span class="p">(</span><span class="k">year</span><span class="p">,</span><span class="k">month</span><span class="p">,</span><span class="k">day</span><span class="p">,</span><span class="n">hour</span><span class="p">)</span> <span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>简单查询：</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">sogou_ext</span> <span class="k">limit</span> <span class="mi">10</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">keyword</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">group</span> <span class="k">by</span> <span class="n">keyword</span> <span class="k">order</span> <span class="k">by</span> <span class="n">cnt</span> <span class="k">desc</span> <span class="k">limit</span> <span class="mi">30</span><span class="p">;</span>
+
+<span class="o">#</span> <span class="err">结果</span>
+<span class="err">百度</span>	<span class="mi">38437</span>
+<span class="n">baidu</span>	<span class="mi">18312</span>
+<span class="err">人体艺术</span>	<span class="mi">14474</span>
+<span class="mi">4399</span><span class="err">小游戏</span>	<span class="mi">11438</span>
+<span class="n">qq</span><span class="err">空间</span>	<span class="mi">10316</span>
+<span class="err">优酷</span>	<span class="mi">10158</span>
+<span class="err">新亮剑</span>	<span class="mi">9654</span>
+<span class="err">馆陶县县长闫宁的父亲</span>	<span class="mi">9127</span>
+<span class="err">公安卖萌</span>	<span class="mi">8192</span>
+<span class="err">百度一下</span> <span class="err">你就知道</span>	<span class="mi">7504</span>
+<span class="err">百度一下</span>	<span class="mi">7104</span>
+<span class="mi">4399</span>	<span class="mi">7041</span>
+<span class="err">魏特琳</span>	<span class="mi">6665</span>
+<span class="n">qq</span><span class="err">网名</span>	<span class="mi">6148</span>
+<span class="mi">7</span><span class="n">k7k</span><span class="err">小游戏</span>	<span class="mi">5985</span>
+<span class="err">黑狐</span>	<span class="mi">5610</span>
+<span class="err">儿子与母亲不正当关系</span>	<span class="mi">5496</span>
+<span class="err">新浪微博</span>	<span class="mi">5369</span>
+<span class="err">李宇春体</span>	<span class="mi">5310</span>
+<span class="err">新疆暴徒被击毙图片</span>	<span class="mi">4997</span>
+<span class="n">hao123</span>	<span class="mi">4834</span>
+<span class="mi">123</span>	<span class="mi">4829</span>
+<span class="mi">4399</span><span class="err">洛克王国</span>	<span class="mi">4112</span>
+<span class="n">qq</span><span class="err">头像</span>	<span class="mi">4085</span>
+<span class="n">nba</span>	<span class="mi">4027</span>
+<span class="err">龙门飞甲</span>	<span class="mi">3917</span>
+<span class="n">qq</span><span class="err">个性签名</span>	<span class="mi">3880</span>
+<span class="err">张去死</span>	<span class="mi">3847</span>
+<span class="n">cf</span><span class="err">官网</span>	<span class="mi">3729</span>
+<span class="err">凰图腾</span>	<span class="mi">3632</span>
+</code></pre></div></div>
+
+<p>效果如下：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/5dba79a4bd461d945a7adf4b.jpg" alt="5dba79a4bd461d945a7adf4b" /></p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">#</span> <span class="err">查询访问频次最高的</span><span class="mi">10</span><span class="err">条网址</span>
+<span class="k">select</span> <span class="n">url</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="o">/</span><span class="mi">4999877</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">group</span> <span class="k">by</span> <span class="n">url</span> <span class="k">order</span> <span class="k">by</span> <span class="n">cnt</span> <span class="k">desc</span> <span class="k">limit</span> <span class="mi">10</span><span class="p">;</span>
+
+<span class="o">#</span> <span class="err">真实，且还都是</span><span class="n">http</span><span class="err">协议</span>
+
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">baidu</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">73732</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">014746762770364151</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="mi">4399</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">19015</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">00380309355610148</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">hao123</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">14338</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">0028676705446953996</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">youku</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">14085</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">002817069299904778</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">qzone</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">12920</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">002584063567963772</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="mi">7</span><span class="n">k7k</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">8326</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">0016652409649277372</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">weibo</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">7547</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">001509437132153451</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">cf</span><span class="p">.</span><span class="n">qq</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">7544</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">001508837117393088</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="n">xixiwg</span><span class="p">.</span><span class="n">com</span><span class="o">/</span>	<span class="mi">7043</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">0014086346524124493</span>
+<span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="p">.</span><span class="mi">12306</span><span class="p">.</span><span class="n">cn</span><span class="o">/</span>	<span class="mi">6961</span>	<span class="mi">0</span><span class="p">.</span><span class="mi">0013922342489625244</span>
+</code></pre></div></div>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/5dba7ec0bd461d945a7b1e5f.jpg" alt="5dba7ec0bd461d945a7b1e5f" /></p>
+
+<p>后面数据分析应该也是基于<strong>sogou.sogou_ext</strong>这个表。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/10/29/%E7%9F%A9%E9%98%B5%E4%B8%AD%E7%9A%84%E8%B7%AF%E5%BE%84/" data-toggle="tooltip" data-placement="top" title="矩阵中的路径">
+                        Previous<br>
+                        <span>矩阵中的路径</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/10/31/%E5%8D%95%E4%BE%8B%E6%A8%A1%E5%BC%8F/" data-toggle="tooltip" data-placement="top" title="单例模式">
+                        Next<br>
+                        <span>单例模式</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

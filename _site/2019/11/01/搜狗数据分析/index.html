@@ -1,0 +1,922 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>搜狗数据分析 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2019/11/01/%E6%90%9C%E7%8B%97%E6%95%B0%E6%8D%AE%E5%88%86%E6%9E%90/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0005.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0005.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Hadoop" title="Hadoop">Hadoop</a>
+                        
+                    </div>
+                    <h1>搜狗数据分析</h1>
+                    
+                    
+                    <h2 class="subheading">Hadoop/Hive</h2>
+                    
+                    <span class="meta">Posted by bbkgl on November 1, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>未信有情皆是累</p>
+
+  <p>但能无病便为仙</p>
+</blockquote>
+
+<h2 id="介绍">介绍</h2>
+
+<p>这是一个作业，根据搜狗2011.12.30号的500w条搜索数据，做一个数据分析，阅读这条博客前，需要先看下<a href="https://bbkgl.github.io/2019/10/30/%E4%BD%BF%E7%94%A8%E5%92%8Chive%E7%A2%B0%E5%88%B0%E7%9A%84%E5%9D%91/">使用和配置hive碰到的坑</a>。</p>
+
+<h2 id="数据分析">数据分析</h2>
+
+<h4 id="条数统计">条数统计</h4>
+
+<ol>
+  <li>
+    <p>数据总条数</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_table</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/5dbbd6cbbd461d945ad8c5db.jpg" alt="5dbbd6cbbd461d945ad8c5db" /></p>
+  </li>
+  <li>
+    <p>非空查询条数：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span> <span class="k">is</span> <span class="k">not</span> <span class="k">null</span> <span class="k">and</span> <span class="n">keyword</span><span class="o">!=</span><span class="s1">''</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/5dbbd72abd461d945ad8cb97.jpg" alt="5dbbd72abd461d945ad8cb97" /></p>
+  </li>
+  <li>
+    <p>无重复总条数（根据 ts、uid、keyword、url）：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">ts</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">url</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">group</span> <span class="k">by</span> <span class="n">ts</span><span class="p">,</span> <span class="n">uid</span><span class="p">,</span> <span class="n">keyword</span><span class="p">,</span> <span class="n">url</span> <span class="k">having</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="n">a</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/H9a3740f9ab7543f4a4461dee5faa7b122.png" alt="H9a3740f9ab7543f4a4461dee5faa7b122" /></p>
+  </li>
+  <li>
+    <p>独立 UID 总数：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span><span class="p">(</span><span class="n">uid</span><span class="p">))</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/5dbbd8afbd461d945ad8e73d.jpg" alt="5dbbd8afbd461d945ad8e73d" /></p>
+  </li>
+</ol>
+
+<h4 id="关键词分析">关键词分析</h4>
+
+<ol>
+  <li>
+    <p>关键词个数统计</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">cnt</span><span class="p">)</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="k">size</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span><span class="s1">'</span><span class="se">\\</span><span class="s1">s+'</span><span class="p">))</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span><span class="p">)</span> <span class="n">a</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/5dbbd98bbd461d945ad8ff70.jpg" alt="5dbbd98bbd461d945ad8ff70" /></p>
+  </li>
+  <li>
+    <p>关键词长度统计</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">avg</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">cnt</span><span class="p">)</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="k">size</span><span class="p">(</span><span class="n">split</span><span class="p">(</span><span class="n">keyword</span><span class="p">,</span><span class="s1">''</span><span class="p">))</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span><span class="p">)</span> <span class="n">a</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/Hdfbc4bfe80cb451589635069addc3a16t.png" alt="Hdfbc4bfe80cb451589635069addc3a16t" /></p>
+  </li>
+</ol>
+
+<h4 id="uid分析">UID分析</h4>
+
+<ol>
+  <li>
+    <p>UID 的查询次数分布（查询 1 次的 UID 个数，…查询 N 次的 UID个数）：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">SUM</span><span class="p">(</span><span class="n">IF</span><span class="p">(</span><span class="n">uids</span><span class="p">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span><span class="k">SUM</span><span class="p">(</span><span class="n">IF</span><span class="p">(</span><span class="n">uids</span><span class="p">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span><span class="k">SUM</span><span class="p">(</span><span class="n">IF</span><span class="p">(</span><span class="n">uids</span><span class="p">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span><span class="k">SUM</span><span class="p">(</span><span class="n">IF</span><span class="p">(</span><span class="n">uids</span><span class="p">.</span><span class="n">cnt</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">)),</span> <span class="k">SUM</span><span class="p">(</span><span class="n">IF</span><span class="p">(</span><span class="n">uids</span><span class="p">.</span><span class="n">cnt</span><span class="o">&gt;</span><span class="mi">4</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span> <span class="k">from</span>
+<span class="p">(</span><span class="k">select</span> <span class="n">uid</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">group</span> <span class="k">by</span> <span class="n">uid</span><span class="p">)</span> <span class="n">uids</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/5dbbdd75bd461d945ad93b58.jpg" alt="5dbbdd75bd461d945ad93b58" /></p>
+  </li>
+  <li>
+    <p>UID 平均查询次数：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">sum</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">cnt</span><span class="p">)</span><span class="o">/</span><span class="k">count</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">uid</span><span class="p">)</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">uid</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">group</span> <span class="k">by</span> <span class="n">uid</span><span class="p">)</span> <span class="n">a</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/5dbbde01bd461d945ad948da.jpg" alt="5dbbde01bd461d945ad948da" /></p>
+  </li>
+  <li>
+    <p>查询次数大于 2 次的用户总数：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">uid</span><span class="p">)</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">uid</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">group</span> <span class="k">by</span> <span class="n">uid</span> <span class="k">having</span> <span class="n">cnt</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="n">a</span><span class="p">;</span>
+   
+<span class="mi">546343</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>查询次数大于 2 次的用户占比：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="k">distinct</span> <span class="p">(</span><span class="n">uid</span><span class="p">))</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span><span class="p">;</span>
+<span class="k">select</span> <span class="n">uid</span><span class="p">,</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">group</span> <span class="k">by</span> <span class="n">uid</span> <span class="k">having</span> <span class="n">cnt</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">)</span> <span class="n">a</span><span class="p">;</span>
+   
+<span class="mi">1352645</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>查询次数大于 4 次的数据展示：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="n">b</span><span class="p">.</span><span class="o">*</span> <span class="k">from</span> <span class="p">(</span><span class="k">select</span> <span class="n">uid</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">group</span> <span class="k">by</span> <span class="n">uid</span> <span class="k">having</span> <span class="n">cnt</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">)</span> <span class="n">a</span> <span class="k">join</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="n">b</span> <span class="k">on</span> <span class="n">a</span><span class="p">.</span><span class="n">uid</span><span class="o">=</span><span class="n">b</span><span class="p">.</span><span class="n">uid</span> <span class="k">limit</span> <span class="mi">10</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/Hd6c3e269c95343188ce633dfac5a14eeD.jpg" alt="Hd6c3e269c95343188ce633dfac5a14eeD" /></p>
+  </li>
+</ol>
+
+<h4 id="用户行为分析">用户行为分析</h4>
+
+<ol>
+  <li>
+    <p>点击次数与 Rank 之间的关系分析：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">#</span> <span class="n">Rank</span> <span class="err">在</span> <span class="mi">10</span> <span class="err">以内的点击次数占比</span>
+<span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">rank</span> <span class="o">&lt;</span> <span class="mi">11</span><span class="p">;</span>
+   
+<span class="mi">4999742</span>    <span class="o">#</span> <span class="err">搜索结果中位于前十的数目</span>
+   
+<span class="mi">5000000</span>    <span class="o">#</span> <span class="err">总条数</span>
+   
+<span class="err">比例：</span><span class="mi">4999742</span><span class="o">/</span><span class="mi">5000000</span>   <span class="err">绝大部分情况下，用户只点击了前</span><span class="mi">10</span><span class="err">的搜索结果</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>直接输入 URL 作为查询词的比例：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span> <span class="k">like</span> <span class="s1">'%www%'</span><span class="p">;</span>
+   
+<span class="mi">73979</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>独立用户行为分析（搜索具备多样性，因人而异，主要注意个性化需求）：</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">（</span><span class="mi">1</span><span class="err">）查询魔兽世界且次数大于</span><span class="mi">3</span><span class="err">的用户</span>
+<span class="k">select</span> <span class="n">uid</span><span class="p">,</span><span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'魔兽世界'</span> <span class="k">group</span> <span class="k">by</span> <span class="n">uid</span> <span class="k">having</span> <span class="n">cnt</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">;</span>
+   
+<span class="mi">00500</span><span class="n">c8db13dca7587b3a84edfc42c4c</span>	<span class="mi">4</span>
+<span class="mi">3</span><span class="n">b535bb62eb6de7be9866f227fb62fe7</span>	<span class="mi">5</span>
+<span class="n">b6afa6d0697dbb7d0a4bedbc6bd1f90e</span>	<span class="mi">5</span>
+<span class="n">fa7fb5c4e265c5482a75175d358ac1ad</span>	<span class="mi">4</span>
+<span class="n">a64e04683b8c2dda48c8eec50f923c6f</span>	<span class="mi">7</span>
+<span class="n">e8c9d4a151434e89b6fbb9d5b7365a07</span>	<span class="mi">5</span>
+   
+<span class="err">（</span><span class="mi">2</span><span class="err">）查询用户</span><span class="mi">00500</span><span class="n">c8db13dca7587b3a84edfc42c4c</span><span class="err">和用户</span><span class="n">a64e04683b8c2dda48c8eec50f923c6f</span><span class="err">的相关搜索记录</span>
+   
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">uid</span><span class="o">=</span><span class="s1">'00500c8db13dca7587b3a84edfc42c4c'</span> <span class="k">and</span> <span class="n">keyword</span> <span class="k">like</span> <span class="s1">'%魔兽世界%'</span><span class="p">;</span>
+   
+   
+<span class="k">select</span> <span class="o">*</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">uid</span><span class="o">=</span><span class="s1">'a64e04683b8c2dda48c8eec50f923c6f'</span> <span class="k">and</span> <span class="n">keyword</span> <span class="k">like</span> <span class="s1">'%魔兽世界%'</span><span class="p">;</span>
+</code></pre></div>    </div>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/Hb42b5856ad564c61807e3ec20852ae3dd.jpg" alt="Hb42b5856ad564c61807e3ec20852ae3dd" /></p>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/H1906ca3b5830495cb64fabd30af33612G.jpg" alt="H1906ca3b5830495cb64fabd30af33612G" /></p>
+  </li>
+</ol>
+
+<h4 id="2011年10-12月关键词搜索分析">2011年10-12月关键词搜索分析</h4>
+
+<ol>
+  <li>
+    <p>“金正日”相关搜索频次</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'金正日'</span><span class="p">;</span>
+   
+<span class="mi">234</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“英雄联盟”搜索频次</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'英雄联盟'</span><span class="p">;</span>
+   
+<span class="mi">697</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“微博”搜索频次（微博实名制）</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'微博'</span><span class="p">;</span>
+   
+<span class="mi">1561</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“2012”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'2012'</span><span class="p">;</span>
+   
+<span class="mi">225</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“阿里巴巴”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'阿里巴巴'</span><span class="p">;</span>
+   
+<span class="mi">715</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“腾讯”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'腾讯'</span><span class="p">;</span>
+   
+<span class="mi">614</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“百度”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'百度'</span><span class="p">;</span>
+   
+<span class="mi">38437</span>   <span class="err">？？？</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h4 id="高校热度">高校热度</h4>
+
+<ol>
+  <li>
+    <p>“浙江大学”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'浙江大学'</span><span class="p">;</span>
+   
+<span class="mi">39</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“清华大学”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'清华大学'</span><span class="p">;</span>
+   
+<span class="mi">79</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“北京大学”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'北京大学'</span><span class="p">;</span>
+   
+<span class="mi">44</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“复旦大学”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'复旦大学'</span><span class="p">;</span>
+   
+<span class="mi">18</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“上海交通大学”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'上海交通大学'</span><span class="p">;</span>
+   
+<span class="mi">10</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>“武汉大学”</p>
+
+    <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">select</span> <span class="k">count</span><span class="p">(</span><span class="o">*</span><span class="p">)</span> <span class="k">as</span> <span class="n">cnt</span> <span class="k">from</span> <span class="n">sogou</span><span class="p">.</span><span class="n">sogou_ext</span> <span class="k">where</span> <span class="n">keyword</span><span class="o">=</span><span class="s1">'武汉大学'</span><span class="p">;</span>
+   
+<span class="mi">49</span>
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/10/31/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" data-toggle="tooltip" data-placement="top" title="工厂模式">
+                        Previous<br>
+                        <span>工厂模式</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/11/03/opecv%E6%A3%80%E6%B5%8B%E5%9B%BE%E5%83%8F%E4%B8%AD%E5%87%A0%E4%BD%95%E5%9B%BE%E5%BD%A2/" data-toggle="tooltip" data-placement="top" title="检测图像中几何图形">
+                        Next<br>
+                        <span>检测图像中几何图形</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

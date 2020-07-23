@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/page2/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/home-bg-index.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>我太菜了</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">喜欢写Hello World的未来程序员.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+    		<div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                postlist-container
+            ">
+    			
+<div class="post-preview">
+    <a href="/2020/02/09/leetcode10/">
+        <h2 class="post-title">
+            10. Regular Expression Matching
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            C++，dp，递归，字符串匹配。
+
+像这种题，最容易忘记，索性思路写的详细一点。
+
+大体思路：使用从前往后“消除”的思路，使用双指针，对于指针之前的可以不管，只判断当前位置和以后的字符串的匹配情况，然后使用相同的策略进行递归匹配。
+
+详细匹配步骤：
+
+
+  如果s和p指针都指向\0，则说明已经全部匹配成功了；
+  如果s和p指针指向的字符相等或者是p指向的是.，说明当前字符匹配成功：
+   ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on February 9, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/02/08/%E4%BD%BF%E7%94%A8libelfin%E5%BA%93%E9%80%9A%E8%BF%87dwarf%E4%BF%A1%E6%81%AF%E8%AF%BB%E5%8F%96%E8%A1%8C%E5%8F%B7/">
+        <h2 class="post-title">
+            使用libelfin库通过dwarf信息读取行号
+        </h2>
+        
+        <h3 class="post-subtitle">
+            profile
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  金杯侧
+
+  插向绿云鬓
+
+  便随王母仙
+
+
+在之前的一篇博客elf文件和读取elf信息中已经讲到，elf文件中的.debug_line段，存储的是汇编指令地址到文件名+行号的映射。
+
+dwarf是一种调试格式，可以通过解析这种格式获得很多的调试信息，这里的汇编指令对应的源代码位置就是一种调试信息。
+
+其实能够介绍的不是很多，关于dwarf，读者可以自行百度/谷歌查询，也可以直接查看...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on February 8, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/02/07/%E5%8A%A8%E6%80%81%E5%BA%93%E6%8C%87%E4%BB%A4%E5%9C%B0%E5%9D%80/">
+        <h2 class="post-title">
+            读取动态库符号表以及指令地址转化
+        </h2>
+        
+        <h3 class="post-subtitle">
+            profile
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  为众人抱薪者
+
+  已冻毙于风雪
+
+
+获取可执行文件的符号表
+
+获取可执行文件的符号表其实还是比较简单的，直接用libelfin的接口读取就行了，当然也可以用libelf库，也不是很难，这里我都会演示一下的，并和readelf读取的进行对比。
+
+使用libelfin读取符号表
+
+libelfin的接口设计很人性化，为什么这么说呢？两个原因。
+
+
+  现代C++11写的，比较简洁，考虑的...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on February 7, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/02/01/leetcode4/">
+        <h2 class="post-title">
+            4. Median of Two Sorted Arrays
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  染得道家衣
+
+  淡妆梳洗时
+
+  晓来清露滴
+
+
+C++，二分，这道题我看到复杂度要求就知道是二分了，但是依然想了很久才知道大概的理论，然后代码实践又是一个下午。。。菜得真实。
+
+本题的理论就是在短序列A1中找到一个分界下标点m1，其满足如下条件（短长序列长度分别为len1, len2）：
+
+
+  可以在短序列A2找到一个唯一的m2，满足：
+    
+      如果(len1 + ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on February 1, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/31/leetcode-easy/">
+        <h2 class="post-title">
+            leetcode easy 题集合
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            20. Valid Parentheses
+
+这个题就是直接用栈，然后配对就好了，判断是否能配对，asii码相差小于等于2的就是配对符号。
+
+class Solution {
+public:
+    bool isValid(string s) {
+        stack&lt;char&gt; st;
+        for (const char &amp;it : s) {
+   ...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 31, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/31/leetcode739/">
+        <h2 class="post-title">
+            739. Daily Temperatures
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  终是圣明天子事
+
+  景阳宫井又何人
+
+
+C++，算是动态规划23333，也是看了评论区大神的思路。
+
+其实很容易想到一个O(N\^2)的方法，就是从后往前遍历，对于每个T[i]，再往后找到第一个大于T[i]的数，设其为T[j]，显然找T[j]的过程复杂度也是O(N)，所以总的复杂度就是O(N\^2)了。
+
+热评解法就是利用了一个很重要的信息，来优化找T[j]的过程。
+
+原来我们找找T...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 31, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/30/leetcode647/">
+        <h2 class="post-title">
+            647. Palindromic Substrings
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  近水楼台先得月
+
+  向阳花木易为春
+
+
+因为个肺炎疫情，在家待了半个月了，准备开始继续刷题了，打了一周的只狼，打铁的感觉真不错23333。
+
+说回到这道题，C++，动态规划。
+
+回文串的题，用dp来解就是最简单和最容易理解的套路。
+
+定义一个动态数组dp，dp[i][j]表示下标从i到j组成的子串是不是回文串，我们直接两层循环，遍历dp数组的所有值，如果s[i] == s[j]成立，...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 30, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/12/leetcode621/">
+        <h2 class="post-title">
+            621. Task Scheduler
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  小楼一夜听春雨
+
+  深巷明朝卖杏花
+
+
+C++，暴力排序模拟和桶排序。
+
+暴力排序模拟
+
+一开始想到的就是模拟了，直接模拟整个CPU执行任务的过程，用一个循环变量i标记CPU的每次执行，然后记住每种任务执行对应的i的值，每次取新任务的时候，都对任务数组重新排序，从最繁忙的任务开始，找到一个满足前n次都没执行过的任务，执行并标记为执行。。。
+
+暴力模拟的思路很简单，代码一般会稍微麻烦点...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 12, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/11/libunwind%E4%B8%ADunw_set_caching_policy/">
+        <h2 class="post-title">
+            libunwind中unw_set_caching_policy对unw_step性能的影响
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  云想衣裳花相容
+
+  春风拂槛露华浓
+
+
+对子进程进行profile，使用到了libunwind库中的几个接口，但发现耗费时间颇多。然后一个点一个点的排查，居然是unw_get_proc_name和unw_step两个最频繁调用的接口耗费时间最多。
+
+初探libunwind性能
+
+简单地写了几行代码，对系统中某个后台进程trace。
+
+选择的进程就是下面这个，fcitx，随便选的，我也...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 11, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/08/leetcode560/">
+        <h2 class="post-title">
+            494. Target Sum
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  四时可爱唯春日
+
+  一事能狂便少年
+
+
+C++，暴力和，或者hash，前者不需要额外空间，后者需要额外空间。
+
+暴力和解法
+
+有一种很简单的方法，就是将nums数组变成和数组，nums[i]表示的是nums[0]到nums[i]的累加和。通过两层循环，记录nums[j] - nums[i - 1]，就可以得到所有的和，然后找出等于K的和就行了。
+
+class Solution {
+p...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 8, 2020
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+    <li class="previous">
+        <a href="/">&larr; Newer Posts</a>
+    </li>
+    
+    
+    <li class="next">
+        <a href="/page3">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
+
+
+    		</div>
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                            
+                                <a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+                        
+                            
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
+                    <div class="short-about">
+                        
+                            <a href="/about">
+                                <img src="/img/bbkgl.jpg"/>
+                            </a>
+                        
+                        
+                            <p>写过Hello World, 下过矿。</p>
+                        
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            <!-- add jianshu add target = "_blank" to <a> by BY -->
+                            
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://github.com/bbkgl">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                        </ul>
+                        
+                            <p>✉️ zoujiakun@zju.edu.cn</p>
+                        
+                    </div>
+                </section>
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+    		</div>
+        
+	</div>
+</div>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

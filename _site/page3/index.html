@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/page3/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Page Header -->
+<header class="intro-header" style="background-image: url('/img/home-bg-index.jpg')">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
+                <div class="site-heading">
+                    <h1>我太菜了</h1>
+                    <!--<hr class="small">-->
+                    <span class="subheading">喜欢写Hello World的未来程序员.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+	<div class="row">
+        
+
+<!-- USE SIDEBAR -->
+    <!-- PostList Container -->
+    		<div class="
+                col-lg-8 col-lg-offset-1
+                col-md-8 col-md-offset-1
+                col-sm-12
+                col-xs-12
+                postlist-container
+            ">
+    			
+<div class="post-preview">
+    <a href="/2020/01/06/elf%E6%96%87%E4%BB%B6%E5%92%8C%E8%AF%BB%E5%8F%96elf%E4%BF%A1%E6%81%AF/">
+        <h2 class="post-title">
+            elf文件和读取elf信息
+        </h2>
+        
+        <h3 class="post-subtitle">
+            profile
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  秋花最是黄葵好
+
+  天然嫩态迎秋早
+
+
+关于ELF文件
+
+首次接触到elf，我也是非常懵逼，可执行文件就叫可执行文件嘛！为什么搞个可执行与可链接格式文件？这里我也不说太多废话，因为解释和说明文档，无论你百度和google，都能找到一大堆解释，很全。我说的更多是关于自己使用的时候要用到的知识理论，以及怎么读取。
+
+ELF文件中常用到的有，ELF头，节和表。
+
+ELF头更多的是记录文件的...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 6, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/05/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA/">
+        <h2 class="post-title">
+            关于编程语言中的虚拟机
+        </h2>
+        
+        <h3 class="post-subtitle">
+            profile
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  伤心桥下春波绿
+
+  曾是惊鸿照影来
+
+
+前段时间luajit的源码，然后在查阅资料的时候，经常会看到“虚拟机”，“字节码”等字眼。在luajit的源码中，也会经常看到vm等文件和函数。
+
+
+
+实际上，虚拟机对于一门编程语言来说，就承担了执行“字节码/机器码”的工作。为什么要叫做虚拟机，重点就在于执行，模拟机器执行汇编指令的过程。
+
+编译型语言和解释型语言
+
+
+  我太难了，明明写好了...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 5, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/04/leetcode494/">
+        <h2 class="post-title">
+            494. Target Sum
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  自古圣贤皆寂寞
+
+  只教饮者留名
+
+
+C++，暴力解法和背包。
+
+建议大家暴力解法和背包都能学一下。。。为什么呢？
+
+如果面试的时候，你直接跟面试官开始推出本题中正负数和的公式，那肯定是不讨好面试官的，他会觉得你都没有怎么思考，是背的题。个人建议刷题及面试的时候，应该首先考虑暴力和容易想到的方法。亲身经历，一开始就给出那种很巧妙且复杂度最优的解法，容易被面试官觉得你刷题多，然后故意为...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 4, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2020/01/01/leetcode438/">
+        <h2 class="post-title">
+            438. Find All Anagrams in a String
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  浮生只合尊前老
+
+  雪满长安道
+
+
+C++，哈希，字符串比较。
+
+如何判断连个字符串组成的字符以及数目是相同的呢？
+
+最容易想到的就是，记录下每个字符出现的次数，然后比较每个字符出现的次数是否相等。
+
+所以就是利用hash记录字符出现次数，然后比较两个hash表是否相等。
+
+在本题中，很容易就会想到，遍历字符串s，每前进一位，对新组成的子串，利用hash记录字符出现次数，然后将这个h...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on January 1, 2020
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/12/28/leetcode416/">
+        <h2 class="post-title">
+            416. Partition Equal Subset Sum
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  可惜一溪风月
+
+  莫教踏碎琼瑶
+
+
+C++，动态规划，01背包。
+
+这道题需要稍微转变点思路，就是01背包了哈哈哈。
+
+首先可以肯定的是，序列总和必须为偶数，因为得由两个和相等的集合相加而成。
+
+然后就变成了，找到若干元素组成的子序列，该子序列的和等于总和的半数。
+
+这不就是01背包吗？？？虽然我忘了01背包怎么写了2333。
+
+定义一个数组：vector&lt;bool&gt; d...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on December 28, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/12/28/leetcode406/">
+        <h2 class="post-title">
+            406. Queue Reconstruction by Height
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  梨花院落溶溶月
+
+  柳絮池塘淡淡风
+
+
+C++，排序模拟题，贪心思想。
+
+要解这道题，首先明白一个事，就是对于该序列，身高最低的人在剩余空位中的位置是可以直接确定的。
+
+比如序列：[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]，元素[4,4]在新序列的是可以直接确定的，因为它就是身高最矮的，就是新序列中的4号位；同理[5,2]也是能确定的，是在2...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on December 28, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/12/19/leetcode394/">
+        <h2 class="post-title">
+            394. Decode String
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  金风玉露一相逢
+
+  便胜却人间无数
+
+
+C++，字符串处理、栈、dfs。
+
+这种套娃题，肯定想到的就是递归了，为什么用递归？
+
+因为套娃啊，在处理这个字符串的过程中，就会发现[...]里的内容又是一个字符串，可以用相同的方法去处理，所以就是找到所有的[...]，把...扔给递归的下一层去处理。同时要把[...]前的数字给提取出来，把下一层返回的结果，重复加N遍，N是前面提取到的数字。...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on December 19, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/12/18/leetcode347/">
+        <h2 class="post-title">
+            347. Top K Frequent Elements
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  天涯岂是无归意
+
+  争奈归期未可期
+
+
+C++，最小堆+hash。
+
+说一个很多人不知道的小知识点，C++中不同pair之间大小比较默认先比较first，再比较second，这样对做这道题有帮助。如果没有pair这个特性的话，可能得写个struct进行重载或者自定义比较函数了。
+思路也是很简单的，先用hash达到记录元素频次的目的，然后再用一个大小为K的最小堆，选出频次最高的K个元素...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on December 18, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/12/17/leetcode338/">
+        <h2 class="post-title">
+            338. Counting Bits
+        </h2>
+        
+        <h3 class="post-subtitle">
+            你快乐吗
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  朝辞白帝彩云间
+
+  千里江陵一日还
+
+
+C++，数学题。。。
+
+这想到了，就是一分钟的事情。
+
+我是找规律发现的。
+
+分奇数和偶数：
+
+
+  偶数的二进制1个数超级简单，因为偶数是相当于被某个更小的数乘2，乘2怎么来的？在二进制运算中，就是左移一位，也就是在低位多加1个0，那样就说明dp[i] = dp[i / 2]
+  奇数稍微难想到一点，奇数由不大于该数的偶数+1得到，偶数+1在...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on December 17, 2019
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2019/12/15/C++%E4%B8%AD%E8%B4%9F%E6%95%B0%E4%B8%8B%E6%A0%87/">
+        <h2 class="post-title">
+            C++中负数下标
+        </h2>
+        
+        <h3 class="post-subtitle">
+            C++
+        </h3>
+        
+        <div class="post-content-preview">
+            
+  一川烟草
+
+  满城风絮
+
+  梅子黄时雨
+
+
+在阅读luajit源码的时候，发现在特别多地方使用了负数下标，当时觉得特别奇怪，C的数组中使用负数下标，不是会直接报段错误吗？
+
+
+
+其实这里就引出一个问题，下标在C/C++中，代表的实际意义是什么？
+
+下标的意义
+
+可以说，在碰到负数下标这个操作之前，我根本就没思考过，为什么会存在下标索引这个操作呢，为什么下标会从0开始？
+
+在此之前，...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by bbkgl on December 15, 2019
+    </p>
+</div>
+<hr>
+
+
+<!-- Pager -->
+
+<ul class="pager">
+    
+    <li class="previous">
+        <a href="/page2">&larr; Newer Posts</a>
+    </li>
+    
+    
+    <li class="next">
+        <a href="/page4">Older Posts &rarr;</a>
+    </li>
+    
+</ul>
+
+
+    		</div>
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-3 col-lg-offset-0
+                col-md-3 col-md-offset-0
+                col-sm-12
+                col-xs-12
+                sidebar-container
+            ">
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+                        
+                            
+                                <a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+                        
+                            
+                        
+                            
+                        
+                            
+                                <a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+                        
+                            
+                                <a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+                        
+                            
+                        
+                    </div>
+                </section>
+                
+
+                <!-- Short About -->
+                <section class="visible-md visible-lg">
+                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
+                    <div class="short-about">
+                        
+                            <a href="/about">
+                                <img src="/img/bbkgl.jpg"/>
+                            </a>
+                        
+                        
+                            <p>写过Hello World, 下过矿。</p>
+                        
+                        <!-- SNS Link -->
+                        <ul class="list-inline">
+                            
+                            <!-- add jianshu add target = "_blank" to <a> by BY -->
+                            
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">知</i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                            <li>
+                                <a target="_blank" href="https://github.com/bbkgl">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            
+                            
+                        </ul>
+                        
+                            <p>✉️ zoujiakun@zju.edu.cn</p>
+                        
+                    </div>
+                </section>
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+    		</div>
+        
+	</div>
+</div>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

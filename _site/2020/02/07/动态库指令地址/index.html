@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>读取动态库符号表以及指令地址转化 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2020/02/07/%E5%8A%A8%E6%80%81%E5%BA%93%E6%8C%87%E4%BB%A4%E5%9C%B0%E5%9D%80/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0013.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0013.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#profile" title="profile">profile</a>
+                        
+                    </div>
+                    <h1>读取动态库符号表以及指令地址转化</h1>
+                    
+                    
+                    <h2 class="subheading">profile</h2>
+                    
+                    <span class="meta">Posted by bbkgl on February 7, 2020</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>为众人抱薪者</p>
+
+  <p>已冻毙于风雪</p>
+</blockquote>
+
+<h2 id="获取可执行文件的符号表">获取可执行文件的符号表</h2>
+
+<p>获取可执行文件的符号表其实还是比较简单的，直接用libelfin的接口读取就行了，当然也可以用libelf库，也不是很难，这里我都会演示一下的，并和readelf读取的进行对比。</p>
+
+<h4 id="使用libelfin读取符号表">使用libelfin读取符号表</h4>
+
+<p>libelfin的接口设计很人性化，为什么这么说呢？两个原因。</p>
+
+<ul>
+  <li>现代C++11写的，比较简洁，考虑的东西少很多</li>
+  <li>门槛低，不需要了解太多关于elf/dwarf符号的的知识应该就能用</li>
+  <li>libelf库不好找相关的例子，也没有比较好的文档。。。反正我没找到</li>
+</ul>
+
+<p>等会看看用libelf库实现同样的功能多麻烦，就发现libelfin的好了。</p>
+
+<p>首先可以遍历elf文件中的各个段：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+#include &lt;elf/elf++.hh&gt;
+#include &lt;string&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fname</span> <span class="o">=</span> <span class="s">"/home/bbkgl/vimcode/server"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+    <span class="n">elf</span><span class="o">::</span><span class="n">elf</span> <span class="n">ef</span><span class="p">(</span><span class="n">elf</span><span class="o">::</span><span class="n">create_mmap_loader</span><span class="p">(</span><span class="n">fd</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sec</span> <span class="o">:</span> <span class="n">ef</span><span class="p">.</span><span class="n">sections</span><span class="p">())</span> <span class="p">{</span> 
+        <span class="n">printf</span><span class="p">(</span><span class="s">"Symbol table '%s':</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sec</span><span class="p">.</span><span class="n">get_name</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>看一下输出：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208174928.png" alt="20200208174928.png" /></p>
+
+<p>可以看到程序的各个段，也有我们熟知的<code class="highlighter-rouge">text</code>、<code class="highlighter-rouge">data</code>、<code class="highlighter-rouge">bss</code>段，也有我们后面要用的符号段：<code class="highlighter-rouge">.symtab</code>、<code class="highlighter-rouge">.dynamic</code>，也就是符号表。</p>
+
+<p>所以得从这两个section中读取符号，同样使用libelfin库，接着上面的程序写。</p>
+
+<p>稍微加上几行就好了，但是注意这里我进行了筛选，得到只有函数的符号，并使用重载的<code class="highlighter-rouge">elf::to_string()</code>去打印符号类型，筛选后应该都是<code class="highlighter-rouge">func</code>。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+#include &lt;elf/elf++.hh&gt;
+#include &lt;string&gt;
+#include &lt;unistd.h&gt;
+#include &lt;fcntl.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fname</span> <span class="o">=</span> <span class="s">"/home/bbkgl/vimcode/server"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+    <span class="n">elf</span><span class="o">::</span><span class="n">elf</span> <span class="n">ef</span><span class="p">(</span><span class="n">elf</span><span class="o">::</span><span class="n">create_mmap_loader</span><span class="p">(</span><span class="n">fd</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sec</span> <span class="o">:</span> <span class="n">ef</span><span class="p">.</span><span class="n">sections</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sec</span><span class="p">.</span><span class="n">get_hdr</span><span class="p">().</span><span class="n">type</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">sht</span><span class="o">::</span><span class="n">symtab</span> <span class="o">&amp;&amp;</span> <span class="n">sec</span><span class="p">.</span><span class="n">get_hdr</span><span class="p">().</span><span class="n">type</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">sht</span><span class="o">::</span><span class="n">dynsym</span><span class="p">)</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sym</span> <span class="o">:</span> <span class="n">sec</span><span class="p">.</span><span class="n">as_symtab</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">auto</span> <span class="o">&amp;</span><span class="n">data</span> <span class="o">=</span> <span class="n">sym</span><span class="p">.</span><span class="n">get_data</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">stt</span><span class="o">::</span><span class="n">func</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"%016lx %8ld %10s %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">,</span>
+                   <span class="n">elf</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">type</span><span class="p">()).</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">sym</span><span class="p">.</span><span class="n">get_name</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>看到输出结果：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200207230414.png" alt="20200207230414.png" /></p>
+
+<p>可以看到所有函数符号都打印出来了，还打印了函数的起始指令地址和函数的指令在函数中所有指令地址上的范围，这里可以说明一下，直接看汇编会更清楚一点，这里以_start函数举例。</p>
+
+<p>使用<code class="highlighter-rouge">objdump -d server &gt; server.txt</code>拿到汇编指令，然后打开<code class="highlighter-rouge">server.txt</code>，找到_start函数的指令。</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200207232645.png" alt="20200207232645.png" /></p>
+
+<p>在之前图中可以看到，_start函数的起始指令地址为<code class="highlighter-rouge">0x0000000000400bb0</code>，地址范围大小为42，<code class="highlighter-rouge">0x400bb0 + 42 = 0x400bda</code>，正好就是最后一条指令，所以打印的符号表中的意义就很明了了。</p>
+
+<p>当然也会发现有很多函数的起始指令地址是0，地址范围大小也是0，说明这些函数是动态库中导入的，后面会详细说如何获取这部分函数的符号表。</p>
+
+<h4 id="使用libelf库读取符号表">使用libelf库读取符号表</h4>
+
+<p>其实原理和步骤其实是一样的，只是用libelf库相对来说会复杂很多。</p>
+
+<p>然后我就直接贴代码了，注意的是libelf会依赖于libz：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+#include &lt;elf/elf++.hh&gt;
+#include &lt;string&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;libelf.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;gelf.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fname</span> <span class="o">=</span> <span class="s">"/home/bbkgl/vimcode/server"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+    <span class="c1">// Before the first call to elf_begin() , a program must call elf_version() to coordinate versions.
+</span>    <span class="k">if</span> <span class="p">(</span><span class="n">elf_version</span><span class="p">(</span><span class="n">EV_CURRENT</span><span class="p">)</span> <span class="o">==</span> <span class="n">EV_NONE</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"EV_NONE"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">Elf</span> <span class="o">*</span><span class="n">elf</span> <span class="o">=</span> <span class="n">elf_begin</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">ELF_C_READ_MMAP</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">elf</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* 确定是文件类型是否是ELF文件 */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">elf_kind</span> <span class="p">(</span><span class="n">elf</span><span class="p">)</span> <span class="o">==</span> <span class="n">ELF_K_ELF</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"elf exe</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">elf_kind</span> <span class="p">(</span><span class="n">elf</span><span class="p">)</span> <span class="o">==</span> <span class="n">ELF_K_AR</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 目标是库文件 */</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"lib</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">Elf_Scn</span>     <span class="o">*</span><span class="n">scn</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+        <span class="n">GElf_Shdr</span>   <span class="n">shdr</span><span class="p">;</span>
+        <span class="n">Elf_Data</span>    <span class="o">*</span><span class="n">data</span><span class="p">;</span>
+        <span class="kt">int</span>         <span class="n">ii</span><span class="p">,</span> <span class="n">count</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">((</span><span class="n">scn</span> <span class="o">=</span> <span class="n">elf_nextscn</span><span class="p">(</span><span class="n">elf</span><span class="p">,</span> <span class="n">scn</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">gelf_getshdr</span><span class="p">(</span><span class="n">scn</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">shdr</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">shdr</span><span class="p">.</span><span class="n">sh_type</span> <span class="o">==</span> <span class="n">SHT_SYMTAB</span> <span class="o">||</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_type</span> <span class="o">==</span> <span class="n">SHT_DYNSYM</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">elf_getdata</span><span class="p">(</span><span class="n">scn</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_size</span> <span class="o">/</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_entsize</span><span class="p">;</span>
+                <span class="c1">// sym.st_info == 18的时候是func类型
+</span>                <span class="k">for</span> <span class="p">(</span><span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ii</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="o">++</span><span class="n">ii</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">GElf_Sym</span> <span class="n">sym</span><span class="p">;</span>
+                    <span class="n">gelf_getsym</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sym</span><span class="p">);</span>
+                    <span class="c1">// 只打印函数符号表
+</span>                    <span class="k">if</span> <span class="p">(</span><span class="n">ELF32_ST_TYPE</span><span class="p">(</span><span class="n">sym</span><span class="p">.</span><span class="n">st_info</span><span class="p">)</span> <span class="o">!=</span> <span class="n">STT_FUNC</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+                    <span class="kt">char</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+                    <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+                    <span class="n">printf</span><span class="p">(</span><span class="s">"%016lx %4d %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">st_value</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">st_size</span><span class="p">,</span> <span class="n">elf_strptr</span><span class="p">(</span><span class="n">elf</span><span class="p">,</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_link</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">st_name</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="cm">/* 关闭elf结构句柄 */</span>
+        <span class="n">elf_end</span> <span class="p">(</span><span class="n">elf</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>下面是输出结果，其实和之前libelfin差不多，但是代码长度长了一半多啊，：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200207235325.png" alt="20200207235325.png" /></p>
+
+<h2 id="获取可执行文件引入的动态库的符号表">获取可执行文件引入的动态库的符号表</h2>
+
+<p>在前面已经看到，存在某个函数符号的首指令地址和地址范围都为0，表示这个函数其实是动态库内的函数，那么在哪里可以得到这些动态库里的函数以及指令地址呢？</p>
+
+<h4 id="动态库的地址映射procpidmaps文件">动态库的地址映射/proc/[pid]/maps文件</h4>
+
+<p>在/proc/[pid]/maps文件中存放有每个进程的地址映射关系，同样包括了这些动态库文件目录，以及映射到elf文件里的地址范围里。</p>
+
+<p>同样的，以server这个程序为例，我们查看它的地址映射文件：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208140019.png" alt="20200208140019.png" /></p>
+
+<p>可以注意到，在后面，会有很多动态库.so出现，这里稍微解释一下，只对我比较清楚的项作解释，会看到几乎每个.so文件都对应了4行，或者也有3行的，每一行内容空格作为分隔：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">首地址</span><span class="o">-</span><span class="err">尾地址</span> <span class="err">权限</span> <span class="err">地址偏移</span> <span class="err">时间</span> <span class="err">不知道</span> <span class="err">动态库目录</span>
+</code></pre></div></div>
+
+<p>对于我们来说，关注的是<code class="highlighter-rouge">首地址-尾地址 权限 动态库目录</code>，为什么会出现三-四行呢，因为动态库同样也分为数据段，代码段等，不同的段映射的地址不一样，我们要关注的是代码段：</p>
+
+<ul>
+  <li><code class="highlighter-rouge">首地址-尾地址</code>是对应的动态库这部分在可执行文件里的实际地址范围</li>
+  <li>权限就是可读可写可执行，p我不知道干嘛的，如果可执行，说明这就是代码段，是我们关注的段</li>
+  <li>动态库目录，就是这个动态库文件实际在这个机器上什么位置</li>
+</ul>
+
+<p>于是理论就理清楚了，可以先尝试以下读取动态库的符号表。</p>
+
+<h4 id="读取动态库符号表">读取动态库符号表</h4>
+
+<p>可以直接使用之前的程序，把文件路径改成动态库的路径：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208144352.png" alt="20200208144352.png" /></p>
+
+<p>然后输出，其实是一样的，不过这次会发现部分熟悉的函数，比如sleep、usleep，就是glibc库中的，还有就是前前面的首指令其实是个相对地址，相对动态库载入首地址的相对地址，后面会讲换算。</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208184250.png" alt="20200208184250.png" /></p>
+
+<h4 id="动态库相对地址换算成绝对地址">动态库相对地址换算成绝对地址</h4>
+
+<p>换算其实很简单，就是<code class="highlighter-rouge">函数指令地址范围+动态库载入首地址</code>就可以了，这个也是基于前面的理论，这里会以usleep函数作为例子，因为usleep函数其实是glibc库中的函数。</p>
+
+<p>先给出被读取的程序，test.cpp，打包成可执行文件test：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+#include &lt;iostream&gt;
+#include &lt;unistd.h&gt;
+#include &lt;random&gt;
+</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">f3</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">f1</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+        <span class="n">usleep</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="n">f1</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">f2</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">usleep</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="n">f3</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">f3</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">usleep</span><span class="p">(</span><span class="mi">10</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="n">f2</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">default_random_engine</span> <span class="n">e</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="nb">true</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="n">rd</span> <span class="o">=</span> <span class="n">e</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">rd</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">f1</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">rd</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">f2</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+        <span class="k">else</span>
+            <span class="n">f3</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>说明步骤：</p>
+
+<ul>
+  <li>执行<code class="highlighter-rouge">./test</code>，其大部分时间会停留在usleep上</li>
+  <li>使用gdb attach上去，<code class="highlighter-rouge">./test</code>会执行在usleep里，这样的话，可以通过gdb打印出汇编指令，能看到usleep的首指令地址</li>
+  <li>使用自己编写读取所有elf符号（包括动态库.so）的程序读取<code class="highlighter-rouge">test</code>可执行文件的所有符号表，并换算其中动态库中所有函数的地址范围为绝对地址</li>
+</ul>
+
+<p>首先，执行<code class="highlighter-rouge">./test</code>：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208151806.png" alt="20200208151806.png" /></p>
+
+<p>输出得到进程id，使用gdb attach上去<code class="highlighter-rouge">gdb attach 6645</code>：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208152407.png" alt="20200208152407.png" /></p>
+
+<p>然后再读取usleep的汇编：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208152541.png" alt="20200208152541.png" /></p>
+
+<p>可以看到<code class="highlighter-rouge">0x00007fbac4f88d60 &lt;+0&gt;:	mov    %edi,%eax</code>这一行，可以看到<code class="highlighter-rouge">0x00007fbac4f88d60</code>就是usleep函数的首指令地址，后面需要将这个地址作为验证。</p>
+
+<p>最后写程序读取elf符号表，包括动态库的，会比较麻烦，要解析maps文件，如果是python就简单了，C++就是会写的长一些：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;fstream&gt;
+#include &lt;climits&gt;
+#include &lt;elf/elf++.hh&gt;
+#include &lt;string&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;libelf.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;gelf.h&gt;
+</span>
+<span class="k">struct</span> <span class="n">FuncSym</span> <span class="p">{</span>
+    <span class="kt">uintptr_t</span> <span class="n">low</span><span class="p">;</span>
+    <span class="kt">uintptr_t</span> <span class="n">high</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">name</span><span class="p">;</span>
+
+    <span class="n">FuncSym</span><span class="p">(</span><span class="kt">uintptr_t</span> <span class="n">l</span><span class="p">,</span> <span class="kt">uintptr_t</span> <span class="n">h</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">sname</span><span class="p">)</span> <span class="o">:</span>
+            <span class="n">low</span><span class="p">(</span><span class="n">l</span><span class="p">),</span> <span class="n">high</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">name</span><span class="p">(</span><span class="n">sname</span><span class="p">)</span> <span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="nf">getsymbol</span><span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fname</span><span class="p">,</span> <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">FuncSym</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">symbols</span><span class="p">,</span> <span class="kt">uintptr_t</span> <span class="n">low</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+    <span class="n">elf</span><span class="o">::</span><span class="n">elf</span> <span class="n">ef</span><span class="p">(</span><span class="n">elf</span><span class="o">::</span><span class="n">create_mmap_loader</span><span class="p">(</span><span class="n">fd</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sec</span> <span class="o">:</span> <span class="n">ef</span><span class="p">.</span><span class="n">sections</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sec</span><span class="p">.</span><span class="n">get_hdr</span><span class="p">().</span><span class="n">type</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">sht</span><span class="o">::</span><span class="n">symtab</span> <span class="o">&amp;&amp;</span> <span class="n">sec</span><span class="p">.</span><span class="n">get_hdr</span><span class="p">().</span><span class="n">type</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">sht</span><span class="o">::</span><span class="n">dynsym</span><span class="p">)</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sym</span> <span class="o">:</span> <span class="n">sec</span><span class="p">.</span><span class="n">as_symtab</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">auto</span> <span class="o">&amp;</span><span class="n">data</span> <span class="o">=</span> <span class="n">sym</span><span class="p">.</span><span class="n">get_data</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">stt</span><span class="o">::</span><span class="n">func</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">size</span> <span class="o">&amp;&amp;</span> <span class="n">data</span><span class="p">.</span><span class="n">value</span><span class="p">)</span>
+                <span class="n">symbols</span><span class="p">.</span><span class="n">emplace_back</span><span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">data</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">low</span> <span class="o">+</span> <span class="n">data</span><span class="p">.</span><span class="n">value</span> <span class="o">+</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">get_name</span><span class="p">());</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">splitbyspace</span><span class="p">(</span><span class="kt">char</span> <span class="o">*&amp;</span><span class="n">line</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">();</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">p</span> <span class="o">=</span> <span class="n">line</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">!=</span> <span class="sc">' '</span> <span class="o">&amp;&amp;</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">p</span><span class="o">++</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">ret</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">*</span><span class="n">p</span> <span class="o">==</span> <span class="sc">' '</span><span class="p">)</span> <span class="n">p</span><span class="o">++</span><span class="p">;</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">p</span><span class="p">;</span>
+    <span class="k">return</span> <span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="n">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="mi">6645</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fexename</span> <span class="o">=</span> <span class="s">"/proc/"</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span> <span class="o">+</span> <span class="s">"/exe"</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fmapsname</span> <span class="o">=</span> <span class="s">"/proc/"</span> <span class="o">+</span> <span class="n">std</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">pid</span><span class="p">)</span> <span class="o">+</span> <span class="s">"/maps"</span><span class="p">;</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="n">FuncSym</span><span class="o">&gt;</span> <span class="n">symbols</span><span class="p">;</span>
+    <span class="n">getsymbol</span><span class="p">(</span><span class="n">fexename</span><span class="p">,</span> <span class="n">symbols</span><span class="p">);</span>
+    <span class="c1">// 解析maps，把所有动态库的代码段地址范围和动态库目录获取到，并依次获取其符号表并转换
+</span>    <span class="n">std</span><span class="o">::</span><span class="n">ifstream</span> <span class="n">streammaps</span><span class="p">(</span><span class="n">fmapsname</span><span class="p">);</span>
+    <span class="k">while</span> <span class="p">(</span><span class="o">!</span><span class="n">streammaps</span><span class="p">.</span><span class="n">eof</span><span class="p">())</span> <span class="p">{</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">str</span><span class="p">;</span>
+        <span class="kt">char</span> <span class="n">line</span><span class="p">[</span><span class="mi">200</span><span class="p">];</span>
+        <span class="n">streammaps</span><span class="p">.</span><span class="n">getline</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="mi">200</span><span class="p">);</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">newline</span> <span class="o">=</span> <span class="n">line</span><span class="p">;</span>
+        <span class="n">str</span> <span class="o">=</span> <span class="n">splitbyspace</span><span class="p">(</span><span class="n">newline</span><span class="p">);</span>
+        <span class="kt">uintptr_t</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">str</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">'-'</span><span class="p">);</span>
+        <span class="kt">uintptr_t</span> <span class="n">low</span> <span class="o">=</span> <span class="p">(</span><span class="kt">uintptr_t</span><span class="p">)(</span><span class="n">strtol</span><span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">mid</span><span class="p">).</span><span class="n">c_str</span><span class="p">(),</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="mi">16</span><span class="p">));</span>
+        <span class="n">str</span> <span class="o">=</span> <span class="n">splitbyspace</span><span class="p">(</span><span class="n">newline</span><span class="p">);</span>
+        <span class="kt">bool</span> <span class="n">codesec</span> <span class="o">=</span> <span class="p">(</span><span class="n">str</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="sc">'x'</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">);</span>
+        <span class="n">str</span> <span class="o">=</span> <span class="n">splitbyspace</span><span class="p">(</span><span class="n">newline</span><span class="p">);</span>
+        <span class="n">str</span> <span class="o">=</span> <span class="n">splitbyspace</span><span class="p">(</span><span class="n">newline</span><span class="p">);</span>
+        <span class="n">str</span> <span class="o">=</span> <span class="n">splitbyspace</span><span class="p">(</span><span class="n">newline</span><span class="p">);</span>
+        <span class="n">str</span> <span class="o">=</span> <span class="n">splitbyspace</span><span class="p">(</span><span class="n">newline</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">codesec</span> <span class="o">&amp;&amp;</span> <span class="n">str</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">".so"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">getsymbol</span><span class="p">(</span><span class="n">str</span><span class="p">,</span> <span class="n">symbols</span><span class="p">,</span> <span class="n">low</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sym</span> <span class="o">:</span> <span class="n">symbols</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"0x%016lx 0x%016lx %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">low</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">high</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>然后打印一下，就可以获取到所有的符号表了就，包括动态库的：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208163513.png" alt="20200208163513.png" /></p>
+
+<p>同时，筛选出usleep函数的符号和首位指令地址：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sym</span> <span class="o">:</span> <span class="n">symbols</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">sym</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="s">"usleep"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="o">::</span><span class="n">npos</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"0x%016lx 0x%016lx %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">low</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">high</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">name</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>然后打印结果：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208163742.png" alt="20200208163742.png" /></p>
+
+<p>看到了，首指令地址就是<code class="highlighter-rouge">0x00007fbac4f88d60</code>，和之前gdb里面汇编打印的一样。。。</p>
+
+<p>大功告成！</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/02/01/leetcode4/" data-toggle="tooltip" data-placement="top" title="4. Median of Two Sorted Arrays">
+                        Previous<br>
+                        <span>4. Median of Two Sorted Arrays</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/02/08/%E4%BD%BF%E7%94%A8libelfin%E5%BA%93%E9%80%9A%E8%BF%87dwarf%E4%BF%A1%E6%81%AF%E8%AF%BB%E5%8F%96%E8%A1%8C%E5%8F%B7/" data-toggle="tooltip" data-placement="top" title="使用libelfin库通过dwarf信息读取行号">
+                        Next<br>
+                        <span>使用libelfin库通过dwarf信息读取行号</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

@@ -1,0 +1,103 @@
+<blockquote>
+  <p>十年旧约江南梦</p>
+
+  <p>独听寒山半夜钟</p>
+</blockquote>
+
+<p>C++，动态规划，贪心。。。。最重要的是这是道<strong>数学题</strong>！！！</p>
+
+<p>很多博客一上来就是dp，贪心，也不解释为什么这样是最优解，一言难尽，其实这就是道数学题，明白其中的数学思想，就知道怎么用dp和贪心解了。</p>
+
+<h2 id="动态规划">动态规划</h2>
+
+<p>首先，我们会发现这么一个规律（假设绳子长 \(l​\) 只能被剪成两段 \(x\) 和 \(y\) ）：</p>
+
+<ul>
+  <li>如果 \(l &lt; 4\)，会发现无论怎么组合，都会有\(l &gt; xy\)
+    <ul>
+      <li>比如 \(3 &gt; 2 * 1 \)</li>
+      <li>比如 \(2 &gt; 1 * 1 \)</li>
+    </ul>
+  </li>
+  <li>而如果 \(l \ge 4 \)，会发现无论怎么组合，都会存在 \(l \geq xy \)
+    <ul>
+      <li>比如 \(4 = 2 * 2 \)</li>
+      <li>比如 \(5 &lt; 2 * 3 \)</li>
+    </ul>
+  </li>
+</ul>
+
+<p>也就是说当一个数<strong>大于4的时候，我们就应该把它分解，来得到更大的乘积。</strong></p>
+
+<p>所以，可以整理出如下公式：</p>
+
+<script type="math/tex; mode=display">f(n) = max\{f(1)f(n-1), f(2)f(n-2)....f(n-1)f(1)\}​</script>
+
+<p>同样的，如果对应的子项\(f(i) \)，其中 \(i &gt; 4 \)，也是可以分解的。所以就变成了递归分解了，既然是递归，就要想到能不能用额外空间去记录递归的中间结果呢？</p>
+
+<p><strong>woc！！！这不就是DP嘛！！！</strong></p>
+
+<p>所以就能写出下面的代码了：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">cutRope</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">dp</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="p">[</span><span class="n">number</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+        <span class="n">dp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">dp</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="n">dp</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="n">dp</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">number</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">j</span> <span class="o">&lt;=</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">dp</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="p">]);</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">j</span> <span class="o">*</span> <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">j</span><span class="p">]);</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="n">dp</span><span class="p">[</span><span class="n">j</span><span class="p">]);</span>
+                <span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">max</span><span class="p">(</span><span class="n">dp</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="n">i</span> <span class="o">-</span> <span class="n">j</span><span class="p">)</span> <span class="o">*</span> <span class="n">j</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">delete</span><span class="p">[]</span> <span class="n">dp</span><span class="p">;</span>
+        <span class="k">return</span> <span class="n">dp</span><span class="p">[</span><span class="n">number</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+
+<h2 id="贪心">贪心</h2>
+
+<p>同样也是数学问题，基于前面的数学结论：当一个数大于4的时候，我们就应该把它分解，来得到更大的乘积。</p>
+
+<p>我们会发现，大于等于4的数，一定能够被分解成若干个2和3的和。那多点2好呢，还是多点3好呢？</p>
+
+<p>因为做人不能太2，还是3吧。</p>
+
+<p>好吧其实有个结论就是：</p>
+
+<script type="math/tex; mode=display">3(n-3) \ge 2(n-2)</script>
+
+<p>化简就是：</p>
+
+<script type="math/tex; mode=display">3n-9 \ge 2n-4</script>
+
+<script type="math/tex; mode=display">n >= 5</script>
+
+<p>也就是$n \ge 5$，则有$3(n-3) \ge 2(n-2)$。</p>
+
+<p>所以就是尽量3多一点好了，但是不能出现1，出现1的话，3就没用了呀。</p>
+
+<p>所以就有了贪心的答案：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Solution</span> <span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="kt">int</span> <span class="n">cutRope</span><span class="p">(</span><span class="kt">int</span> <span class="n">number</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">number</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+        <span class="kt">int</span> <span class="n">cnt_3</span> <span class="o">=</span> <span class="n">number</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">number</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cnt_3</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">4</span><span class="p">;</span>
+        <span class="k">else</span>
+            <span class="k">return</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span> <span class="n">pow</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cnt_3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div></div>
+

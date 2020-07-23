@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="怎么才能不那么菜！！！">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>Linux下MQTT安装及测试 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2019/10/24/Linux%E4%B8%8BMQTT%E5%AE%89%E8%A3%85%E5%8F%8A%E6%B5%8B%E8%AF%95/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0008.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0008.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#Linux" title="Linux">Linux</a>
+                        
+                    </div>
+                    <h1>Linux下MQTT安装及测试</h1>
+                    
+                    
+                    <h2 class="subheading">MQTT</h2>
+                    
+                    <span class="meta">Posted by bbkgl on October 24, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>雨打梨花深闭门</p>
+
+  <p>忘了青春</p>
+
+  <p>误了青春</p>
+</blockquote>
+
+<p>物联网老师上课的时候突然让用MQTT写一个通信程序，实现命令控制，他说的是客户端输入<code class="highlighter-rouge">ls</code>，那边就得返回目录信息，不是很懂，查了一大堆也不会，今天有点时间把第一步走了。</p>
+
+<h2 id="mqtt">MQTT程序安装</h2>
+
+<blockquote>
+  <p>千里之行，始于足下</p>
+</blockquote>
+
+<p>这东西安装也是费了大劲，百度一查全是介绍协议的，CSDN博客上也是互相抄的飞起，没一个是真正能用的，要么抄别人没抄完，要么抄的就是错的。</p>
+
+<p><img src="https://ae01.alicdn.com/kf/Hb22b3b5446434c7b912b28f2dc44d887r.jpg" alt="" /></p>
+
+<p>理一下我们的需求：使用MQTT通信，实现部分远程控制命令，基于C/C++编程语言实现。</p>
+
+<p>然后再看看MQTT到底是个什么？</p>
+
+<p>简单来说就是个消息代理，双方制定同一个订阅ID，假设是“2333”，那么发布端负责使用“2333”发布消息，订阅端则使用“2333”接收消息。</p>
+
+<p>所以我们需要安装两个东西：</p>
+
+<ul>
+  <li>MQTT代理服务器（mosquitto）</li>
+  <li>MQTT的C/C++接口库（paho.mqtt.c）</li>
+</ul>
+
+<p>接下来的安装步骤均基于Ubuntu 16.04的环境下进行。</p>
+
+<h4 id="mosquitto">mosquitto安装</h4>
+
+<p>我又要吐槽了，人家官网都说了，Ubuntu可以apt安装，我就不明白为什么网上一搜全是源码安装的，无脑抄真是难搞。。。<a href="https://mosquitto.org/download/">mosquitto官网下载</a></p>
+
+<p><img src="https://ae01.alicdn.com/kf/He6bb63a2cfe34e698e34c62878e2cfc2Q.jpg" alt="img" /></p>
+
+<p>直接执行命令：</p>
+
+<pre><code class="language-she">sudo apt install mosquitto   # 安装MQTT服务器
+
+sudo apt install mosquitto-clients # 安装MQTT客户端
+</code></pre>
+
+<p>会自动安装对应的依赖库的，简单吧！！！</p>
+
+<p>可以用一个小例子检测下是否安装成功：</p>
+
+<p>依次开三个终端执行以下命令：</p>
+
+<p>终端1，作为代理服务器：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mosquitto -p 1883   <span class="c"># mosquitto默认时候用1883端口</span>
+
+<span class="c"># 以下这个命令可以检测mosquito是否运行</span>
+sudo service mosquitto status 
+</code></pre>
+</div>
+
+<p>终端2，作为订阅端：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">mosquitto_sub</span> <span class="o">-</span><span class="n">t</span> <span class="n">mqtt</span>
+</code></pre>
+</div>
+
+<p>终端3:，作为发布端：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mosquitto_pub -h localhost -t mqtt -m <span class="s2">"23333"</span>
+</code></pre>
+</div>
+
+<p>然后，就能在终端2收到消息了：</p>
+
+<p><img src="https://ae01.alicdn.com/kf/H87930d5abfc146c0b2497def0a4a1b81N.jpg" alt="" /></p>
+
+<h4 id="pahomqttc">paho.mqtt.c安装</h4>
+
+<p>这个得从github上下载源码安装，其实安装教程在<a href="https://github.com/eclipse/paho.mqtt.c/blob/master/README.md">README</a>中已经写了，基本执行以下命令就行了：</p>
+
+<p>安装依赖：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>sudo apt-get install build-essential gcc make cmake cmake-gui cmake-curses-gui
+
+<span class="c"># 如果提示openssl错误，再装以下openssl</span>
+sudo apt-get install libssl-dev
+</code></pre>
+</div>
+
+<p>安装paho.mqtt.c：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c"># clone</span>
+git clone git@github.com:eclipse/paho.mqtt.c.git   <span class="c"># ssh</span>
+git clone https://github.com/eclipse/paho.mqtt.c.git <span class="c"># https</span>
+<span class="c"># run</span>
+<span class="nb">cd </span>paho.mqtt.c
+make
+sudo make install
+</code></pre>
+</div>
+
+<p>然后就安装好了，需要注意的是，头文件默认在<code class="highlighter-rouge">/usr/local/include</code>下，动态/静态库默认在<code class="highlighter-rouge">/usr/local/lib</code>下，也就是说你如果要用到这个库的话，得想好怎么去引用，可以使用cmake或者你再移动到<code class="highlighter-rouge">/usr/include</code>和<code class="highlighter-rouge">/usr/lib</code>下，当然只是完成作业的话还有一种非常简单粗暴的方法，就是把文件拷贝到当前目录下哈哈哈。</p>
+
+<h2 id="ccmqtt">C/C++中使用MQTT</h2>
+
+<p>很简单，调接口就行了。</p>
+
+<p>举个小例子。</p>
+
+<p>发布端 publish.cpp：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;errno.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include "MQTTClient.h"
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">address</span> <span class="o">=</span> <span class="s">"tcp://localhost:1883"</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">client_id</span> <span class="o">=</span> <span class="s">"publish_client"</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">topic</span> <span class="o">=</span> <span class="s">"mqtt_examples"</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="n">buf</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+    <span class="k">const</span> <span class="kt">int</span> <span class="n">time_out</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">rv</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">QOS</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="n">MQTTClient</span> <span class="n">client</span><span class="p">;</span>
+    <span class="n">MQTTClient_connectOptions</span> <span class="n">conn_opts</span> <span class="o">=</span> <span class="n">MQTTClient_connectOptions_initializer</span><span class="p">;</span>
+    <span class="n">MQTTClient_message</span> <span class="n">publish_msg</span> <span class="o">=</span> <span class="n">MQTTClient_message_initializer</span><span class="p">;</span>
+    <span class="n">MQTTClient_deliveryToken</span> <span class="n">token</span><span class="p">;</span>
+
+    <span class="n">conn_opts</span><span class="p">.</span><span class="n">keepAliveInterval</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+    <span class="n">conn_opts</span><span class="p">.</span><span class="n">cleansession</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="n">MQTTClient_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">client_id</span><span class="p">,</span> <span class="n">MQTTCLIENT_PERSISTENCE_NONE</span><span class="p">,</span>
+                      <span class="n">nullptr</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">rv</span> <span class="o">=</span> <span class="n">MQTTClient_connect</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">conn_opts</span><span class="p">))</span> <span class="o">!=</span> <span class="n">MQTTCLIENT_SUCCESS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"MQTTClient_connect failure:%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">publish_msg</span><span class="p">.</span><span class="n">qos</span> <span class="o">=</span> <span class="n">QOS</span><span class="p">;</span>
+    <span class="n">publish_msg</span><span class="p">.</span><span class="n">retained</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"enter the message you want to send</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="n">fgets</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span> <span class="n">stdin</span><span class="p">);</span>
+        <span class="n">publish_msg</span><span class="p">.</span><span class="n">payload</span> <span class="o">=</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">)</span><span class="n">buf</span><span class="p">;</span>
+        <span class="n">publish_msg</span><span class="p">.</span><span class="n">payloadlen</span> <span class="o">=</span> <span class="n">strlen</span><span class="p">(</span><span class="n">buf</span><span class="p">);</span>
+        <span class="n">MQTTClient_publishMessage</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">topic</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">publish_msg</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">token</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span>
+            <span class="s">"waiting for %d seconds for publication of %s on topic %s for "</span>
+            <span class="s">"client with CLIENTID :%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+            <span class="n">time_out</span> <span class="o">/</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">topic</span><span class="p">,</span> <span class="n">client_id</span><span class="p">);</span>
+        <span class="n">rv</span> <span class="o">=</span> <span class="n">MQTTClient_waitForCompletion</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">token</span><span class="p">,</span> <span class="n">time_out</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"Message with delivery token %d delivered</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">rv</span><span class="p">);</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">buf</span><span class="p">);</span>  <span class="c1">//用于测试
+</span>        <span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>订阅端 client.cpp：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="cp">#include &lt;errno.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include "MQTTClient.h"
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">address</span> <span class="o">=</span> <span class="s">"tcp://localhost:1883"</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">client_id</span> <span class="o">=</span> <span class="s">"client_sub"</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">payload</span> <span class="o">=</span> <span class="s">"mqtt_examples"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">rv</span><span class="p">,</span> <span class="n">i</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">ptr</span> <span class="o">=</span> <span class="n">nullptr</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">topic</span> <span class="o">=</span> <span class="n">nullptr</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">topic_len</span><span class="p">;</span>
+    <span class="n">MQTTClient</span> <span class="n">client</span><span class="p">;</span>
+    <span class="n">MQTTClient_connectOptions</span> <span class="n">conn_opts</span> <span class="o">=</span> <span class="n">MQTTClient_connectOptions_initializer</span><span class="p">;</span>
+    <span class="n">MQTTClient_deliveryToken</span> <span class="n">token</span><span class="p">;</span>
+    <span class="n">MQTTClient_message</span> <span class="o">*</span><span class="n">receive_msg</span> <span class="o">=</span> <span class="n">nullptr</span><span class="p">;</span>
+    <span class="n">conn_opts</span><span class="p">.</span><span class="n">keepAliveInterval</span> <span class="o">=</span> <span class="mi">60</span><span class="p">;</span>
+    <span class="n">conn_opts</span><span class="p">.</span><span class="n">cleansession</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">((</span><span class="n">rv</span> <span class="o">=</span> <span class="n">MQTTClient_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span> <span class="n">address</span><span class="p">,</span> <span class="n">client_id</span><span class="p">,</span>
+                                <span class="n">MQTTCLIENT_PERSISTENCE_NONE</span><span class="p">,</span> <span class="n">nullptr</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"MQTTClient_create failure:%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"MQTTClient_create successfully</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">((</span><span class="n">rv</span> <span class="o">=</span> <span class="n">MQTTClient_connect</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">conn_opts</span><span class="p">))</span> <span class="o">!=</span> <span class="n">MQTTCLIENT_SUCCESS</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"MQTTClient_connect failure:%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+        <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"MQTTClient_connect successfuly</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="n">MQTTClient_subscribe</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">payload</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="cm">/* if((rv=MQTTClient_receive(client,&amp;topic,&amp;topic_len,&amp;receive_msg,5000))!=MQTTCLIENT_SUCCESS)
+    {
+        printf("MQTTClient_receive failure:%s\n",strerror(errno));
+        return 0;
+    }
+    printf("MQTTClient_receive successfully\n");*/</span>
+    <span class="c1">// receive 函数放在外面传递信息不会改变
+</span>    <span class="k">while</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">((</span><span class="n">rv</span> <span class="o">=</span> <span class="n">MQTTClient_receive</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">topic</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">topic_len</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">receive_msg</span><span class="p">,</span>
+                                     <span class="mi">100000</span><span class="p">))</span> <span class="o">!=</span>
+            <span class="n">MQTTCLIENT_SUCCESS</span><span class="p">)</span>  <span class="c1">//最后一个参数是超时时间,单位是毫秒
+</span>        <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"MQTTClient_receive failure:%s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">strerror</span><span class="p">(</span><span class="n">errno</span><span class="p">));</span>
+            <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"MQTTClient_receive successfully</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="n">ptr</span> <span class="o">=</span> <span class="p">(</span><span class="kt">char</span> <span class="o">*</span><span class="p">)</span><span class="n">receive_msg</span><span class="o">-&gt;</span><span class="n">payload</span><span class="p">;</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"Topic:%s</span><span class="se">\n</span><span class="s">Topic_len:%d</span><span class="se">\n</span><span class="s">msg:"</span><span class="p">,</span> <span class="n">topic</span><span class="p">,</span> <span class="n">topic_len</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">receive_msg</span><span class="o">-&gt;</span><span class="n">payloadlen</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">putchar</span><span class="p">(</span><span class="o">*</span><span class="n">ptr</span><span class="o">++</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">msg_len:%d</span><span class="se">\n</span><span class="s">msg_id:%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">receive_msg</span><span class="o">-&gt;</span><span class="n">payloadlen</span><span class="p">,</span>
+               <span class="n">receive_msg</span><span class="o">-&gt;</span><span class="n">msgid</span><span class="p">);</span>
+        <span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"end</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+    <span class="n">MQTTClient_disconnect</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="mi">10000</span><span class="p">);</span>
+    <span class="n">MQTTClient_destroy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre>
+</div>
+
+<p>分别编译两个源文件，需要链接上paho.mqtt.c的动态库，可以使用cmake，可以参考我的：</p>
+
+<pre><code class="language-cmake">cmake_minimum_required(VERSION 3.9)
+
+add_definitions(-std=c++11)
+add_definitions(-g)
+
+include_directories(/usr/local/include)
+add_executable(publish src/publish.cpp) 
+# 为了方便，我把动态库直接放到CMakeLists.txt目录下的lib下面了
+target_link_libraries(publish ${CMAKE_CURRENT_SOURCE_DIR}/lib/libpaho-mqtt3c.so)
+</code></pre>
+
+<p>得到可执行文件 publish和client.。</p>
+
+<p>然后在三个不同的终端依次执行：</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>mosquitto -p 1883
+./client.
+./publish
+</code></pre>
+</div>
+
+<p>在publish下输入23333：</p>
+
+<p><img src="https://ae01.alicdn.com/kf/Hf963ff09e5b24832b67e993ce9969dfcZ.jpg" alt="" /></p>
+
+<p>在client的终端下就能收到如下消息：</p>
+
+<p><img src="https://ae01.alicdn.com/kf/H43e60e5068314075bcc92640fd742086J.jpg" alt="" /></p>
+
+<p>验证成功！</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/10/23/Raft%E4%B8%AD%E7%9A%84%E4%B8%80%E8%87%B4%E6%80%A7%E4%BF%9D%E9%9A%9C/" data-toggle="tooltip" data-placement="top" title="Raft中的一致性保障">
+                        Previous<br>
+                        <span>Raft中的一致性保障</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/10/24/aptinstall%E5%87%BA%E7%8E%B0EncounteredasectionwithnoPackage/" data-toggle="tooltip" data-placement="top" title="apt install 出现 Encountered a section with no Package header">
+                        Next<br>
+                        <span>apt install 出现 Encountered a section with no Package header</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="44">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="6">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="60">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/nan-shen-ai-bao-bao-44/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2019
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

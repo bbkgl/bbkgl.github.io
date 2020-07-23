@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>C/C++获取程序堆栈信息 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2019/12/01/%E8%8E%B7%E5%8F%96%E7%A8%8B%E5%BA%8F%E8%BF%90%E8%A1%8C%E5%A0%86%E6%A0%88%E4%BF%A1%E6%81%AFC++/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0006.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0006.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#profile" title="profile">profile</a>
+                        
+                    </div>
+                    <h1>C/C++获取程序堆栈信息</h1>
+                    
+                    
+                    <h2 class="subheading">profile</h2>
+                    
+                    <span class="meta">Posted by bbkgl on December 1, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>碧玉妆成一树高</p>
+
+  <p>万条垂下绿丝绦</p>
+</blockquote>
+
+<h2 id="前言">前言</h2>
+
+<p>实习的时候有个需求，需要实现一个profile工具，工具的功能（简述）有：</p>
+
+<ul>
+  <li>根据进程ID和服务器ip获取程序中C++的堆栈信息</li>
+  <li>根据进程ID和服务器ip获取程序中Lua的堆栈信息</li>
+  <li>将堆栈调用信息绘制成火焰图</li>
+</ul>
+
+<p>目前打算使用<code class="highlighter-rouge">libunwind</code>获得C++的堆栈信息。</p>
+
+<h2 id="libunwind">libunwind</h2>
+
+<p>这玩意说实话，资料特别特别少，特别是相关接口使用的例子，我只找到了一个，然后其他人全部抄的这一个，而且他还是获取当前程序堆栈的，也就是必须在被<code class="highlighter-rouge">profile</code>的程序中调用<code class="highlighter-rouge">libunwind</code>接口才能获取到堆栈信息。。。然后还不是中文的，国内关于<code class="highlighter-rouge">libunwind</code>的资料真的少</p>
+
+<p>说实话，我觉得这样和现在的需求不符，我们需要是获取其他进程堆栈信息。</p>
+
+<p>然后就只能啃<code class="highlighter-rouge">libunwind</code>的<a href="https://www.nongnu.org/libunwind/docs.html">文档</a>了，发现了两个接口：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">unw_init_local</span><span class="p">(</span><span class="n">unw_cursor_t</span> <span class="o">*</span><span class="n">c</span><span class="p">,</span> <span class="n">unw_context_t</span> <span class="o">*</span><span class="n">ctxt</span><span class="p">)</span>
+<span class="n">unw_init_remote</span><span class="p">(</span><span class="n">unw_cursor_t</span> <span class="o">*</span><span class="n">c</span><span class="p">,</span> <span class="n">unw_addr_space_t</span> <span class="n">as</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>很显然，第一个是在当前程序堆栈为<code class="highlighter-rouge">unw_cursor_t</code>指针进行初始化，第二个是利用“远程”程序堆栈为<code class="highlighter-rouge">unw_cursor_t</code>指针进行初始化，区别就在于第三个参数了，所以第三个参数一定带有其他进程的信息。</p>
+
+<p>来看看文档中关于<code class="highlighter-rouge">arg</code>参数的介绍：</p>
+
+<blockquote>
+  <p>The <code class="highlighter-rouge">arg</code> void-pointer tells the address space exactly what entity should be unwound.   For example, if <code class="highlighter-rouge">unw_local_addr_space</code> is passed in <code class="highlighter-rouge">as</code>, then <code class="highlighter-rouge">arg</code> needs to be a pointer to a context structure containing the machine-state of the initial stack frame. However, other address-spaces may instead expect a process-id, a thread-id, or a pointer to an arbitrary structure which identifies the stack-frame chain to be unwound.   In other words, the interpretation of <code class="highlighter-rouge">arg</code> is entirely dependent on the address-space in use; <code class="highlighter-rouge">libunwind</code> never interprets the argument in any way on its own.</p>
+</blockquote>
+
+<p>翻译一下的话，意思就是<code class="highlighter-rouge">arg</code>是用来告知“是哪里的堆栈信息应该被解开”，举个例子，如果<code class="highlighter-rouge">unw_local_addr_space</code> 是通过<code class="highlighter-rouge">as</code>来告知是哪里的堆栈信息要解开，那么<code class="highlighter-rouge">arg</code>需要被一个指针来指向一个存有机器状态的空间。然而如果是其他的程序的堆栈空间，则更期望<code class="highlighter-rouge">arg</code>指向了一个存有进程id，线程id或者其他堆栈信息的空间。换句话说，需要用户自己来指定这些信息。</p>
+
+<p>说的云里雾里的，可能是自己英语水平太渣了，大概就是<code class="highlighter-rouge">arg</code>中需要存有目标进程的信息，目标进程就是要被“解堆栈”的进程，后面那个解释不解释我也不懂了就。</p>
+
+<p>后面在github上直接搜<code class="highlighter-rouge">unw_init_remote</code>这个关键词，找到了别人的调用方法。</p>
+
+<p>调用格式是这样的：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">void</span> <span class="n">rctx</span> <span class="o">=</span> <span class="n">_UPT_create</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>   <span class="c1">// pid就是目标进程id
+</span><span class="n">unw_init_remote</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">addr_space</span><span class="p">,</span> <span class="n">rctx</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>那怎么绑定进程就解决了。</p>
+
+<h4 id="主要接口介绍">主要接口介绍</h4>
+
+<p>这里只讲这里需要用到的接口，其他的可以自行参考<a href="https://www.nongnu.org/libunwind/docs.html">libunwind文档</a>。</p>
+
+<ol>
+  <li>
+    <p>获得一块被展开的空间：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="n">unw_addr_space_t</span> <span class="n">unw_create_addr_space</span><span class="p">(</span><span class="n">unw_accessors_t</span> <span class="o">*</span><span class="n">ap</span><span class="p">,</span> <span class="kt">int</span> <span class="n">byteorder</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>获得当前机器状态的上下文：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">int</span> <span class="n">unw_getcontext</span><span class="p">(</span><span class="n">unw_context_t</span> <span class="o">*</span><span class="n">ucp</span><span class="p">);</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>跟踪目标进程，可选参数很多，这里用的attach和detach：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">long</span> <span class="kt">int</span> <span class="n">ptrace</span> <span class="p">(</span><span class="k">enum</span> <span class="n">__ptrace_request</span> <span class="n">__request</span><span class="p">,</span> <span class="p">...)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>根据进程ID得到一个进程信息的<code class="highlighter-rouge">void *</code>指针，对应之前说的那个<code class="highlighter-rouge">arg</code>：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">void</span> <span class="o">*</span><span class="n">_UPT_create</span> <span class="p">(</span><span class="n">pid_t</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>对进程堆栈展开，并将信息赋给一个cursor，也就是之前介绍的：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">int</span> <span class="n">unw_init_remote</span><span class="p">(</span><span class="n">unw_cursor_t</span> <span class="o">*</span><span class="n">c</span><span class="p">,</span> <span class="n">unw_addr_space_t</span> <span class="n">as</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>从寄存器中获得某些变量的地址：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="n">unw_get_reg</span><span class="p">(</span><span class="n">unw_cursor_t</span> <span class="o">*</span><span class="n">cp</span><span class="p">,</span> <span class="n">unw_regnum_t</span> <span class="n">reg</span><span class="p">,</span> <span class="n">unw_word_t</span> <span class="o">*</span><span class="n">valp</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>获取cursor所在栈的函数名字，最后的offp是一个偏移量：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">int</span> <span class="n">unw_get_proc_name</span><span class="p">(</span><span class="n">unw_cursor_t</span> <span class="o">*</span><span class="n">cp</span><span class="p">,</span> <span class="kt">char</span> <span class="o">*</span><span class="n">bufp</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">len</span><span class="p">,</span> <span class="n">unw_word_t</span> <span class="o">*</span><span class="n">offp</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>将编译器内部函数名转化成外部函数名：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="n">abi</span><span class="o">::</span><span class="n">__cxa_demangle</span><span class="p">(</span><span class="n">bufp</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>跳到下一个层栈，如果是栈顶则返回0：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="kt">int</span> <span class="n">unw_step</span><span class="p">(</span><span class="n">unw_cursor_t</span> <span class="o">*</span><span class="n">cp</span><span class="p">)</span>
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>最后就是销毁环境：</p>
+
+    <div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">int</span> <span class="n">_UPT_resume</span> <span class="p">(</span><span class="n">unw_addr_space_t</span><span class="p">,</span> <span class="n">unw_cursor_t</span> <span class="o">*</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="p">);</span>
+    
+<span class="kt">void</span> <span class="n">_UPT_destroy</span> <span class="p">(</span><span class="kt">void</span> <span class="o">*</span><span class="p">);</span>    
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<h4 id="简单例子">简单例子</h4>
+
+<p>被测试展开的程序1, test.cpp：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+#include &lt;unistd.h&gt;
+</span>
+
+<span class="kt">void</span> <span class="nf">ddd</span><span class="p">(</span><span class="kt">int</span> <span class="n">n</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="n">sleep</span><span class="p">(</span><span class="mi">3000</span><span class="p">);</span>
+    <span class="k">else</span> <span class="n">ddd</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">ccc</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ddd</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">bbb</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">ccc</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">aaa</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">bbb</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">aaa</span><span class="p">();</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>获取堆栈信息程序, backtrace.cpp：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;libunwind.h&gt;
+#include &lt;libunwind-ptrace.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/ptrace.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;cxxabi.h&gt;
+#include &lt;cstdio&gt;
+</span>
+<span class="kt">int</span> <span class="nf">wait4stop</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">waitpid</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">WIFEXITED</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">||</span> <span class="n">WIFSIGNALED</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">WIFSTOPPED</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">get_backtrace</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">unw_cursor_t</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">resume_cursor</span><span class="p">;</span>
+    <span class="n">unw_context_t</span> <span class="n">context</span><span class="p">;</span>
+    <span class="n">unw_word_t</span> <span class="n">ip</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">off</span><span class="p">;</span>
+
+    <span class="n">unw_addr_space_t</span> <span class="n">addr_space</span> <span class="o">=</span> <span class="n">unw_create_addr_space</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_UPT_accessors</span><span class="p">,</span> <span class="n">__BYTE_ORDER__</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">addr_space</span><span class="p">)</span> 
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to create address space"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    
+    <span class="n">unw_getcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">context</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">==</span> <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_ATTACH</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to ptrace"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">wait4stop</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"wait SIGSTOP of ptrace failed"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="kt">void</span> <span class="o">*</span><span class="n">rctx</span> <span class="o">=</span> <span class="n">_UPT_create</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">rctx</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span> 
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to _UPT_create"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">unw_init_remote</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">addr_space</span><span class="p">,</span> <span class="n">rctx</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"unw_init_remote failed"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">resume_cursor</span> <span class="o">=</span> <span class="n">cursor</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">bufflen</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">buff</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">bufflen</span><span class="p">];</span>
+
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="s">"23333"</span><span class="p">;</span>
+        <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_REG_IP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ip</span><span class="p">);</span>
+        <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_REG_SP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sp</span><span class="p">);</span>
+
+        <span class="c1">// 获取函数名字
+</span>        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">unw_get_proc_name</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">buff</span><span class="p">,</span> <span class="n">bufflen</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">off</span><span class="p">))</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"%s---"</span><span class="p">,</span> <span class="n">buff</span><span class="p">);</span>
+            <span class="c1">// 如果符号表中没有找到buff的函数名
+</span>            <span class="k">if</span> <span class="p">((</span><span class="n">name</span> <span class="o">=</span> <span class="n">abi</span><span class="o">::</span><span class="n">__cxa_demangle</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">buff</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"%s.</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">name</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">unw_step</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+    
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">buff</span><span class="p">;</span>
+    <span class="n">_UPT_resume</span><span class="p">(</span><span class="n">addr_space</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">resume_cursor</span><span class="p">,</span> <span class="n">rctx</span><span class="p">);</span>
+    <span class="n">_UPT_destroy</span><span class="p">(</span><span class="n">rctx</span><span class="p">);</span>
+
+    <span class="c1">// 然后是将进程结束中断
+</span>    <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_DETACH</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">(</span><span class="kt">int</span> <span class="n">argc</span><span class="p">,</span> <span class="kt">char</span> <span class="o">**</span><span class="n">argv</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">argc</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> 
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"please input pid"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+
+    <span class="n">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">atoi</span><span class="p">(</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]);</span>
+    <span class="n">get_backtrace</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>需要做的就是首先执行程序test.cpp，然后得到进程id，最后执行backtrace.cpp，参数是test.cpp的进程id。</p>
+
+<p>我这里的输出结果是：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112222659.png" alt="20200112222659.png" /></p>
+
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/12/01/leetcode337/" data-toggle="tooltip" data-placement="top" title="337. House Robber III">
+                        Previous<br>
+                        <span>337. House Robber III</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/12/02/%E8%8E%B7%E5%8F%96%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F/" data-toggle="tooltip" data-placement="top" title="获取其他进程的全局变量">
+                        Next<br>
+                        <span>获取其他进程的全局变量</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

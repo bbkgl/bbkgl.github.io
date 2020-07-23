@@ -1,0 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>“远程”获取进程中函数参数值 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2019/12/04/%E8%8E%B7%E5%8F%96%E8%BF%9B%E7%A8%8B%E4%B8%AD%E5%87%BD%E6%95%B0%E5%8F%82%E6%95%B0%E5%80%BC/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0009.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0009.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#profile" title="profile">profile</a>
+                        
+                    </div>
+                    <h1>“远程”获取进程中函数参数值</h1>
+                    
+                    
+                    <h2 class="subheading">profile</h2>
+                    
+                    <span class="meta">Posted by bbkgl on December 4, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>东风夜放花千树</p>
+
+  <p>更吹落</p>
+
+  <p>星如雨</p>
+</blockquote>
+
+<p>获取一个已经在运行的C++进程的函数堆栈信息之前已经讲过了，然后就会想到，怎么获取到对应函数的参数值呢？</p>
+
+<p>这是一个不简单的问题，前面讲过了函数压栈的问题，这次讲一下寄存器。</p>
+
+<h2 id="函数参数传递">函数参数传递</h2>
+
+<h4 id="程序寄存器">程序寄存器</h4>
+
+<p>在X64计算机上，有多个寄存器，这些寄存器都用来保存函数调用时的临时信息，还有很重要的一点，<strong>寄存器是所有函数调用过程中共享的存储资源</strong>。</p>
+
+<p>比如之前说到的RBP，RSP寄存器，是存储函数栈帧边界地址的。还有很多其他寄存器，可以见下图：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200112221112.png" alt="20200112221112.png" /></p>
+
+<p>e打头表示是在32位机器上，现在 x86-64中，所有寄存器都是64位，寄存器名字都是r打头，但是同样兼容e打头的标识符用法。</p>
+
+<p>函数参数寄存器就是上图说的6个参数寄存器，什么时候用到这些参数寄存器呢？</p>
+
+<p>再来回顾一下函数压栈过程：</p>
+
+<ol>
+  <li>调用者函数把被调函数的参数从右向左依次压入栈;</li>
+  <li>调用者函数使用call指令调用被调函数,并把call指令的下一条指令的地址当成返回地址压入栈中(这个压栈操作隐含在call指令中);</li>
+  <li>在被调函数中,被调函数会先保存调用者函数的栈底地址(push rbp),然后再保存调用者函数的栈顶地址,即:当前被调函数的栈底地址(mov rbp,rsp);</li>
+  <li>在被调函数中,从rbp的位置处开始存放被调函数中的局部变量和临时变量,并且这些变量的地址按照定义时的顺序依次减小,即:这些变量的地址是按照栈的延伸方向排列的,先定义的变量先入栈,后定义的变量后入栈;</li>
+</ol>
+
+<p>在过程1中把函数实参压栈的时候就会将参数保存在寄存器中，也就是说这些寄存器记录的之前的信息会被覆盖掉，然后在执行某个函数时，会把寄存器中的函数参数取出，在栈帧中保存。</p>
+
+<h4 id="使用gdb查看函数调用过程">使用GDB查看函数调用过程</h4>
+
+<p>我们先给上示例程序，很简单的示例程序：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+#include &lt;unistd.h&gt;
+</span>
+<span class="kt">void</span> <span class="nf">aaaaaaaaaa</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">e</span> <span class="o">=</span> <span class="mi">14</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"a(%d):%x, sizeof(&amp;a) == %d, b:%x, sizeof(&amp;b) == %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="k">sizeof</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">,</span> <span class="k">sizeof</span> <span class="o">&amp;</span><span class="n">b</span><span class="p">);</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"c = %d, addr = %x  d = %d, addr = %x</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">d</span><span class="p">);</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">100000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">10</span><span class="p">;</span>
+    <span class="n">aaaaaaaaaa</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>使用gdb分别将两个函数转成汇编语句：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gdb &lt;appname&gt;
+disassemble /m main   <span class="c"># 查看main函数的汇编执行过程</span>
+</code></pre></div></div>
+
+<p><strong>得到main函数的汇编语句</strong>：</p>
+
+<pre><code class="language-assembly">(gdb) disassemble /m main
+Dump of assembler code for function main():
+17      int main() {
+   0x0000000000000798 &lt;+0&gt;:     push   %rbp
+   0x0000000000000799 &lt;+1&gt;:     mov    %rsp,%rbp
+   0x000000000000079c &lt;+4&gt;:     sub    $0x10,%rsp
+
+18          int a = 10;
+   0x00000000000007a0 &lt;+8&gt;:     movl   $0xa,-0x4(%rbp)
+
+19          aaaaaaaaaa(a, 11, 12, 13);
+   0x00000000000007a7 &lt;+15&gt;:    mov    -0x4(%rbp),%eax
+   0x00000000000007aa &lt;+18&gt;:    mov    $0xd,%ecx
+   0x00000000000007af &lt;+23&gt;:    mov    $0xc,%edx
+   0x00000000000007b4 &lt;+28&gt;:    mov    $0xb,%esi
+   0x00000000000007b9 &lt;+33&gt;:    mov    %eax,%edi
+   0x00000000000007bb &lt;+35&gt;:    callq  0x720 &lt;aaaaaaaaaa(int, int, int, int)&gt;
+
+20          return 0;
+   0x00000000000007c0 &lt;+40&gt;:    mov    $0x0,%eax
+
+21      }   0x00000000000007c5 &lt;+45&gt;:   leaveq 
+   0x00000000000007c6 &lt;+46&gt;:    retq   
+
+End of assembler dump.
+</code></pre>
+
+<p>重点关注到调用<code class="highlighter-rouge">aaaaaaaaaa</code>函数的过程：</p>
+
+<pre><code class="language-assembly">0x00000000000007a0 &lt;+8&gt;:     movl   $0xa,-0x4(%rbp)  
+0x00000000000007a7 &lt;+15&gt;:    mov    -0x4(%rbp),%eax
+0x00000000000007aa &lt;+18&gt;:    mov    $0xd,%ecx
+0x00000000000007af &lt;+23&gt;:    mov    $0xc,%edx
+0x00000000000007b4 &lt;+28&gt;:    mov    $0xb,%esi
+0x00000000000007b9 &lt;+33&gt;:    mov    %eax,%edi
+0x00000000000007bb &lt;+35&gt;:    callq  0x720 &lt;aaaaaaaaaa(int, int, int, int)&gt;
+</code></pre>
+
+<p>解释一下：</p>
+
+<ul>
+  <li>将局部变量a放到rbp-4的位置</li>
+  <li>将局部变量a拷贝到eax寄存器中</li>
+  <li>将值10（对应形参d）拷贝到ecx寄存器中</li>
+  <li>将值11（对应形参c）拷贝到edx寄存器中</li>
+  <li>将值12（对应形参b）拷贝到esi寄存器中</li>
+  <li>将局部变量a拷贝到edi寄存器中</li>
+  <li>然后调用<code class="highlighter-rouge">aaaaaaaaaa</code>函数</li>
+</ul>
+
+<p>这也是说明函数确实是从右到左进栈的，但不一定进栈，应该先进入寄存器。</p>
+
+<p>然后是<code class="highlighter-rouge">aaaaaaaaaa</code>函数</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>disassemble /m aaaaaaaaaa   <span class="c"># 查看main函数的汇编执行过程</span>
+</code></pre></div></div>
+
+<p><strong>得到main函数的汇编语句</strong>：</p>
+
+<pre><code class="language-assembly">(gdb) disassemble /m aaaaaaaaaa
+Dump of assembler code for function aaaaaaaaaa(int, int, int, int):
+10      void aaaaaaaaaa(int a, int b, int c, int d) {
+   0x0000000000000720 &lt;+0&gt;:     push   %rbp
+   0x0000000000000721 &lt;+1&gt;:     mov    %rsp,%rbp
+   0x0000000000000724 &lt;+4&gt;:     sub    $0x20,%rsp
+   0x0000000000000728 &lt;+8&gt;:     mov    %edi,-0x14(%rbp)
+   0x000000000000072b &lt;+11&gt;:    mov    %esi,-0x18(%rbp)
+   0x000000000000072e &lt;+14&gt;:    mov    %edx,-0x1c(%rbp)
+   0x0000000000000731 &lt;+17&gt;:    mov    %ecx,-0x20(%rbp)
+
+11          int e = 14;
+   0x0000000000000734 &lt;+20&gt;:    movl   $0xe,-0x4(%rbp)
+</code></pre>
+
+<p>这里只截取前一部分，以便于观察参数是如何进栈的。</p>
+
+<p>我们依旧解释上述汇编过程：</p>
+
+<ul>
+  <li>前两句依旧是建立新栈帧</li>
+  <li>然后是让rsp寄存器存储栈顶地址</li>
+  <li>接下来四句就是形参入栈了：
+    <ul>
+      <li>rbp-14存储第一个参数</li>
+      <li>rbp-18存储第二个参数</li>
+      <li>rbp-1c存储第三个参数</li>
+      <li>rbp-20存储第四个参数</li>
+    </ul>
+  </li>
+  <li>然后是创建局部变量，注意这里重点是局部变量在形参前面</li>
+</ul>
+
+<p>上述中重点就是栈帧中<strong>局部变量在形参前面</strong>。</p>
+
+<p>也就是这么个结构：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">rbp</span>
+<span class="err">局部变量</span>
+<span class="err">空</span><span class="mi">12</span><span class="err">字节</span>
+<span class="err">形参</span>
+<span class="n">rsp</span>
+</code></pre></div></div>
+
+<p>于是我们就可以明白，获取函数某个参数，需要去计算在rbp上偏移多少个单位。</p>
+
+<p>这里还有个疑问，为什么不能直接用存储形参的那几个寄存器来获取呢？</p>
+
+<p>如果我们同时把<code class="highlighter-rouge">main</code>和<code class="highlighter-rouge">aaaaaaaaaa</code>放一起观察，就会发现rdi、rsi等几个寄存器是不断在存储新的值的，如果用gdb每次进入新的栈帧去观察这些寄存器的值，会发现rdi和rsi等参数寄存器中存储的永远是顶层栈的信息，而rsp和rbp存储的就是每个栈帧的信息。</p>
+
+<p>所以，如果我们不在调用某个函数的时候要得到该函数的参数，通过这几个参数寄存器显然是不行的，除非在这之前，就已经存储了这些寄存器的值，比如gdb就是这么做的。</p>
+
+<h2 id="获取函数参数">获取函数参数</h2>
+
+<p>首先来认识一个系统调用：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">long</span> <span class="n">ptrace</span><span class="p">(</span><span class="k">enum</span> <span class="n">__ptrace_request</span> <span class="n">request</span><span class="p">,</span> <span class="n">pid_t</span> <span class="n">pid</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">addr</span><span class="p">,</span> <span class="kt">void</span> <span class="o">*</span><span class="n">data</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>第一个参数枚举类型如果是<code class="highlighter-rouge"> PTRACE_PEEKDATA  </code>就可以从对方进程栈地址中读取一个字节，然后返回，其中<code class="highlighter-rouge">addr</code>是要读取的地址，<code class="highlighter-rouge">data</code>可以为空。</p>
+
+<p>第一个参数枚举类型如果是PTRACE_PEEKDATA就可以从对方进程栈地址中读取一个单位（a word）的值，然后返回，其中addr是要读取的地址，data可以为空。</p>
+
+<p>这里会郁闷，什么叫<strong>一个单位（a word）</strong>?</p>
+
+<p>根据<a href="https://stackoverflow.com/questions/20974068/does-the-size-of-a-long-equal-to-the-size-of-a-word">stackoverflow</a>中的解答，a word的长度就是操作系统的位数，比如32位系统中就是32位，4字节；64位系统中就是64位，8个字节。其实也正对应了在不同位数的操作系统中，long类型的长度。</p>
+
+<p>至于返回值：</p>
+
+<ul>
+  <li>如果是执行失败，则返回值会小于0</li>
+  <li>执行成功则得到读取的数值</li>
+  <li>
+    <p>关于执行失败，errno有多个可能的值：</p>
+  </li>
+  <li>
+    <p>EBUSY：分配和释放调试寄存器时出错</p>
+  </li>
+  <li>
+    <p>EFAULT（5）：读写不可访问的内存空间</p>
+  </li>
+  <li>
+    <p>EINVAL：尝试设置无效选项</p>
+  </li>
+  <li>
+    <p>EIO：请求无效，或者尝试读写父子进程不可访问的空间</p>
+  </li>
+  <li>
+    <p>EPERM：没有权限追踪指定的进程</p>
+  </li>
+  <li>ESRCH：指定的子进程不存在，或者当前正由调用者追踪</li>
+</ul>
+
+<p>需要根据errno的取值去知晓是否发生错误以及错误的种类。</p>
+
+<h4 id="获取整形参数值">获取整形参数值</h4>
+
+<p>这是一件可以很简单也可以很复杂的事情，具体得根据函数栈帧中局部变量以及形参的数量和类型来分析。我们从一个最简单的类型入手，获取无局部变量的栈帧中的第一个整形参数值。</p>
+
+<p>首先给出被跟踪进程的程序：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+#include &lt;unistd.h&gt;
+#include &lt;vector&gt;
+</span>
+<span class="kt">void</span> <span class="nf">func</span><span class="p">(</span><span class="kt">int</span> <span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">100000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"pid = %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+    <span class="n">test</span> <span class="n">a</span><span class="p">;</span>
+    <span class="n">aaaaaaaaaa</span><span class="p">(</span><span class="mi">129</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>分析该程序，如果要获得参数a的值，要经过以下步骤：</p>
+
+<ol>
+  <li>
+    <p>程序因为sleep停在了函数func的执行过程中，得到进程ID，pid</p>
+  </li>
+  <li>
+    <p>通过使用libunwind遍历整个pid进程的程序栈，找到func的栈帧</p>
+  </li>
+  <li>
+    <p>获得该栈帧中RBP寄存器记录的栈基地址rbp</p>
+  </li>
+  <li>
+    <p>使用rbp向低地址偏移一个整型，得到形参a的地址addr</p>
+  </li>
+  <li>
+    <p>使用上述ptrace就能从addr中读取到a的值了</p>
+  </li>
+</ol>
+
+<p>根据上述步骤，就可以写出跟踪程序了：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;sys/ptrace.h&gt;
+#include &lt;array&gt;
+#include &lt;algorithm&gt;
+#include &lt;libunwind-ptrace.h&gt;
+#include &lt;libunwind.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;cxxabi.h&gt;
+#include &lt;lua/lua.h&gt;
+#include &lt;vector&gt;
+#include &lt;cerrno&gt;
+</span>
+<span class="kt">int</span> <span class="nf">wait4stop</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">waitpid</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">WIFEXITED</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">||</span> <span class="n">WIFSIGNALED</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">WIFSTOPPED</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">get_backtrace</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">unw_cursor_t</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">resume_cursor</span><span class="p">;</span>
+    <span class="n">unw_context_t</span> <span class="n">context</span><span class="p">;</span>
+    <span class="n">unw_word_t</span> <span class="n">ip</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">off</span><span class="p">;</span>
+    <span class="n">unw_addr_space_t</span> <span class="n">addr_space</span> <span class="o">=</span> <span class="n">unw_create_addr_space</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_UPT_accessors</span><span class="p">,</span> <span class="n">__BYTE_ORDER__</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">addr_space</span><span class="p">)</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to create address space"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">unw_getcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">context</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">==</span> <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_ATTACH</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to ptrace"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">wait4stop</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"wait SIGSTOP of ptrace failed"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">rctx</span> <span class="o">=</span> <span class="n">_UPT_create</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rctx</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to _UPT_create"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">unw_init_remote</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">addr_space</span><span class="p">,</span> <span class="n">rctx</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"unw_init_remote failed"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">resume_cursor</span> <span class="o">=</span> <span class="n">cursor</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">bufflen</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">buff</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">bufflen</span><span class="p">];</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="s">"23333"</span><span class="p">;</span>
+        <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_REG_IP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ip</span><span class="p">);</span>
+        <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_REG_SP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sp</span><span class="p">);</span>
+        <span class="c1">// 获取函数名字
+</span>        <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="n">unw_get_proc_name</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">buff</span><span class="p">,</span> <span class="n">bufflen</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">off</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">flag</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">name</span> <span class="o">=</span> <span class="n">abi</span><span class="o">::</span><span class="n">__cxa_demangle</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">buff</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">).</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="s">"func"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kt">uintptr_t</span> <span class="n">rbp</span><span class="p">,</span> <span class="n">rsp</span><span class="p">;</span>
+                <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_X86_64_RBP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rbp</span><span class="p">);</span>
+                <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_X86_64_RSP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rsp</span><span class="p">);</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">"ip: 0x%016lx, %s + 0x%016lx, sp: 0x%016lx</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">sp</span><span class="p">);</span>
+                <span class="kt">int</span> <span class="o">*</span><span class="n">addr</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">int</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">rbp</span> <span class="o">-</span> <span class="mi">4</span><span class="p">);</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">rbp</span> <span class="o">&lt;&lt;</span> <span class="s">"-&gt;"</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">rsp</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">addr</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="kt">long</span> <span class="n">rev</span> <span class="o">=</span> <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_PEEKDATA</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">"%d -- %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">rev</span><span class="p">),</span> <span class="n">errno</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="n">printf</span><span class="p">(</span><span class="s">"error!(%d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">flag</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">unw_step</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">buff</span><span class="p">;</span>
+    <span class="n">_UPT_resume</span><span class="p">(</span><span class="n">addr_space</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">resume_cursor</span><span class="p">,</span> <span class="n">rctx</span><span class="p">);</span>
+    <span class="n">_UPT_destroy</span><span class="p">(</span><span class="n">rctx</span><span class="p">);</span>
+    <span class="c1">// 然后是将进程结束中断
+</span>    <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_DETACH</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">pid_t</span> <span class="n">pid</span> <span class="o">=</span> <span class="n">XXXXX</span><span class="p">;</span>
+    <span class="n">get_backtrace</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这是我的输出：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ip:</span> <span class="mh">0x0000564b1977a8ce</span><span class="p">,</span> <span class="n">func</span><span class="p">(</span><span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="o">+</span> <span class="mh">0x000000000000001e</span><span class="p">,</span> <span class="n">sp</span><span class="o">:</span> <span class="mh">0x00007fff0ba93260</span>
+<span class="mi">7</span><span class="n">fff0ba93270</span><span class="o">-&gt;</span><span class="mi">7</span><span class="n">fff0ba93260</span>
+<span class="mh">0x7fff0ba9326c</span>
+<span class="mi">129</span> <span class="o">--</span> <span class="mi">0</span>
+</code></pre></div></div>
+
+<p>Tips：如果在printf中使用%ld的格式去打印结果rev，可能会得到一个不可预知的结果，这应该和ptrace存储结果的方式有关系，所以获取ptrace结果的时候，需要特别注意这点。</p>
+
+<h4 id="获取指针参数值">获取指针参数值</h4>
+
+<p>基于前面整型参数的获取方法，指针参数也就比较明了了，首先可以明白，一个指针变量的占用空间大小和一个long类型的占用空间大小是一样的。</p>
+
+<p>和前面同样的思路，我们需要把从rbp偏移的量变成一个指针大小的值。</p>
+
+<p>给出被跟踪进程的程序：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;cstdio&gt;
+#include &lt;unistd.h&gt;
+#include &lt;vector&gt;
+</span>
+<span class="kt">void</span> <span class="nf">func</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="n">a</span><span class="p">,</span> <span class="kt">int</span> <span class="n">b</span><span class="p">,</span> <span class="kt">int</span> <span class="n">c</span><span class="p">,</span> <span class="kt">int</span> <span class="n">d</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">sleep</span><span class="p">(</span><span class="mi">100000</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"pid = %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+    <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="mi">129</span><span class="p">;</span>
+    <span class="n">printf</span><span class="p">(</span><span class="s">"%ld:%d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="p">);</span>
+    <span class="n">func</span><span class="p">(</span><span class="o">&amp;</span><span class="n">a</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>分析一下，我们首先要获得参数a的值，也就是一个地址，同样我们还可以通过这个地址，拿到前一个栈中a的值，也就是129，最后输出的就是129。</p>
+
+<p>需要提醒的是，<strong>任何时候都不能通过</strong><strong>**</strong>*这个解引用符号去获得其他进程地址上的值**，ptrace作为系统调用提供了这么一种方法（就是好麻烦）。</p>
+
+<p>然后我们就能写出跟踪进程的代码了：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;sys/ptrace.h&gt;
+#include &lt;array&gt;
+#include &lt;algorithm&gt;
+#include &lt;libunwind-ptrace.h&gt;
+#include &lt;libunwind.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;cxxabi.h&gt;
+#include &lt;vector&gt;
+#include &lt;cerrno&gt;
+</span>
+<span class="kt">int</span> <span class="nf">wait4stop</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">waitpid</span><span class="p">(</span><span class="n">pid</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="o">||</span> <span class="n">WIFEXITED</span><span class="p">(</span><span class="n">status</span><span class="p">)</span> <span class="o">||</span> <span class="n">WIFSIGNALED</span><span class="p">(</span><span class="n">status</span><span class="p">))</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span> <span class="k">while</span><span class="p">(</span><span class="o">!</span><span class="n">WIFSTOPPED</span><span class="p">(</span><span class="n">status</span><span class="p">));</span>
+    <span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="nf">get_backtrace</span><span class="p">(</span><span class="n">pid_t</span> <span class="n">pid</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">unw_cursor_t</span> <span class="n">cursor</span><span class="p">,</span> <span class="n">resume_cursor</span><span class="p">;</span>
+    <span class="n">unw_context_t</span> <span class="n">context</span><span class="p">;</span>
+    <span class="n">unw_word_t</span> <span class="n">ip</span><span class="p">,</span> <span class="n">sp</span><span class="p">,</span> <span class="n">off</span><span class="p">;</span>
+    <span class="n">unw_addr_space_t</span> <span class="n">addr_space</span> <span class="o">=</span> <span class="n">unw_create_addr_space</span><span class="p">(</span><span class="o">&amp;</span><span class="n">_UPT_accessors</span><span class="p">,</span> <span class="n">__BYTE_ORDER__</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">addr_space</span><span class="p">)</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to create address space"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">unw_getcontext</span><span class="p">(</span><span class="o">&amp;</span><span class="n">context</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">==</span> <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_ATTACH</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to ptrace"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">wait4stop</span><span class="p">(</span><span class="n">pid</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"wait SIGSTOP of ptrace failed"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="kt">void</span> <span class="o">*</span><span class="n">rctx</span> <span class="o">=</span> <span class="n">_UPT_create</span><span class="p">(</span><span class="n">pid</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">rctx</span> <span class="o">==</span> <span class="nb">nullptr</span><span class="p">)</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"Failed to _UPT_create"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">unw_init_remote</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">addr_space</span><span class="p">,</span> <span class="n">rctx</span><span class="p">))</span>
+        <span class="n">std</span><span class="o">::</span><span class="n">cerr</span> <span class="o">&lt;&lt;</span> <span class="s">"unw_init_remote failed"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+    <span class="n">resume_cursor</span> <span class="o">=</span> <span class="n">cursor</span><span class="p">;</span>
+    <span class="k">const</span> <span class="kt">size_t</span> <span class="n">bufflen</span> <span class="o">=</span> <span class="mi">1024</span><span class="p">;</span>
+    <span class="kt">char</span> <span class="o">*</span><span class="n">buff</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">bufflen</span><span class="p">];</span>
+    <span class="k">do</span> <span class="p">{</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="s">"23333"</span><span class="p">;</span>
+        <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_REG_IP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ip</span><span class="p">);</span>
+        <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_REG_SP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sp</span><span class="p">);</span>
+        <span class="c1">// 获取函数名字
+</span>        <span class="kt">int</span> <span class="n">flag</span> <span class="o">=</span> <span class="n">unw_get_proc_name</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">buff</span><span class="p">,</span> <span class="n">bufflen</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">off</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mi">0</span> <span class="o">==</span> <span class="n">flag</span><span class="p">)</span> <span class="p">{</span>
+            <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">((</span><span class="n">name</span> <span class="o">=</span> <span class="n">abi</span><span class="o">::</span><span class="n">__cxa_demangle</span><span class="p">(</span><span class="n">buff</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">status</span><span class="p">))</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">buff</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">std</span><span class="o">::</span><span class="n">string</span><span class="p">(</span><span class="n">name</span><span class="p">).</span><span class="n">substr</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="s">"func"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="kt">uintptr_t</span> <span class="n">rbp</span><span class="p">,</span> <span class="n">rsp</span><span class="p">;</span>
+                <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_X86_64_RBP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rbp</span><span class="p">);</span>
+                <span class="n">unw_get_reg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">,</span> <span class="n">UNW_X86_64_RSP</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">rsp</span><span class="p">);</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">"ip: 0x%016lx, %s + 0x%016lx, sp: 0x%016lx</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">ip</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">off</span><span class="p">,</span> <span class="n">sp</span><span class="p">);</span>
+                <span class="kt">int</span> <span class="o">*</span><span class="n">addr</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">int</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">rbp</span> <span class="o">-</span> <span class="k">sizeof</span><span class="p">(</span><span class="kt">int</span> <span class="o">*</span><span class="p">));</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">rbp</span> <span class="o">&lt;&lt;</span> <span class="s">"-&gt;"</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">rsp</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="n">addr</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+                <span class="kt">int</span> <span class="o">*</span><span class="n">addr_a</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">int</span> <span class="o">*&gt;</span><span class="p">(</span><span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_PEEKDATA</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">addr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">));</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">"%ld -- %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">addr_a</span><span class="p">),</span> <span class="n">errno</span><span class="p">);</span>
+                <span class="kt">int</span> <span class="n">a</span> <span class="o">=</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">int</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_PEEKDATA</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="n">addr_a</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">));</span>
+                <span class="n">printf</span><span class="p">(</span><span class="s">"%ld:%d -- %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="kt">long</span><span class="o">&gt;</span><span class="p">(</span><span class="n">addr_a</span><span class="p">),</span> <span class="n">a</span><span class="p">,</span> <span class="n">errno</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="n">printf</span><span class="p">(</span><span class="s">"error!(%d)</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">flag</span><span class="p">);</span>
+    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">unw_step</span><span class="p">(</span><span class="o">&amp;</span><span class="n">cursor</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="k">delete</span><span class="p">[]</span> <span class="n">buff</span><span class="p">;</span>
+    <span class="n">_UPT_resume</span><span class="p">(</span><span class="n">addr_space</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">resume_cursor</span><span class="p">,</span> <span class="n">rctx</span><span class="p">);</span>
+    <span class="n">_UPT_destroy</span><span class="p">(</span><span class="n">rctx</span><span class="p">);</span>
+    <span class="c1">// 然后是将进程结束中断
+</span>    <span class="n">ptrace</span><span class="p">(</span><span class="n">PTRACE_DETACH</span><span class="p">,</span> <span class="n">pid</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">get_backtrace</span><span class="p">(</span><span class="mi">1627628</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>这里我的输出是这样子的：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nl">ip:</span> <span class="mh">0x000055db2d52a77f</span><span class="p">,</span> <span class="n">func</span><span class="p">(</span><span class="kt">int</span><span class="o">*</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">,</span> <span class="kt">int</span><span class="p">)</span> <span class="o">+</span> <span class="mh">0x000000000000001f</span><span class="p">,</span> <span class="n">sp</span><span class="o">:</span> <span class="mh">0x00007ffd537314b0</span>
+<span class="mi">7</span><span class="n">ffd537314d0</span><span class="o">-&gt;</span><span class="mi">7</span><span class="n">ffd537314b0</span>
+<span class="mh">0x7ffd537314c8</span>
+<span class="mi">140726003504364</span> <span class="o">--</span> <span class="mi">0</span>
+<span class="mi">140726003504364</span><span class="o">:</span><span class="mi">129</span> <span class="o">--</span> <span class="mi">0</span>
+</code></pre></div></div>
+
+<p>可以看到确实输出了129，说明读取指针参数是成功的。</p>
+
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/12/03/%E6%A0%88%E5%B8%A7/" data-toggle="tooltip" data-placement="top" title="程序中栈帧的分布">
+                        Previous<br>
+                        <span>程序中栈帧的分布</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/12/12/%E5%85%B3%E4%BA%8E%E7%A8%8B%E5%BA%8F%E5%85%A5%E5%8F%A3%E5%9C%B0%E5%9D%80/" data-toggle="tooltip" data-placement="top" title="关于程序入口地址">
+                        Next<br>
+                        <span>关于程序入口地址</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

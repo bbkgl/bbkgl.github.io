@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>面向对象系统分析与设计 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2019/11/07/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1%E7%B3%BB%E7%BB%9F%E5%88%86%E6%9E%90%E4%B8%8E%E8%AE%BE%E8%AE%A1/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0012.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0012.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#面向对象" title="面向对象">面向对象</a>
+                        
+                    </div>
+                    <h1>面向对象系统分析与设计</h1>
+                    
+                    
+                    <h2 class="subheading">面向对象考试总结</h2>
+                    
+                    <span class="meta">Posted by bbkgl on November 7, 2019</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>间坐小窗读周易</p>
+
+  <p>不知春去几多时</p>
+</blockquote>
+
+<p>面向对象考试重点总结。</p>
+
+<h2 id="1-1-概述">1-1 概述</h2>
+
+<h4 id="11-分析与设计">1.1 分析与设计</h4>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><strong>分析</strong></th>
+      <th style="text-align: center"><strong>设计</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">用户视角</td>
+      <td style="text-align: center">计算机视角</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">卖的视角</td>
+      <td style="text-align: center">做的视角</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">具体</td>
+      <td style="text-align: center">抽象</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">产品当项目做</td>
+      <td style="text-align: center">项目当产品做</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">设计源于需求、高于需求</td>
+      <td style="text-align: center"> </td>
+    </tr>
+  </tbody>
+</table>
+
+<ol>
+  <li>
+    <p>什么是面向对象的分析？</p>
+
+    <p>面向对象的分析强调的是在问题域内发现和描述对象。</p>
+  </li>
+  <li>
+    <p>什么是面向对象的设计？</p>
+
+    <p>面向对象的设计强调的是如何定义对象以及它们是如何协作的。</p>
+  </li>
+  <li>
+    <p>什么是面向对象的分析与设计？</p>
+
+    <p>分析是识别现实世界中的对象；设计是找到软件世界中的对象。</p>
+  </li>
+</ol>
+
+<h4 id="12-面向对象">1.2 面向对象</h4>
+
+<ul>
+  <li>
+    <p>面向对象的优点是什么？</p>
+
+    <p>复用、应变、沟通、市场、士气？？？</p>
+  </li>
+  <li>
+    <p>面向对象是什么？</p>
+
+    <p>对现实世界的理解和抽象的方法。</p>
+  </li>
+</ul>
+
+<h4 id="13-uml建模">1.3 UML建模</h4>
+
+<p>UML是一种很统一的、标准化的，应用面很广泛的建模语言。</p>
+
+<ol>
+  <li>
+    <p>为什么使用UML建模？</p>
+
+    <ul>
+      <li>利用UML20%就可以为80%的问题建模</li>
+      <li>一图胜过千言万语</li>
+    </ul>
+  </li>
+  <li>
+    <p>UML建模过程</p>
+
+    <ul>
+      <li>定义用例</li>
+      <li>定义领域模型</li>
+      <li>定义交互图</li>
+      <li>定义设计类图</li>
+    </ul>
+  </li>
+  <li>
+    <p>定义领域模型（OOA）</p>
+
+    <p>领域模型并不是对软件对象的描述，它是真实世界领域中概念和想象可视化，又称为概念模型。</p>
+  </li>
+  <li>
+    <p>定义交互图</p>
+
+    <ul>
+      <li>关注的是软件对象的定义，以及它们的职责和协作</li>
+      <li>顺序图/时序图是描述协作的常用手法</li>
+      <li>顺序图展示出软件对象之间的消息流</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="14-可视化建模">1.4 可视化建模</h4>
+
+<p>可视化建模的优点：</p>
+
+<ul>
+  <li>观察全景</li>
+  <li>发现和分析对象之间的联系</li>
+  <li>忽略或隐藏细枝末节</li>
+</ul>
+
+<h2 id="1-2-迭代进化和敏捷">1-2 迭代、进化和敏捷</h2>
+
+<h4 id="21-软件过程">2.1 软件过程</h4>
+
+<ol>
+  <li>
+    <p>什么是软件过程？</p>
+
+    <p>软件过程定义了软件开发、部署和维护的步骤。</p>
+  </li>
+  <li>
+    <p>软件过程本身就是软件，是一种由人构成的虚拟机执行的软件。</p>
+  </li>
+</ol>
+
+<h4 id="22-迭代式开发">2.2 迭代式开发</h4>
+
+<ol>
+  <li>
+    <p>瀑布式生命周期</p>
+
+    <p>试图在编写代码之前定义所有的需求，以及详尽的时间表。</p>
+  </li>
+  <li>
+    <p>迭代式的生命周期</p>
+
+    <ul>
+      <li>通过多次的迭代获得周期性的反馈，以这些反馈为驱动力，对系统进行不断的扩展和精化</li>
+      <li>迭代式开发将软件开发过程分解为一系列小的，固定的周期项目，每个小项目称为一次迭代</li>
+      <li>迭代的周期固定，一般为2-6周</li>
+    </ul>
+  </li>
+  <li>
+    <p>迭代式开发的优势</p>
+
+    <ul>
+      <li>能够较早地应对风险高的内容</li>
+      <li>能够让人明确地看到进展</li>
+      <li>能够较早地获得反馈，鼓励用户参与，靠近用户的需求</li>
+      <li>控制复杂性</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="23-统一过程unified-process-up">2.3 统一过程（Unified Process, UP）</h4>
+
+<ol>
+  <li>UP是迭代过程的一种，提出人Ivar Jacobsn</li>
+  <li>UP具有灵活性，可以应用于敏捷方法</li>
+  <li>4个主要阶段
+    <ul>
+      <li>初始</li>
+      <li>细化</li>
+      <li>构造</li>
+      <li>移交</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="24-敏捷方法">2.4 敏捷方法</h4>
+
+<ol>
+  <li>敏捷开发
+    <ul>
+      <li>进化式精进的计划</li>
+      <li>需求和设计的短时间迭代</li>
+      <li>简易，轻量，沟通</li>
+    </ul>
+  </li>
+  <li>敏捷宣言
+    <ul>
+      <li>个体和交流</li>
+      <li>工作的软件</li>
+      <li>与客户协作</li>
+      <li>积极响应变更</li>
+      <li>过程和工具</li>
+      <li>完善的文档</li>
+      <li>合同谈判</li>
+      <li>严格履行计划</li>
+    </ul>
+  </li>
+  <li>敏捷原则
+    <ul>
+      <li>通过早期和持续交付满足客户</li>
+      <li>欢迎变更需求</li>
+      <li>以两周-两月为周期，频繁交付软件</li>
+      <li>每天开发人员都要和业务人员交流合作</li>
+      <li>依靠有干劲的个体推动项目的开发</li>
+      <li>衡量进度的重要尺度是可运行的软件</li>
+      <li>提倡开发和集成</li>
+    </ul>
+  </li>
+  <li>什么是敏捷建模？
+    <ul>
+      <li>不对所有或大部分软件设计建模或应用UML</li>
+      <li>尽可能使用最简单的软件</li>
+      <li>不单独建模</li>
+      <li>并行建模</li>
+      <li>明白“任何模型都不准确”</li>
+      <li>开发者为自己进行建模</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="1-3-敏捷开发">1-3 敏捷开发？？</h2>
+
+<h4 id="31-敏捷开发原则">3.1 敏捷开发原则</h4>
+
+<p>敏捷开发10原则？？？</p>
+
+<h4 id="32-srum">3.2 Srum</h4>
+
+<p>Scrum是一个敏捷的过程，使我们能够专注于在最短的时间内提供最高的业务价值。</p>
+
+<h2 id="2-需求用例">2 需求&amp;用例</h2>
+
+<h4 id="21-需求">2.1 需求</h4>
+
+<ol>
+  <li>
+    <p>什么是需求？</p>
+
+    <p>需求是一套系统或者项目所要满足的能力和条件。</p>
+  </li>
+  <li>
+    <p>需求类型</p>
+  </li>
+</ol>
+
+<h4 id="22-用例">2.2 用例</h4>
+
+<ol>
+  <li>
+    <p>参与者种类</p>
+
+    <ul>
+      <li>主要参与者</li>
+      <li>辅助参与者</li>
+      <li>幕后参与者</li>
+    </ul>
+  </li>
+  <li>
+    <p>用例定义</p>
+
+    <ul>
+      <li>站在用户角度定义软件系统的外部特征</li>
+      <li>可表示为系统提供的某种服务或者行为</li>
+      <li>把现实世界捕获下来的方法</li>
+    </ul>
+  </li>
+  <li>
+    <p>用例和需求的关系</p>
+
+    <p>用例就是需求，需求不是用例？？？</p>
+  </li>
+  <li>
+    <p>什么是用例图？</p>
+
+    <p>一个用例模型由若干个用例描述，用例图是显示一组用例，参与者以及他们之间关系的图。</p>
+  </li>
+  <li>
+    <p>用例图的组成</p>
+
+    <ul>
+      <li>一组用例</li>
+      <li>一组参与者</li>
+      <li>一组关系</li>
+    </ul>
+  </li>
+  <li>
+    <p>用例图的应用</p>
+
+    <ul>
+      <li>
+        <p>从用户角度来描述软件的需求</p>
+      </li>
+      <li>分析产品的功能和行为</li>
+      <li>定义和描述了系统的外部可见行为</li>
+    </ul>
+  </li>
+  <li>
+    <p>参与者</p>
+
+    <ul>
+      <li>定义：在系统之外，通过系统边界与系统进行直接有意义交互的任何事物。</li>
+      <li>关键词：系统外、责任边界、</li>
+    </ul>
+  </li>
+  <li>
+    <p>如何识别用例？</p>
+
+    <ol>
+      <li>选择系统边界</li>
+      <li>确定主要参与者</li>
+      <li>确定每个主要参与者的目标</li>
+      <li>定义满足用户目标的用例，并根据其目标命名</li>
+    </ol>
+  </li>
+  <li>
+    <p>用例的粒度</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>阶段</th>
+          <th>粒度</th>
+          <th>例子</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>业务建模   （描述功能性需求）</td>
+          <td>用例名称能够说明一个完整业务流程</td>
+          <td>取钱、报装电话、借书等</td>
+        </tr>
+        <tr>
+          <td>概念建模</td>
+          <td>用例描述一项完整业务的一个步骤</td>
+          <td>提供申请资料、受理业务等</td>
+        </tr>
+        <tr>
+          <td>系统建模</td>
+          <td>用例能够描述操作者与计算机的一次完整交互为宜</td>
+          <td>填写申请单、审核任务单、验证密码等</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>用例描述</p>
+  </li>
+</ol>
+
+<p>描述用例的流程细节。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th><strong>用例的不同部分</strong></th>
+      <th><strong>注解</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>用例名称   Use   Case Name</td>
+      <td>动词+名词</td>
+    </tr>
+    <tr>
+      <td>范围   Scope</td>
+      <td>要设计的系统</td>
+    </tr>
+    <tr>
+      <td>级别   Level</td>
+      <td>“用户目标”或者是“子功能”</td>
+    </tr>
+    <tr>
+      <td>主要参与者   Primary   Actor</td>
+      <td>与系统交互完成服务</td>
+    </tr>
+    <tr>
+      <td>涉众及观众点   Stakeholders   and Interests</td>
+      <td>关注该用例的人及其需求</td>
+    </tr>
+    <tr>
+      <td>前置条件    Preconditions</td>
+      <td>值得告诉读者，开始前必须为真的条件</td>
+    </tr>
+    <tr>
+      <td>成功保证   Success   Guarantee</td>
+      <td>值得告诉读者，成功完成必须满足的条件</td>
+    </tr>
+    <tr>
+      <td>主成功场景   Main   Success Scenario</td>
+      <td>典型的、无条件的、理想方式的成果场景</td>
+    </tr>
+    <tr>
+      <td>扩展   Extensions</td>
+      <td>成功或失败的替代场景</td>
+    </tr>
+    <tr>
+      <td>特殊需求   Special   Requirements</td>
+      <td>相关的非功能需求</td>
+    </tr>
+    <tr>
+      <td>技术和数据变元表   Technology   and Data Variations List</td>
+      <td>不同的I/O方法和数据格式</td>
+    </tr>
+    <tr>
+      <td>发生频率   Frequency   of Occurrence</td>
+      <td>影响对实现的调查、测试和时间安排</td>
+    </tr>
+    <tr>
+      <td>杂项   Miscellaneous</td>
+      <td>例如未决问题</td>
+    </tr>
+  </tbody>
+</table>
+
+<ol>
+  <li>
+    <p>用例描述四种形式</p>
+
+    <ul>
+      <li>命名</li>
+      <li>摘要</li>
+      <li>非正式</li>
+      <li>详述</li>
+    </ul>
+  </li>
+  <li>
+    <p>用例描述组成</p>
+
+    <ul>
+      <li>用例名称</li>
+      <li>范围</li>
+      <li>级别</li>
+      <li>主要参与者</li>
+      <li>涉众及观众点</li>
+      <li>前置条件</li>
+      <li>成功保证</li>
+      <li>主成功场景：基本事件流</li>
+      <li>扩展</li>
+      <li>后置条件</li>
+    </ul>
+  </li>
+  <li>
+    <p>用例描述举例</p>
+  </li>
+</ol>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/H9b16786b65f94e24bdd872d0acb08fa9g.jpg" alt="H9b16786b65f94e24bdd872d0acb08fa9g" /></p>
+
+<ol>
+  <li>
+    <p>用例描述总原则</p>
+
+    <p>如果涉众不能理解和验证，就不是需求。（如果删除他，会不会有涉众的利益受到伤害）</p>
+  </li>
+  <li>
+    <p>主成功场景编写要点</p>
+
+    <ul>
+      <li>只书写“可理解、可验证、可观测”的</li>
+      <li>每个步骤一个句子</li>
+      <li>使用主动语句，理清责任</li>
+      <li>句子以参与者或者系统为主语</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="3-域模型与类图">3 域模型与类图</h2>
+
+<h4 id="31-概念类">3.1 概念类</h4>
+
+<ol>
+  <li>
+    <p>概念类定义</p>
+
+    <p>概念类是描述现实世界的实体或者概念，是现实世界问题域的概念。</p>
+  </li>
+  <li>
+    <p>如何找到概念类</p>
+
+    <ul>
+      <li>重用或者修改现有模型</li>
+      <li>使用分类列表</li>
+      <li>确定名词短语，作为候选的关键抽象</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="32-领域模型">3.2 领域模型</h4>
+
+<ol>
+  <li>
+    <p>定义</p>
+
+    <ul>
+      <li>
+        <p>也称为域模型，概念模型，是对领域内的概念类或者对现实中对象的可视化表示。</p>
+      </li>
+      <li>
+        <p>在UML中，领域模型被描述为一组没有定义操作的类图。</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>领域模型不是数据模型，与概念数据模型类似</p>
+  </li>
+</ol>
+
+<h4 id="33-关键抽象方法">3.3 关键抽象方法</h4>
+
+<p>从软件需求规格说明书或用例即用例描述中将所有名词抽取出来，填入“候选关键抽象表格”，从而识别出所有的关键抽象。</p>
+
+<ol>
+  <li>候选的关键抽象表格由以下三列组成
+    <ul>
+      <li>候选的关键抽象</li>
+      <li>排除的原因，属性，同义词，无关类。</li>
+      <li>选定的名词</li>
+    </ul>
+  </li>
+  <li>CRC分析法(Class-Responsibility-Collaborator)
+    <ul>
+      <li>是一种收集并整理卡片的开发方式</li>
+      <li>是一种面向文本建模技术，具有影响力的敏捷思想</li>
+      <li>步骤：
+        <ul>
+          <li>选择一个候选的关键抽象</li>
+          <li>确定一个与该候选关键抽象相关的的用例</li>
+          <li>查看用例描述和系统的功能需求来确定职责和协作的关系</li>
+          <li>用CRC卡片记录抽取出来的关键抽象</li>
+          <li>基于以上的工作，更新候选关键抽象表格</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>排除候选关键抽象的原因：
+    <ul>
+      <li>**的属性</li>
+      <li>仅有一个实例</li>
+      <li>系统外部的</li>
+      <li>与**重复</li>
+      <li>可以和**合并</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="34-类图">3.4 类图</h4>
+
+<p>类图由以下元素组成：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/H24b08ad376864639bbbd347dc4e3a797o.jpg" alt="H24b08ad376864639bbbd347dc4e3a797o" /></p>
+
+<ol>
+  <li>
+    <p>类的组成</p>
+
+    <ul>
+      <li>名字</li>
+      <li>属性</li>
+      <li>操作</li>
+      <li>可见性
+        <ul>
+          <li>私有</li>
+          <li>公有</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>关联</p>
+
+    <p>关联是类之间的关系，表示有意义和值得关注的连接。</p>
+  </li>
+  <li>
+    <p>为什么应该避免加入大量关联？</p>
+
+    <ul>
+      <li>节点间可以有(n * n * (n - 1) / 2)个关联？</li>
+      <li>太多关联会导致混乱</li>
+      <li>重点关注需要被记住的关联</li>
+    </ul>
+  </li>
+  <li>
+    <p>关联的多重性</p>
+
+    <ul>
+      <li>1个A的实例与<strong>多少个</strong>B的实例关联</li>
+      <li>1个B的实例与<strong>多少个</strong>A的实例关联</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="4-交互图">4 交互图</h2>
+
+<h4 id="41-交互图概述">4.1 交互图概述</h4>
+
+<ol>
+  <li>顺序图，按照时间顺序来描述对象的交互</li>
+  <li>通信图，围绕着对象和对象之间的链接来描述对象的交互</li>
+</ol>
+
+<h4 id="42-顺序图">4.2 顺序图</h4>
+
+<ol>
+  <li>定义：显示一组对象为了实现某种功能，而彼此发送和接收一串消息，这组对象可能是类，接口，节点等或者是具体的实例。</li>
+  <li>建模元素
+    <ul>
+      <li>对象</li>
+      <li>生命线</li>
+      <li>消息</li>
+      <li>执行规格条</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="43-系统顺序图">4.3 系统顺序图</h4>
+
+<h4 id="44-通信图">4.4 通信图</h4>
+
+<ol>
+  <li>
+    <p>定义</p>
+
+    <p>关注对象在参与具体的交互时，对象之间如何链接以及传递什么消息。</p>
+  </li>
+  <li>
+    <p>3个元素</p>
+
+    <ul>
+      <li>对象</li>
+      <li>链</li>
+      <li>消息</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="45-鲁棒图">4.5 鲁棒图</h4>
+
+<ol>
+  <li>
+    <p>鲁棒图的对象元素、职责、与MVC架构的元素对应关系</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th><strong>鲁棒图的元素</strong></th>
+          <th><strong>职责</strong></th>
+          <th><strong>组成架构的元素</strong></th>
+          <th><strong>MVC架构的元素</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>边界对象</td>
+          <td>交互</td>
+          <td>连接元素</td>
+          <td>视图</td>
+        </tr>
+        <tr>
+          <td>控制对象</td>
+          <td>控制</td>
+          <td>处理元素</td>
+          <td>控制器</td>
+        </tr>
+        <tr>
+          <td>实体对象</td>
+          <td>信息</td>
+          <td>数据元素</td>
+          <td>模型</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <li>
+    <p>鲁棒图建图原则</p>
+    <ul>
+      <li>参与者只能与边界交谈</li>
+      <li>边界对象只能与控制体和参与者交流</li>
+      <li>实体对象也能与控制体交流</li>
+      <li>控制体可以和实体对象和边界对象交流，但接触不到参与者</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="5-用例关系和类图">5 用例关系和类图</h2>
+
+<h4 id="51-识别用例关系">5.1 识别用例关系</h4>
+
+<ol>
+  <li>
+    <p>用例关系</p>
+
+    <ul>
+      <li>包含</li>
+      <li>扩展</li>
+      <li>泛化</li>
+    </ul>
+  </li>
+  <li>
+    <p>扩展关系VS包含关系</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th><strong>包含关系</strong></th>
+          <th><strong>扩展关系</strong></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>标示«include»的带箭头虚线</td>
+          <td>标示«extend»的带箭头虚线</td>
+        </tr>
+        <tr>
+          <td>基础用例指向被包含的小用例</td>
+          <td>小用例指向被扩充的基础用例</td>
+        </tr>
+        <tr>
+          <td>一定要执行小用例</td>
+          <td>条件成立（扩展点）才执行小用例</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ol>
+
+<h4 id="52-类图">5.2 类图</h4>
+
+<ol>
+  <li>
+    <p>常用类图表示</p>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/H77071d77f8ee4293a32ddf566cacb972w.png" alt="H77071d77f8ee4293a32ddf566cacb972w" /></p>
+  </li>
+  <li>
+    <p>依赖关系（虚线+开口箭头）VS关联关系（实线+开口箭头）</p>
+
+    <ul>
+      <li>从时间角度区分：依赖关系是一种短暂，动态的关系；关联关系是一种持久，静态的关系；</li>
+      <li>从类之间关系的强弱区分：关联关系比较强；依赖关系弱；</li>
+      <li>设计类之间关系需要遵循的原则：首先判断是不是“关联”关系，再判断是不是“依赖”关系</li>
+      <li>依赖关系是单向的，关联关系之间的导航一般是双向的，关联关系体现在代码中一般是成员变量</li>
+    </ul>
+  </li>
+  <li>
+    <p>泛化关系（实线+空心闭合箭头）：一般类与具体类之间的关系（继承）</p>
+  </li>
+  <li>
+    <p>接口（表示为空心圆圈）与实现（实现类虚线+空心闭合箭头指向接口）</p>
+  </li>
+  <li>
+    <p>保护等级</p>
+
+    <p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/H65f3a9a87e154d3da29d41d67a614b75A.jpg" alt="H65f3a9a87e154d3da29d41d67a614b75A" /></p>
+  </li>
+</ol>
+
+<h2 id="6-面向对象">6 面向对象</h2>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/H9c6ffe21e1f949919f802745bdeac639q.jpg" alt="H9c6ffe21e1f949919f802745bdeac639q" /></p>
+
+<h4 id="61-面向对象的设计原则">6.1 面向对象的设计原则</h4>
+
+<ol>
+  <li>
+    <p>什么是面向对象设计？</p>
+
+    <ul>
+      <li>找到软件对象</li>
+      <li>分配职责，协调</li>
+    </ul>
+  </li>
+  <li>
+    <p>面向对象的设计原则有什么意义？</p>
+
+    <ul>
+      <li>是指导面向对象设计的基本思想</li>
+      <li>评价面向对象设计的价值观体系</li>
+      <li>设计模式的出发点和归宿</li>
+    </ul>
+  </li>
+  <li>
+    <p>设计目标</p>
+
+    <ul>
+      <li>可扩展性</li>
+      <li>灵活性</li>
+      <li>健壮性</li>
+      <li>可插入性</li>
+    </ul>
+  </li>
+  <li>
+    <p>好的设计</p>
+
+    <ul>
+      <li>容易理解</li>
+      <li>容易修改和扩展</li>
+      <li>容易复用</li>
+      <li>容易实现和应用</li>
+      <li>简单、紧凑，经济适用</li>
+    </ul>
+  </li>
+  <li>
+    <p>坏的设计</p>
+
+    <ul>
+      <li>僵化</li>
+      <li>脆弱</li>
+      <li>牢固</li>
+      <li>粘滞</li>
+      <li>不必要的复杂性</li>
+      <li>不必要的重复</li>
+      <li>晦涩</li>
+    </ul>
+  </li>
+  <li>
+    <p>设计原则</p>
+
+    <ul>
+      <li>LSP：Liskov替换原则，子类对象必须可以替换基类对象</li>
+      <li>Meyer原则</li>
+      <li>OCP原则：开放-封闭原则，软件实体是可拓展但不可修改的</li>
+      <li>SRP原则：单一职责原则，一个类仅有一个引起它变化的原因</li>
+      <li>ISP原则：接口隔离原则，客户不依赖用不到的接口，只提供所需要的接口</li>
+      <li>DIP原则：依赖倒置原则，高层不依赖低层，二者依赖于抽象；针对接口编程</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="62-设计模式">6.2 设计模式</h4>
+
+<ol>
+  <li>
+    <p>设计模式的基本思想</p>
+
+    <ol>
+      <li>松耦合</li>
+      <li>针对接口编程</li>
+      <li>继承、组合、委托、多态、参数化</li>
+    </ol>
+  </li>
+  <li>
+    <p>GRASP：通用职责分配软件模式</p>
+    <ul>
+      <li>创建者</li>
+      <li>信息专家</li>
+      <li>低耦合</li>
+      <li>控制器</li>
+      <li>高内聚
+        <ul>
+          <li>不要给一个类太多的职责</li>
+          <li>不相关的职责和功能不要分给一个类</li>
+        </ul>
+      </li>
+      <li>多态</li>
+      <li>纯虚构</li>
+      <li>间接性</li>
+      <li>防止变异：避免系统或对象内部的变化影响其他模块和元素。</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="7-gof设计模式">7 GOF设计模式</h2>
+
+<h4 id="71-适配器模式">7.1 适配器模式</h4>
+
+<ul>
+  <li>问题：如何解决接口不相容的问题，如何为具有不同接口的相似组件提供一个统一稳定的接口</li>
+  <li>解决方案：通过一个中间的适配器对象，使一个组件的原有接口变为另一个接口</li>
+</ul>
+
+<h4 id="72-工厂模式">7.2 工厂模式</h4>
+
+<ul>
+  <li>问题：谁有责任创建写特殊考虑的对象？比如说有复杂的创建逻辑，为了更好地内聚性而希望分离创建职责</li>
+  <li>解决方案：创建一个称为工厂的纯虚构对象来处理。</li>
+</ul>
+
+<h4 id="73-单例模式">7.3 单例模式</h4>
+
+<ul>
+  <li>问题：如何使得一个类严格地只有一个实例？</li>
+  <li>解决方案：对类定义静态方法，返回实例。</li>
+</ul>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2019/11/06/%E5%8D%9A%E5%AE%A2%E4%B8%AD%E4%BD%BF%E7%94%A8Latex%E5%85%AC%E5%BC%8F/" data-toggle="tooltip" data-placement="top" title="博客中使用Latex公式">
+                        Previous<br>
+                        <span>博客中使用Latex公式</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2019/11/08/leetcode146/" data-toggle="tooltip" data-placement="top" title="LRU Cache">
+                        Next<br>
+                        <span>LRU Cache</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>

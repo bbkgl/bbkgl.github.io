@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="给个offer行不行。。。">
+    <meta name="keywords"  content="Blog, 菜鸡的博客, 菜鸡, 宝宝可乖了, C++, 2333, 浙软最菜">
+    <meta name="theme-color" content="#000000">
+    
+    <title>elf文件和读取elf信息 - 菜鸡的博客 | WTCL</title>
+
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="/pwa/manifest.json">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <!-- Safari Webpage Icon    by-BY -->
+    <link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+	
+	<script type="text/javascript" async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-MML-AM_CHTML"></script>	
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://bbkgl.github.io/2020/01/06/elf%E6%96%87%E4%BB%B6%E5%92%8C%E8%AF%BB%E5%8F%96elf%E4%BF%A1%E6%81%AF/">
+
+    <!-- Bootstrap Core CSS -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/hux-blog.min.css">
+
+    <!-- Pygments Github CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom Fonts -->
+    <!-- <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" type="text/css"> -->
+    <!-- Hux change font-awesome CDN to qiniu -->
+    <link href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <!-- Hux Delete, sad but pending in China
+    <link href='http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/
+    css'>
+    -->
+
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+
+<!-- hack iOS CSS :active style -->
+<body ontouchstart="">
+
+    <!-- Navigation -->
+<nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header page-scroll">
+            <button type="button" class="navbar-toggle">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">我太菜了</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div id="huxblog_navbar">
+            <div class="navbar-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="/">Home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="/tags/">Tags</a>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container -->
+</nav>
+<script>
+    // Drop Bootstarp low-performance Navbar
+    // Use customize navbar with high-quality material design animation
+    // in high-perf jank-free CSS3 implementation
+    var $body   = document.body;
+    var $toggle = document.querySelector('.navbar-toggle');
+    var $navbar = document.querySelector('#huxblog_navbar');
+    var $collapse = document.querySelector('.navbar-collapse');
+
+    var __HuxNav__ = {
+        close: function(){
+            $navbar.className = " ";
+            // wait until animation end.
+            setTimeout(function(){
+                // prevent frequently toggle
+                if($navbar.className.indexOf('in') < 0) {
+                    $collapse.style.height = "0px"
+                }
+            },400)
+        },
+        open: function(){
+            $collapse.style.height = "auto"
+            $navbar.className += " in";
+        }
+    }
+
+    // Bind Event
+    $toggle.addEventListener('click', function(e){
+        if ($navbar.className.indexOf('in') > 0) {
+            __HuxNav__.close()
+        }else{
+            __HuxNav__.open()
+        }
+    })
+
+    /**
+     * Since Fastclick is used to delegate 'touchstart' globally
+     * to hack 300ms delay in iOS by performing a fake 'click',
+     * Using 'e.stopPropagation' to stop 'touchstart' event from 
+     * $toggle/$collapse will break global delegation.
+     * 
+     * Instead, we use a 'e.target' filter to prevent handler
+     * added to document close HuxNav.  
+     *
+     * Also, we use 'click' instead of 'touchstart' as compromise
+     */
+    document.addEventListener('click', function(e){
+        if(e.target == $toggle) return;
+        if(e.target.className == 'icon-bar') return;
+        __HuxNav__.close();
+    })
+</script>
+
+
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/post-bg-0003.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/img/post-bg-0003.jpg')
+    }
+
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#profile" title="profile">profile</a>
+                        
+                    </div>
+                    <h1>elf文件和读取elf信息</h1>
+                    
+                    
+                    <h2 class="subheading">profile</h2>
+                    
+                    <span class="meta">Posted by bbkgl on January 6, 2020</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<blockquote>
+  <p>秋花最是黄葵好</p>
+
+  <p>天然嫩态迎秋早</p>
+</blockquote>
+
+<h2 id="关于elf文件">关于ELF文件</h2>
+
+<p>首次接触到elf，我也是非常懵逼，可执行文件就叫可执行文件嘛！为什么搞个<strong>可执行与可链接格式</strong>文件？这里我也不说太多废话，因为解释和说明文档，无论你百度和google，都能找到一大堆解释，很全。我说的更多是关于自己使用的时候要用到的知识理论，以及怎么读取。</p>
+
+<p>ELF文件中常用到的有，ELF头，节和表。</p>
+
+<p>ELF头更多的是记录文件的一些信息，比如程序入口地址、文件类型（可执行还是共享库），文件头的大小等。</p>
+
+<p>比较简单的可以使用readelf工具，首先读取一下ELF头：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208170928.png" alt="20200208170928.png" /></p>
+
+<p>我这个ubuntu语言是中文，导致都翻译成中文了，其实英文看上去会习惯点。</p>
+
+<p>比较重要的就是ELF文件中的各个段，有很多种方式获取各个段名称，这是我之前写的一个简单的C++程序获取的段名：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208174928.png" alt="20200208174928.png" /></p>
+
+<p>各个段都有相应的作用，用readelf读取一下。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">共有</span> <span class="mi">37</span> <span class="err">个节头，从偏移量</span> <span class="mh">0x8740</span> <span class="err">开始：</span>
+
+<span class="err">节头：</span>
+  <span class="p">[</span><span class="err">号</span><span class="p">]</span> <span class="err">名称</span>              <span class="err">类型</span>             <span class="err">地址</span>              <span class="err">偏移量</span>
+       <span class="err">大小</span>              <span class="err">全体大小</span>          <span class="err">旗标</span>   <span class="err">链接</span>   <span class="err">信息</span>   <span class="err">对齐</span>
+  <span class="p">[</span> <span class="mi">0</span><span class="p">]</span>                   <span class="nb">NULL</span>             <span class="mo">0000000000000000</span>  <span class="mo">00000000</span>
+       <span class="mo">0000000000000000</span>  <span class="mo">0000000000000000</span>           <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">0</span>
+  <span class="p">[</span> <span class="mi">1</span><span class="p">]</span> <span class="p">.</span><span class="n">interp</span>           <span class="n">PROGBITS</span>         <span class="mo">000000000040023</span><span class="mi">8</span>  <span class="mo">0000023</span><span class="mi">8</span>
+       <span class="mo">000000000000001</span><span class="n">c</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span> <span class="mi">2</span><span class="p">]</span> <span class="p">.</span><span class="n">note</span><span class="p">.</span><span class="n">ABI</span><span class="o">-</span><span class="n">tag</span>     <span class="n">NOTE</span>             <span class="mo">0000000000400254</span>  <span class="mo">00000254</span>
+       <span class="mo">0000000000000020</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">4</span>
+  <span class="p">[</span> <span class="mi">3</span><span class="p">]</span> <span class="p">.</span><span class="n">note</span><span class="p">.</span><span class="n">gnu</span><span class="p">.</span><span class="n">build</span><span class="o">-</span><span class="n">i</span> <span class="n">NOTE</span>             <span class="mo">0000000000400274</span>  <span class="mo">00000274</span>
+       <span class="mo">0000000000000024</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">4</span>
+  <span class="p">[</span> <span class="mi">4</span><span class="p">]</span> <span class="p">.</span><span class="n">gnu</span><span class="p">.</span><span class="n">hash</span>         <span class="n">GNU_HASH</span>         <span class="mo">00000000004002</span><span class="mi">98</span>  <span class="mo">000002</span><span class="mi">98</span>
+       <span class="mo">0000000000000024</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">5</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span> <span class="mi">5</span><span class="p">]</span> <span class="p">.</span><span class="n">dynsym</span>           <span class="n">DYNSYM</span>           <span class="mo">00000000004002</span><span class="n">c0</span>  <span class="mo">000002</span><span class="n">c0</span>
+       <span class="mo">0000000000000120</span>  <span class="mo">000000000000001</span><span class="mi">8</span>   <span class="n">A</span>       <span class="mi">6</span>     <span class="mi">1</span>     <span class="mi">8</span>
+  <span class="p">[</span> <span class="mi">6</span><span class="p">]</span> <span class="p">.</span><span class="n">dynstr</span>           <span class="n">STRTAB</span>           <span class="mf">00000000004003e0</span>  <span class="mf">000003e0</span>
+       <span class="mo">000000000000010</span><span class="n">c</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span> <span class="mi">7</span><span class="p">]</span> <span class="p">.</span><span class="n">gnu</span><span class="p">.</span><span class="n">version</span>      <span class="n">VERSYM</span>           <span class="mo">00000000004004</span><span class="n">ec</span>  <span class="mo">000004</span><span class="n">ec</span>
+       <span class="mo">000000000000001</span><span class="mi">8</span>  <span class="mo">0000000000000002</span>   <span class="n">A</span>       <span class="mi">5</span>     <span class="mi">0</span>     <span class="mi">2</span>
+  <span class="p">[</span> <span class="mi">8</span><span class="p">]</span> <span class="p">.</span><span class="n">gnu</span><span class="p">.</span><span class="n">version_r</span>    <span class="n">VERNEED</span>          <span class="mo">000000000040050</span><span class="mi">8</span>  <span class="mo">0000050</span><span class="mi">8</span>
+       <span class="mo">0000000000000040</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">6</span>     <span class="mi">2</span>     <span class="mi">8</span>
+  <span class="p">[</span> <span class="mi">9</span><span class="p">]</span> <span class="p">.</span><span class="n">rela</span><span class="p">.</span><span class="n">dyn</span>         <span class="n">RELA</span>             <span class="mo">000000000040054</span><span class="mi">8</span>  <span class="mo">0000054</span><span class="mi">8</span>
+       <span class="mo">000000000000001</span><span class="mi">8</span>  <span class="mo">000000000000001</span><span class="mi">8</span>   <span class="n">A</span>       <span class="mi">5</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">10</span><span class="p">]</span> <span class="p">.</span><span class="n">rela</span><span class="p">.</span><span class="n">plt</span>         <span class="n">RELA</span>             <span class="mo">0000000000400560</span>  <span class="mo">00000560</span>
+       <span class="mo">00000000000000</span><span class="n">a8</span>  <span class="mo">000000000000001</span><span class="mi">8</span>  <span class="n">AI</span>       <span class="mi">5</span>    <span class="mi">24</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="p">.</span><span class="n">init</span>             <span class="n">PROGBITS</span>         <span class="mo">000000000040060</span><span class="mi">8</span>  <span class="mo">0000060</span><span class="mi">8</span>
+       <span class="mo">000000000000001</span><span class="n">a</span>  <span class="mo">0000000000000000</span>  <span class="n">AX</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">4</span>
+  <span class="p">[</span><span class="mi">12</span><span class="p">]</span> <span class="p">.</span><span class="n">plt</span>              <span class="n">PROGBITS</span>         <span class="mo">0000000000400630</span>  <span class="mo">00000630</span>
+       <span class="mo">00000000000000</span><span class="mi">80</span>  <span class="mo">0000000000000010</span>  <span class="n">AX</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">16</span>
+  <span class="p">[</span><span class="mi">13</span><span class="p">]</span> <span class="p">.</span><span class="n">plt</span><span class="p">.</span><span class="n">got</span>          <span class="n">PROGBITS</span>         <span class="mo">00000000004006</span><span class="n">b0</span>  <span class="mo">000006</span><span class="n">b0</span>
+       <span class="mo">000000000000000</span><span class="mi">8</span>  <span class="mo">0000000000000000</span>  <span class="n">AX</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">14</span><span class="p">]</span> <span class="p">.</span><span class="n">text</span>             <span class="n">PROGBITS</span>         <span class="mo">00000000004006</span><span class="n">c0</span>  <span class="mo">000006</span><span class="n">c0</span>
+       <span class="mo">00000000000004</span><span class="mi">92</span>  <span class="mo">0000000000000000</span>  <span class="n">AX</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">16</span>
+  <span class="p">[</span><span class="mi">15</span><span class="p">]</span> <span class="p">.</span><span class="n">fini</span>             <span class="n">PROGBITS</span>         <span class="mo">0000000000400</span><span class="n">b54</span>  <span class="mo">00000</span><span class="n">b54</span>
+       <span class="mo">000000000000000</span><span class="mi">9</span>  <span class="mo">0000000000000000</span>  <span class="n">AX</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">4</span>
+  <span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="p">.</span><span class="n">rodata</span>           <span class="n">PROGBITS</span>         <span class="mo">0000000000400</span><span class="n">b60</span>  <span class="mo">00000</span><span class="n">b60</span>
+       <span class="mo">000000000000000</span><span class="mi">9</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">4</span>
+  <span class="p">[</span><span class="mi">17</span><span class="p">]</span> <span class="p">.</span><span class="n">eh_frame_hdr</span>     <span class="n">PROGBITS</span>         <span class="mo">0000000000400</span><span class="n">b6c</span>  <span class="mo">00000</span><span class="n">b6c</span>
+       <span class="mo">00000000000000</span><span class="mi">94</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">4</span>
+  <span class="p">[</span><span class="mi">18</span><span class="p">]</span> <span class="p">.</span><span class="n">eh_frame</span>         <span class="n">PROGBITS</span>         <span class="mo">0000000000400</span><span class="n">c00</span>  <span class="mo">00000</span><span class="n">c00</span>
+       <span class="mo">0000000000000274</span>  <span class="mo">0000000000000000</span>   <span class="n">A</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">19</span><span class="p">]</span> <span class="p">.</span><span class="n">init_array</span>       <span class="n">INIT_ARRAY</span>       <span class="mo">0000000000601</span><span class="n">de8</span>  <span class="mo">00001</span><span class="n">de8</span>
+       <span class="mo">0000000000000010</span>  <span class="mo">0000000000000000</span>  <span class="n">WA</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">20</span><span class="p">]</span> <span class="p">.</span><span class="n">fini_array</span>       <span class="n">FINI_ARRAY</span>       <span class="mo">0000000000601</span><span class="n">df8</span>  <span class="mo">00001</span><span class="n">df8</span>
+       <span class="mo">000000000000000</span><span class="mi">8</span>  <span class="mo">0000000000000000</span>  <span class="n">WA</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">21</span><span class="p">]</span> <span class="p">.</span><span class="n">jcr</span>              <span class="n">PROGBITS</span>         <span class="mf">0000000000601e00</span>  <span class="mf">00001e00</span>
+       <span class="mo">000000000000000</span><span class="mi">8</span>  <span class="mo">0000000000000000</span>  <span class="n">WA</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">22</span><span class="p">]</span> <span class="p">.</span><span class="n">dynamic</span>          <span class="n">DYNAMIC</span>          <span class="mf">0000000000601e08</span>  <span class="mf">00001e08</span>
+       <span class="mo">00000000000001</span><span class="n">f0</span>  <span class="mo">0000000000000010</span>  <span class="n">WA</span>       <span class="mi">6</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">23</span><span class="p">]</span> <span class="p">.</span><span class="n">got</span>              <span class="n">PROGBITS</span>         <span class="mo">0000000000601</span><span class="n">ff8</span>  <span class="mo">00001</span><span class="n">ff8</span>
+       <span class="mo">000000000000000</span><span class="mi">8</span>  <span class="mo">000000000000000</span><span class="mi">8</span>  <span class="n">WA</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">24</span><span class="p">]</span> <span class="p">.</span><span class="n">got</span><span class="p">.</span><span class="n">plt</span>          <span class="n">PROGBITS</span>         <span class="mo">0000000000602000</span>  <span class="mo">00002000</span>
+       <span class="mo">0000000000000050</span>  <span class="mo">000000000000000</span><span class="mi">8</span>  <span class="n">WA</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">25</span><span class="p">]</span> <span class="p">.</span><span class="n">data</span>             <span class="n">PROGBITS</span>         <span class="mo">0000000000602050</span>  <span class="mo">00002050</span>
+       <span class="mo">0000000000000010</span>  <span class="mo">0000000000000000</span>  <span class="n">WA</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">26</span><span class="p">]</span> <span class="p">.</span><span class="n">bss</span>              <span class="n">NOBITS</span>           <span class="mo">0000000000602060</span>  <span class="mo">00002060</span>
+       <span class="mo">000000000000000</span><span class="mi">8</span>  <span class="mo">0000000000000000</span>  <span class="n">WA</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">27</span><span class="p">]</span> <span class="p">.</span><span class="n">comment</span>          <span class="n">PROGBITS</span>         <span class="mo">0000000000000000</span>  <span class="mo">00002060</span>
+       <span class="mo">0000000000000035</span>  <span class="mo">0000000000000001</span>  <span class="n">MS</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">28</span><span class="p">]</span> <span class="p">.</span><span class="n">debug_aranges</span>    <span class="n">PROGBITS</span>         <span class="mo">0000000000000000</span>  <span class="mo">000020</span><span class="mi">95</span>
+       <span class="mo">00000000000000</span><span class="n">a0</span>  <span class="mo">0000000000000000</span>           <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">29</span><span class="p">]</span> <span class="p">.</span><span class="n">debug_info</span>       <span class="n">PROGBITS</span>         <span class="mo">0000000000000000</span>  <span class="mo">00002135</span>
+       <span class="mo">0000000000002</span><span class="n">c0d</span>  <span class="mo">0000000000000000</span>           <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">30</span><span class="p">]</span> <span class="p">.</span><span class="n">debug_abbrev</span>     <span class="n">PROGBITS</span>         <span class="mo">0000000000000000</span>  <span class="mo">00004</span><span class="n">d42</span>
+       <span class="mo">00000000000006</span><span class="n">a1</span>  <span class="mo">0000000000000000</span>           <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">31</span><span class="p">]</span> <span class="p">.</span><span class="n">debug_line</span>       <span class="n">PROGBITS</span>         <span class="mo">0000000000000000</span>  <span class="mf">000053e3</span>
+       <span class="mo">0000000000000413</span>  <span class="mo">0000000000000000</span>           <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">32</span><span class="p">]</span> <span class="p">.</span><span class="n">debug_str</span>        <span class="n">PROGBITS</span>         <span class="mo">0000000000000000</span>  <span class="mo">000057</span><span class="n">f6</span>
+       <span class="mo">0000000000001</span><span class="n">f8b</span>  <span class="mo">0000000000000001</span>  <span class="n">MS</span>       <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">33</span><span class="p">]</span> <span class="p">.</span><span class="n">debug_ranges</span>     <span class="n">PROGBITS</span>         <span class="mo">0000000000000000</span>  <span class="mo">000077</span><span class="mi">81</span>
+       <span class="mo">00000000000000</span><span class="mi">90</span>  <span class="mo">0000000000000000</span>           <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">34</span><span class="p">]</span> <span class="p">.</span><span class="n">shstrtab</span>         <span class="n">STRTAB</span>           <span class="mo">0000000000000000</span>  <span class="mf">000085e4</span>
+       <span class="mo">000000000000015</span><span class="n">a</span>  <span class="mo">0000000000000000</span>           <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+  <span class="p">[</span><span class="mi">35</span><span class="p">]</span> <span class="p">.</span><span class="n">symtab</span>           <span class="n">SYMTAB</span>           <span class="mo">0000000000000000</span>  <span class="mo">00007</span><span class="mi">818</span>
+       <span class="mo">0000000000000</span><span class="mi">8</span><span class="n">b8</span>  <span class="mo">000000000000001</span><span class="mi">8</span>          <span class="mi">36</span>    <span class="mi">57</span>     <span class="mi">8</span>
+  <span class="p">[</span><span class="mi">36</span><span class="p">]</span> <span class="p">.</span><span class="n">strtab</span>           <span class="n">STRTAB</span>           <span class="mo">0000000000000000</span>  <span class="mo">0000</span><span class="mi">80</span><span class="n">d0</span>
+       <span class="mo">0000000000000514</span>  <span class="mo">0000000000000000</span>           <span class="mi">0</span>     <span class="mi">0</span>     <span class="mi">1</span>
+
+</code></pre></div></div>
+
+<p>有我们熟知的.text段，.data段，.bss段，.rodata段等，也有调试专用的.debug_info，.debug_line等。</p>
+
+<p>讲一下我熟悉的几个段：</p>
+
+<ul>
+  <li>.text，就是代码段，存储汇编指令</li>
+  <li>.bss，保存的是<strong>未初始化</strong>的全局静态变量和局部静态变量</li>
+  <li>.data，数据段，保存的是<strong>已经初始化</strong>了的全局静态变量和局部静态变量，当然了，只是C/C++这种编译型，没有虚拟机的语言，其他解释型语言应该是自己虚拟机决定</li>
+  <li>.rodata，段存放的是只读数据，包括只读变量（const修饰的变量和字符串常量），这个可以自己弄几个变量验证以下2333</li>
+  <li>.debug_info，如果要用到调试信息的话，这个就是最主要的参照，比如存储了从机器码到源代码的映射，当然也存储了源代码</li>
+  <li>.debug_line，存储的是汇编指令地址到文件名+行号的映射</li>
+  <li>.symtab，符号表段，存储有当前可执行文件里加载的所有符号，包括常见的变量，函数等</li>
+  <li>.dynsym，动态库的符号表段，同上类似</li>
+</ul>
+
+<p>基本常用的就上面这几个，其他的我也不了解。</p>
+
+<h2 id="如何读取elf的符号表">如何读取ELF的符号表</h2>
+
+<p>我知道的其实有挺多方式读取的，命令行工具比如readelf，objdump等，自己写程序读的话就是用libelf，libdwarf，libelfin库。当然了，如果用libelf，libdwarf库的话，嘿嘿，我倒是研究过，但是很痛苦啊。。。相对来说，libelfin库就很好用了，下面大部分内容是我写的另一篇博客<a href="https://bbkgl.github.io/2020/02/07/%E5%8A%A8%E6%80%81%E5%BA%93%E6%8C%87%E4%BB%A4%E5%9C%B0%E5%9D%80/">读取动态库符号表以及指令地址转化</a>中的一部分。</p>
+
+<h4 id="使用libelfin读取符号表">使用libelfin读取符号表</h4>
+
+<p>首先可以遍历elf文件中的各个段：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+#include &lt;elf/elf++.hh&gt;
+#include &lt;string&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fname</span> <span class="o">=</span> <span class="s">"/home/bbkgl/vimcode/server"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+    <span class="n">elf</span><span class="o">::</span><span class="n">elf</span> <span class="n">ef</span><span class="p">(</span><span class="n">elf</span><span class="o">::</span><span class="n">create_mmap_loader</span><span class="p">(</span><span class="n">fd</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sec</span> <span class="o">:</span> <span class="n">ef</span><span class="p">.</span><span class="n">sections</span><span class="p">())</span> <span class="p">{</span> 
+        <span class="n">printf</span><span class="p">(</span><span class="s">"Symbol table '%s':</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sec</span><span class="p">.</span><span class="n">get_name</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>看一下输出：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200208174928.png" alt="20200208174928.png" /></p>
+
+<p>可以看到程序的各个段，也有我们熟知的<code class="highlighter-rouge">text</code>、<code class="highlighter-rouge">data</code>、<code class="highlighter-rouge">bss</code>段，也有我们后面要用的符号段：<code class="highlighter-rouge">.symtab</code>、<code class="highlighter-rouge">.dynamic</code>，也就是符号表。</p>
+
+<p>所以得从这两个section中读取符号，同样使用libelfin库，接着上面的程序写。</p>
+
+<p>稍微加上几行就好了，但是注意这里我进行了筛选，得到只有函数的符号，并使用重载的<code class="highlighter-rouge">elf::to_string()</code>去打印符号类型，筛选后应该都是<code class="highlighter-rouge">func</code>。</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+#include &lt;elf/elf++.hh&gt;
+#include &lt;string&gt;
+#include &lt;unistd.h&gt;
+#include &lt;fcntl.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fname</span> <span class="o">=</span> <span class="s">"/home/bbkgl/vimcode/server"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+    <span class="n">elf</span><span class="o">::</span><span class="n">elf</span> <span class="n">ef</span><span class="p">(</span><span class="n">elf</span><span class="o">::</span><span class="n">create_mmap_loader</span><span class="p">(</span><span class="n">fd</span><span class="p">));</span>
+    <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sec</span> <span class="o">:</span> <span class="n">ef</span><span class="p">.</span><span class="n">sections</span><span class="p">())</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">sec</span><span class="p">.</span><span class="n">get_hdr</span><span class="p">().</span><span class="n">type</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">sht</span><span class="o">::</span><span class="n">symtab</span> <span class="o">&amp;&amp;</span> <span class="n">sec</span><span class="p">.</span><span class="n">get_hdr</span><span class="p">().</span><span class="n">type</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">sht</span><span class="o">::</span><span class="n">dynsym</span><span class="p">)</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="k">auto</span> <span class="o">&amp;</span><span class="n">sym</span> <span class="o">:</span> <span class="n">sec</span><span class="p">.</span><span class="n">as_symtab</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">auto</span> <span class="o">&amp;</span><span class="n">data</span> <span class="o">=</span> <span class="n">sym</span><span class="p">.</span><span class="n">get_data</span><span class="p">();</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">type</span><span class="p">()</span> <span class="o">!=</span> <span class="n">elf</span><span class="o">::</span><span class="n">stt</span><span class="o">::</span><span class="n">func</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"%016lx %8ld %10s %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">value</span><span class="p">,</span> <span class="n">data</span><span class="p">.</span><span class="n">size</span><span class="p">,</span>
+                   <span class="n">elf</span><span class="o">::</span><span class="n">to_string</span><span class="p">(</span><span class="n">data</span><span class="p">.</span><span class="n">type</span><span class="p">()).</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">sym</span><span class="p">.</span><span class="n">get_name</span><span class="p">().</span><span class="n">c_str</span><span class="p">());</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>看到输出结果：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200207230414.png" alt="20200207230414.png" /></p>
+
+<p>可以看到所有函数符号都打印出来了，还打印了函数的起始指令地址和函数的指令在函数中所有指令地址上的范围，这里可以说明一下，直接看汇编会更清楚一点，这里以_start函数举例。</p>
+
+<p>使用<code class="highlighter-rouge">objdump -d server &gt; server.txt</code>拿到汇编指令，然后打开<code class="highlighter-rouge">server.txt</code>，找到_start函数的指令。</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200207232645.png" alt="20200207232645.png" /></p>
+
+<p>在之前图中可以看到，_start函数的起始指令地址为<code class="highlighter-rouge">0x0000000000400bb0</code>，地址范围大小为42，<code class="highlighter-rouge">0x400bb0 + 42 = 0x400bda</code>，正好就是最后一条指令，所以打印的符号表中的意义就很明了了。</p>
+
+<p>当然也会发现有很多函数的起始指令地址是0，地址范围大小也是0，说明这些函数是动态库中导入的，详细的说明可以见<a href="https://bbkgl.github.io/2020/02/07/%E5%8A%A8%E6%80%81%E5%BA%93%E6%8C%87%E4%BB%A4%E5%9C%B0%E5%9D%80/">读取动态库符号表以及指令地址转化</a>。</p>
+
+<h4 id="使用libelf库读取符号表">使用libelf库读取符号表</h4>
+
+<p>其实原理和步骤其实是一样的，只是用libelf库相对来说会复杂很多。</p>
+
+<p>然后我就直接贴代码了，注意的是libelf会依赖于libz：</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#include &lt;iostream&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;climits&gt;
+#include &lt;elf/elf++.hh&gt;
+#include &lt;string&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;libelf.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;gelf.h&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">fname</span> <span class="o">=</span> <span class="s">"/home/bbkgl/vimcode/server"</span><span class="p">;</span>
+    <span class="kt">int</span> <span class="n">fd</span> <span class="o">=</span> <span class="n">open</span><span class="p">(</span><span class="n">fname</span><span class="p">.</span><span class="n">c_str</span><span class="p">(),</span> <span class="n">O_RDONLY</span><span class="p">);</span>
+    <span class="c1">// Before the first call to elf_begin() , a program must call elf_version() to coordinate versions.
+</span>    <span class="k">if</span> <span class="p">(</span><span class="n">elf_version</span><span class="p">(</span><span class="n">EV_CURRENT</span><span class="p">)</span> <span class="o">==</span> <span class="n">EV_NONE</span><span class="p">)</span> <span class="p">{</span>
+        <span class="n">printf</span><span class="p">(</span><span class="s">"EV_NONE"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">Elf</span> <span class="o">*</span><span class="n">elf</span> <span class="o">=</span> <span class="n">elf_begin</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">ELF_C_READ_MMAP</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">elf</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+        <span class="cm">/* 确定是文件类型是否是ELF文件 */</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">elf_kind</span> <span class="p">(</span><span class="n">elf</span><span class="p">)</span> <span class="o">==</span> <span class="n">ELF_K_ELF</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"elf exe</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">elf_kind</span> <span class="p">(</span><span class="n">elf</span><span class="p">)</span> <span class="o">==</span> <span class="n">ELF_K_AR</span><span class="p">)</span> <span class="p">{</span> <span class="cm">/* 目标是库文件 */</span>
+            <span class="n">printf</span><span class="p">(</span><span class="s">"lib</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="n">Elf_Scn</span>     <span class="o">*</span><span class="n">scn</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+        <span class="n">GElf_Shdr</span>   <span class="n">shdr</span><span class="p">;</span>
+        <span class="n">Elf_Data</span>    <span class="o">*</span><span class="n">data</span><span class="p">;</span>
+        <span class="kt">int</span>         <span class="n">ii</span><span class="p">,</span> <span class="n">count</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">((</span><span class="n">scn</span> <span class="o">=</span> <span class="n">elf_nextscn</span><span class="p">(</span><span class="n">elf</span><span class="p">,</span> <span class="n">scn</span><span class="p">))</span> <span class="o">!=</span> <span class="nb">nullptr</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">gelf_getshdr</span><span class="p">(</span><span class="n">scn</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">shdr</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">shdr</span><span class="p">.</span><span class="n">sh_type</span> <span class="o">==</span> <span class="n">SHT_SYMTAB</span> <span class="o">||</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_type</span> <span class="o">==</span> <span class="n">SHT_DYNSYM</span><span class="p">)</span> <span class="p">{</span>
+                <span class="n">data</span> <span class="o">=</span> <span class="n">elf_getdata</span><span class="p">(</span><span class="n">scn</span><span class="p">,</span> <span class="nb">nullptr</span><span class="p">);</span>
+                <span class="n">count</span> <span class="o">=</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_size</span> <span class="o">/</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_entsize</span><span class="p">;</span>
+                <span class="c1">// sym.st_info == 18的时候是func类型
+</span>                <span class="k">for</span> <span class="p">(</span><span class="n">ii</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ii</span> <span class="o">&lt;</span> <span class="n">count</span><span class="p">;</span> <span class="o">++</span><span class="n">ii</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="n">GElf_Sym</span> <span class="n">sym</span><span class="p">;</span>
+                    <span class="n">gelf_getsym</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">ii</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">sym</span><span class="p">);</span>
+                    <span class="c1">// 只打印函数符号表
+</span>                    <span class="k">if</span> <span class="p">(</span><span class="n">ELF32_ST_TYPE</span><span class="p">(</span><span class="n">sym</span><span class="p">.</span><span class="n">st_info</span><span class="p">)</span> <span class="o">!=</span> <span class="n">STT_FUNC</span><span class="p">)</span> <span class="k">continue</span><span class="p">;</span>
+                    <span class="kt">char</span> <span class="o">*</span><span class="n">name</span> <span class="o">=</span> <span class="nb">nullptr</span><span class="p">;</span>
+                    <span class="kt">int</span> <span class="n">status</span> <span class="o">=</span> <span class="mi">99</span><span class="p">;</span>
+                    <span class="n">printf</span><span class="p">(</span><span class="s">"%016lx %4d %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">st_value</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">st_size</span><span class="p">,</span> <span class="n">elf_strptr</span><span class="p">(</span><span class="n">elf</span><span class="p">,</span> <span class="n">shdr</span><span class="p">.</span><span class="n">sh_link</span><span class="p">,</span> <span class="n">sym</span><span class="p">.</span><span class="n">st_name</span><span class="p">));</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="cm">/* 关闭elf结构句柄 */</span>
+        <span class="n">elf_end</span> <span class="p">(</span><span class="n">elf</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">close</span><span class="p">(</span><span class="n">fd</span><span class="p">);</span>
+    <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>下面是输出结果，其实和之前libelfin差不多，但是代码长度长了一半多啊，：</p>
+
+<p><img src="https://raw.githubusercontent.com/bbkglpic/picpic/master/img/20200207235325.png" alt="20200207235325.png" /></p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2020/01/05/%E5%85%B3%E4%BA%8E%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E8%99%9A%E6%8B%9F%E6%9C%BA/" data-toggle="tooltip" data-placement="top" title="关于编程语言中的虚拟机">
+                        Previous<br>
+                        <span>关于编程语言中的虚拟机</span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li class="next">
+                        <a href="/2020/01/08/leetcode560/" data-toggle="tooltip" data-placement="top" title="494. Target Sum">
+                        Next<br>
+                        <span>494. Target Sum</span>
+                        </a>
+                    </li>
+                    
+                </ul>
+
+
+                <!--Gitalk评论start  -->
+                
+                <!-- Gitalk end -->
+
+                
+
+            </div>  
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
+    <!-- Sidebar Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
+                <section>
+                    <hr class="hidden-sm hidden-xs">
+                    <h5><a href="/tags/">FEATURED TAGS</a></h5>
+                    <div class="tags">
+        				
+                            
+                				<a href="/tags/#Blog" title="Blog" rel="3">
+                                    Blog
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#leetcode" title="leetcode" rel="79">
+                                    leetcode
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#C++" title="C++" rel="8">
+                                    C++
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#剑指offer" title="剑指offer" rel="67">
+                                    剑指offer
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#http" title="http" rel="4">
+                                    http
+                                </a>
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#Raft" title="Raft" rel="6">
+                                    Raft
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Linux" title="Linux" rel="3">
+                                    Linux
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#Hadoop" title="Hadoop" rel="2">
+                                    Hadoop
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#设计模式" title="设计模式" rel="2">
+                                    设计模式
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#CV" title="CV" rel="2">
+                                    CV
+                                </a>
+                            
+        				
+                            
+        				
+                            
+        				
+                            
+                				<a href="/tags/#leveldb" title="leveldb" rel="3">
+                                    leveldb
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#profile" title="profile" rel="11">
+                                    profile
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#luajit" title="luajit" rel="2">
+                                    luajit
+                                </a>
+                            
+        				
+                            
+                				<a href="/tags/#计算机网络" title="计算机网络" rel="2">
+                                    计算机网络
+                                </a>
+                            
+        				
+                            
+        				
+        			</div>
+                </section>
+                
+
+                <!-- Friends Blog -->
+                
+                <hr>
+                <h5>FRIENDS</h5>
+                <ul class="list-inline">
+                    
+                        <li><a href="http://gavinharbus.github.io">飞洋</a></li>
+                    
+                        <li><a href="https://zouzhitao.github.io">滔滔</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">我的知乎</a></li>
+                    
+                        <li><a href="https://www.zhihu.com/people/rong-yao-76-35/activities">女朋友知乎</a></li>
+                    
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        // BY Fix:去除标题前的‘#’ issues:<https://github.com/qiubaiying/qiubaiying.github.io/issues/137>
+        // anchors.options = {
+        //   visible: 'always',
+        //   placement: 'right',
+        //   icon: '#'
+        // };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
+
+    <!-- Footer -->
+<footer>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <ul class="list-inline text-center">
+                    
+                    <!-- add jianshu add target = "_blank" to <a> by BY -->
+                    
+                            <li>
+                                <a target="_blank" href="https://www.jianshu.com/u/a60f6fdea16d">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fa fa-circle fa-stack-2x"></i>
+                                        <i class="fa  fa-stack-1x fa-inverse">简</i>
+                                    </span>
+                                </a>
+                            </li>
+                    
+                    
+
+                    <!-- add Weibo, Zhihu by Hux, add target = "_blank" to <a> by Hux -->
+                    
+                    <li>
+                        <a target="_blank" href="https://www.zhihu.com/people/mai-nu-hai-de-xiao-huo-chai-17-26/activities">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa  fa-stack-1x fa-inverse">知</i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+
+
+                    
+                    <li>
+                        <a target="_blank" href="https://www.facebook.com/宝宝可乖了">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                    <li>
+                        <a target="_blank" href="https://github.com/bbkgl">
+                            <span class="fa-stack fa-lg">
+                                <i class="fa fa-circle fa-stack-2x"></i>
+                                <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <p class="copyright text-muted">
+                    Copyright &copy; 我太菜了 2020
+                    <br>
+                    Theme on <a href="https://github.com/bbkgl/bbkgl.github.io.git">GitHub</a> |
+                    <iframe
+                        style="margin-left: 2px; margin-bottom:-5px;"
+                        frameborder="0" scrolling="0" width="100px" height="20px"
+                        src="https://ghbtns.com/github-btn.html?user=bbkgl&repo=bbkgl.github.io&type=star&count=true" >
+                    </iframe>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- jQuery -->
+<script src="/js/jquery.min.js "></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script src="/js/bootstrap.min.js "></script>
+
+<!-- Custom Theme JavaScript -->
+<script src="/js/hux-blog.min.js "></script>
+
+<!-- Service Worker -->
+
+<script type="text/javascript">
+    if(navigator.serviceWorker){
+        // For security reasons, a service worker can only control the pages that are in the same directory level or below it. That's why we put sw.js at ROOT level.
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then((registration) => {console.log('Service Worker Registered. ', registration)})
+            .catch((error) => {console.log('ServiceWorker registration failed: ', error)})
+    }
+</script>
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+
+<!-- 
+     Because of the native support for backtick-style fenced code blocks 
+     right within the Markdown is landed in Github Pages, 
+     From V1.6, There is no need for Highlight.js, 
+     so Huxblog drops it officially.
+
+     - https://github.com/blog/2100-github-pages-now-faster-and-simpler-with-jekyll-3-0  
+     - https://help.github.com/articles/creating-and-highlighting-code-blocks/ 
+     - https://github.com/jneen/rouge/wiki/list-of-supported-languages-and-lexers   
+-->
+<!--
+    <script>
+        async("http://cdn.bootcss.com/highlight.js/8.6/highlight.min.js", function(){
+            hljs.initHighlightingOnLoad();
+        })
+    </script>
+    <link href="http://cdn.bootcss.com/highlight.js/8.6/styles/github.min.css" rel="stylesheet">
+-->
+
+
+<!-- jquery.tagcloud.js -->
+<script>
+    // only load tagcloud.js in tag.html
+    if($('#tag_cloud').length !== 0){
+        async('/js/jquery.tagcloud.js',function(){
+            $.fn.tagcloud.defaults = {
+                //size: {start: 1, end: 1, unit: 'em'},
+                color: {start: '#bbbbee', end: '#0085a1'},
+            };
+            $('#tag_cloud a').tagcloud();
+        })
+    }
+</script>
+
+<!--fastClick.js -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js", function(){
+        var $nav = document.querySelector("nav");
+        if($nav) FastClick.attach($nav);
+    })
+</script>
+
+
+<!-- Google Analytics -->
+
+
+
+<!-- Baidu Tongji -->
+
+
+
+
+<!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;    
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
+
+
+
+
+
+<!-- Image to hack wechat -->
+<img src="/img/apple-touch-icon.png" width="0" height="0" />
+<!-- Migrate from head to bottom, no longer block render and still work -->
+
+</body>
+
+</html>
