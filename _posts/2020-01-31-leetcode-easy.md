@@ -1175,3 +1175,23 @@ public:
 };
 ```
 
+## [392. Is Subsequence](https://leetcode-cn.com/problems/is-subsequence/)
+
+双指针刷刷刷！
+
+```cpp
+class Solution {
+public:
+    bool isSubsequence(string s, string t) {
+        const char *p = s.data(), *q = t.data();
+        while (*q && *p) {
+            if (*p == *q)
+                p++;
+            q++;
+        }
+        if (!*p) return true;
+        return false;
+    }
+};
+```
+
