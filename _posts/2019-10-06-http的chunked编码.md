@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      http的chunked编码
 subtitle:   利用chunked编码确定接收长度
 date:       2019-10-06
@@ -67,7 +68,7 @@ bd8
 
 这里有一张图片可以清除地描述整个报文：
 
-![Hd5aff7c9de9b46bb8088bd767e3cd21eo](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/Hd5aff7c9de9b46bb8088bd767e3cd21eo.jpg)
+![Hd5aff7c9de9b46bb8088bd767e3cd21eo](/cloud_img/Hd5aff7c9de9b46bb8088bd767e3cd21eo.jpg)
 
 注意到`\r\n`的位置！！！
 

@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      对‘vtable for ×××’未定义的引用
 subtitle:   undefined reference to `vtable for
 date:       2019-09-28
@@ -84,4 +85,5 @@ private:
 - 父类的虚函数没有被实现
 - QT中的某些设置。。。
 - **析构函数声明了没有实现**
+
 

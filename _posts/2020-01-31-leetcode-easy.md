@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      leetcode easy 题集合
 subtitle:   你快乐吗
 date:       2020-01-31
@@ -1194,4 +1195,5 @@ public:
     }
 };
 ```
+
 

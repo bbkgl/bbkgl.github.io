@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      apt install 出现 Encountered a section with no Package header
 subtitle:   section with no Package
 date:       2019-10-24

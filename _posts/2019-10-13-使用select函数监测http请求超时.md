@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      使用select函数监测http请求超时
 subtitle:   socket超时
 date:       2019-10-13
@@ -219,4 +220,5 @@ ERROR
 - 利用信号机制实现DNS请求超时控制
 
 详细代码和策略可以参考我写的HTTP/HTTPS请求库[crequest](https://github.com/bbkgl/crequests)。
+
 

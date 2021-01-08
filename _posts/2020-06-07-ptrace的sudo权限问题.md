@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      ptrace等调试方法的权限问题
 subtitle:   ptrace以及gdb等调试工具的权限问题
 date:       2020-06-09
@@ -32,4 +33,5 @@ echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 ```
 echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope
 ```
+
 

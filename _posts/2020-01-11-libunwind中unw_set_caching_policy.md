@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      libunwind中unw_set_caching_policy对unw_step性能的影响
 subtitle:   你快乐吗
 date:       2020-01-11
@@ -22,7 +23,7 @@ tags:
 
 选择的进程就是下面这个，fcitx，随便选的，我也不知道它干嘛的。
 
-![20200112214609.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112214609.png)
+![20200112214609.png](/cloud_img/20200112214609.png)
 
 然后麻利地写好trace程序：
 
@@ -115,7 +116,7 @@ int main(int argc, char **argv) {
 
 然后打印结果：
 
-![20200112214712.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112214712.png)
+![20200112214712.png](/cloud_img/20200112214712.png)
 
 恐怖故事发生了！！！
 
@@ -129,7 +130,7 @@ int main(int argc, char **argv) {
 
 其实在官方文档中有关于unw_set_caching_policy的介绍，其中写明remote默认是不能用unw_set_caching_policy的。
 
-![20200112212948.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112212948.png)
+![20200112212948.png](/cloud_img/20200112212948.png)
 
 > To speed up execution, `libunwind` may aggressively cache the information it needs to perform unwinding. If a process changes during its lifetime, this creates a risk of `libunwind` using stale data. For example, this would happen if `libunwind` were to cache information about a shared library which later on gets unloaded (e.g., via *dlclose*(3)).
 >
@@ -246,15 +247,15 @@ int main(int argc, char **argv) {
 
 以下5张图代表循环5次trace的打印结果：
 
-![20200112213154.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112213154.png)
+![20200112213154.png](/cloud_img/20200112213154.png)
 
-![20200112213234.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112213234.png)
+![20200112213234.png](/cloud_img/20200112213234.png)
 
-![20200112213315.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112213315.png)
+![20200112213315.png](/cloud_img/20200112213315.png)
 
-![20200112213352.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112213352.png)
+![20200112213352.png](/cloud_img/20200112213352.png)
 
-![20200112213457.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112213457.png)
+![20200112213457.png](/cloud_img/20200112213457.png)
 
 **结果非常符合我的推测！！！**
 
@@ -359,9 +360,9 @@ int main(int argc, char **argv) {
 
 只贴前两次的了，五个贴起来太累了。
 
-![20200112213543.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112213543.png)
+![20200112213543.png](/cloud_img/20200112213543.png)
 
-![20200112213842.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112213842.png)
+![20200112213842.png](/cloud_img/20200112213842.png)
 
 然后分别五次`unw_step`的时间分别是4858、4572、4597、4744、4677.
 
@@ -419,15 +420,15 @@ int main() {
 
 trace后的结果：
 
-![20200112213928.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112213928.png)
+![20200112213928.png](/cloud_img/20200112213928.png)
 
-![20200112214023.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112214023.png)
+![20200112214023.png](/cloud_img/20200112214023.png)
 
-![20200112214104.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112214104.png)
+![20200112214104.png](/cloud_img/20200112214104.png)
 
-![20200112214159.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112214159.png)
+![20200112214159.png](/cloud_img/20200112214159.png)
 
-![20200112214304.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200112214304.png)
+![20200112214304.png](/cloud_img/20200112214304.png)
 
 可以明显的看到，堆栈输出是正确且非重复的。
 
@@ -438,6 +439,7 @@ trace后的结果：
 `unw_set_caching_policy`会打开缓存，避免`unw_step`重复获取信息，所以大幅提升速度！
 
 官网中说到的**By default, caching is enabled for local unwinding only.**。意思应该是，只有本地展开堆栈的时候默认开启（remote需要手动），而不是默认情况下只能local模式开启2333。。。
+
 
 
 

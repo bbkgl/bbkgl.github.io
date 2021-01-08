@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      使用libelfin库通过dwarf信息读取行号
 subtitle:   profile
 date:       2020-02-08
@@ -67,4 +68,4 @@ int main() {
 
 看看效果图：
 
-![20200208185327.png](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/20200208185327.png)
+![20200208185327.png](/cloud_img/20200208185327.png)

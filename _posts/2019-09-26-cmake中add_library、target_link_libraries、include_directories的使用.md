@@ -1,5 +1,6 @@
 ---
 layout:     post
+typora-root-url: ..
 title:      cmake中add_library、target_link_libraries、include_directories的使用
 subtitle:   add_library、target_link_libraries、include_directories
 date:       2019-09-26
@@ -16,7 +17,7 @@ tags:
 
 其实这个东西最好就是举个例子了，首先可以看到整个项目的层级如下图，我们只需要一个CMakeLists.txt就好了。
 
-![5db02da98b58bc7bf7d1fc9d](https://raw.githubusercontent.com/bbkgl/bbkgl.github.io/master/cloud_img/5db02da98b58bc7bf7d1fc9d.jpg)
+![5db02da98b58bc7bf7d1fc9d](/cloud_img/5db02da98b58bc7bf7d1fc9d.jpg)
 
 然后看下cmake怎么写：
 
@@ -53,5 +54,6 @@ target_link_libraries(main libcircle)
 ### target_link_libraries
 
 `target_link_libraries`就是将之前打包的库，链接到生成的目标上，不然会出现光声明，没定义的错误，注意也可以直接指定库名，如`target_link_libraries(main XXX.so)`或`target_link_libraries(main XXX.a)`。
+
 
 
