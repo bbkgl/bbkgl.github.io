@@ -33,6 +33,7 @@ void UHH::StaticRegisterNativesUHH()
 	};
 	FNativeFunctionRegistrar::RegisterFunctions(Class, Funcs, UE_ARRAY_COUNT(Funcs));
 }
+
 struct Z_Construct_UFunction_UHH_HHFunc_Statics
 {
 	struct HH_eventHHFunc_Parms
@@ -139,7 +140,7 @@ UClass* Z_Construct_UClass_UHH()
 	return OuterClass;
 }
 
-static UHHCompiledInDefer<UHH> AutoInitializeUHH(TEXT("UHH"), sizeof(UHH), 1368286490); 
+static TClassCompiledInDefer<UHH> AutoInitializeUHH(TEXT("UHH"), sizeof(UHH), 1368286490); 
 UClass* UHH::GetPrivateStaticClass() 
 { 
 	static UClass* PrivateStaticClass = NULL; 

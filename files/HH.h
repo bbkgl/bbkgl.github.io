@@ -57,6 +57,19 @@ public:
 	{ \
 		InSlot << (UObject*&)Res; \
 	}
+	
+	NO_API UHH(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get()) : Super(ObjectInitializer) { }; \
+private: \
+	/** Private move- and copy-constructors, should never be used */ \
+	NO_API UHH(UHH&&); \
+	NO_API UHH(const UHH&); \
+public: \
+	NO_API UHH(FVTableHelper& Helper);
+	static UObject* __VTableCtorCaller(FVTableHelper& Helper) \
+	{ \
+		return new (EC_InternalUseOnlyConstructor, (UObject*)GetTransientPackage(), NAME_None, RF_NeedLoad | RF_ClassDefaultObject | RF_TagGarbageTemp) UHH(Helper); \
+	}
+	static void __DefaultConstructor(const FObjectInitializer& X) { new((EInternal*)X.GetObj())UHH(X); }
 
 public:
 	UFUNCTION(BlueprintCallable)
