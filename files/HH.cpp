@@ -171,7 +171,6 @@ template<> CCREFLECTION_API UClass* StaticClass<UHH>()
 {
 	return UHH::StaticClass();
 }
-static TClassCompiledInDefer<UHH> AutoInitializeUHH(TEXT("UHH"), sizeof(UHH), 1368286490); 
 static FCompiledInDefer Z_CompiledInDefer_UClass_UHH(Z_Construct_UClass_UHH, &UHH::StaticClass, TEXT("/Script/CCReflection"), TEXT("UHH"), false, nullptr, nullptr, nullptr);
 
 UHH::UHH(FVTableHelper& Helper) : Super(Helper) {};
