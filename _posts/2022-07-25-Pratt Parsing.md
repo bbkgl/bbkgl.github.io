@@ -20,7 +20,7 @@ tags:
 
 ## Pratt Parsing
 
-在跟Crafting Interpreters的时候，看到clox解析表达式 [compiling-expressions] (https://craftinginterpreters.com/compiling-expressions.html)的时候用了这种Parsing。初次接触，这一节我看了很久，虽然跟着作者的代码和文字写出来了，也能顺利生成字节码。但我清楚地明白自己并没有搞懂这是怎么来的，Prefix和Infix到底代表了什么，为什么通过 `parsePrecedence()` 就能把结合性（associativity）和优先级（Precedence）就都处理好了，再加上递归，确实有一定的理解难度。
+在跟Crafting Interpreters的时候，看到clox解析表达式 [compiling-expressions](https://craftinginterpreters.com/compiling-expressions.html)的时候用了这种Parsing。初次接触，这一节我看了很久，虽然跟着作者的代码和文字写出来了，也能顺利生成字节码。但我清楚地明白自己并没有搞懂这是怎么来的，Prefix和Infix到底代表了什么，为什么通过 `parsePrecedence()` 就能把结合性（associativity）和优先级（Precedence）就都处理好了，再加上递归，确实有一定的理解难度。
 后来为了彻底搞明白，在跟这部分内容的时候，我实现的 [Parser](https://github.com/bbkgl/cclox/commit/53da77108b18803b057a1513dcd8dabf92b29824) 做了一定的改动，不是直接输出字节码，而是先生成AST（抽象语法树），同时把Parser独立出来了，作者实现的Parser是直接和Compile塞一起的。因为自己菜，实现用的是C++，而不是纯C，命名为cclox。于我个人而言，C相对缺乏抽象，写编译器/解释器不如C++来的直观，特别是后面实现Object/String的时候。
 
 ![](/cloud_img/2022-07-26-22-58-07.png)
@@ -307,4 +307,4 @@ power:                          8      6.1     6     7.1    7       9      9
 
 ## 总结
 
-从实现来看，Pratt Parsing 的优势在于，处理每个 Token 或者子表达式时，不需要关注当前所处的表达式嵌套层级和全局状态。每个Prefix Function和Infix Function，都仅关注如何构造对应 Token 的子表达式，最后通过递归得到更大的表达式/AST。结合 `ParsePrecedence()` ，Pratt Parsing 会在遍历 Token 的过程中，将每个 Token 放在合适的AST/表达式的结构里。由于上述特点，相对于递归下降算法，Pratt Parsing 处理表达式也就更得心应手了。
+从实现来看，Pratt Parsing 的优势在于，处理每个 Token 或者子表达式时，不需要关注当前所处的表达式嵌套层级和全局状态。每个 Prefix Function 和 Infix Function，都仅关注如何构造对应 Token 的子表达式，最后通过递归得到更大的表达式/AST。结合 `ParsePrecedence()` ，Pratt Parsing 会在遍历 Token 的过程中，将每个 Token 放在合适的AST/表达式的结构里。由于上述特点，相对于递归下降算法，用 Pratt Parsing 处理表达式也就更得心应手。
